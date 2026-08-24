@@ -51,6 +51,9 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
   * 18 full-length fables, each with a takeaway
   * 30 one-liners
   * 18 hand-built mini crosswords, one per day
+* **The three P's** — Purge (type it once), Prioritise (tap three), Put into action (tap one). Nothing is written twice, and unpicked items carry into tomorrow.
+* **Built to touch** — springs on press, haptics, a real breathing circle, and a sunrise burst when you finish. All of it toggleable, and it respects reduced-motion.
+* **Zero network requests** — fonts embedded, everything local. It works the same in a tunnel as at your kitchen table.
 * **Two looks** — **Dawn**, oat paper and ink for daylight, and **Dusk** for the hours before sunrise. Set in Fraunces over Inter.
 * **Your software is yours** — reminders and quotes are edited in Settings, never in the code.
 * **Export / import** — one tap dumps everything to a JSON file, and restores from one. Insurance against a cleared browser.
