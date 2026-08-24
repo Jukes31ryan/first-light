@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>First Light</title>
+<meta name="description" content="A personal morning launcher — a boot sequence for the brain.">
+<meta name="theme-color" content="#1c1917">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="First Light">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+--bg:#1c1917;--card:#26211e;--card2:#2e2825;
+--border:rgba(255,238,224,0.10);--border2:rgba(255,238,224,0.18);
+--text:#f6f1eb;--text2:#b3a89e;--text3:#8a7f75;
+--accent:#e8a06c;--accent2:rgba(232,160,108,0.14);
+--gold:#e3c489;--gold2:rgba(227,196,137,0.14);
+--green:#8fcfa6;--green2:rgba(143,207,166,0.14);
+--sky:#9dbfdd;--sky2:rgba(157,191,221,0.14);
+--purple:#bda9dd;--purple2:rgba(189,169,221,0.14);
+--chrome:rgba(28,25,23,0.88);
+--shadow:0 1px 3px rgba(0,0,0,0.18);
+}
+html,body{height:100%;width:100%;font-family:'DM Sans',system-ui,-apple-system,sans-serif;
+background:radial-gradient(120% 62% at 50% -12%, #37281f 0%, #251f1b 46%, #1c1917 100%);
+background-attachment:fixed;color:var(--text);-webkit-font-smoothing:antialiased;overflow:hidden;
+-webkit-tap-highlight-color:transparent}
+#fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.fx-p{position:absolute;border-radius:50%}
+@keyframes sunpulse{0%,100%{opacity:0.65;transform:scale(1)}50%{opacity:1;transform:scale(1.06)}}
+@keyframes cloudmove{0%{transform:translateX(-30vw)}100%{transform:translateX(130vw)}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(8px)}100%{opacity:1;transform:none}}
+.scr{position:fixed;inset:0;display:none;flex-direction:column;overflow-y:auto;overflow-x:hidden;z-index:1;
+-webkit-overflow-scrolling:touch}
+.scr.on{display:flex;animation:fadeUp 0.28s ease}
+
+/* chrome */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;position:sticky;top:0;
+background:var(--chrome);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);z-index:50;
+padding-top:calc(16px + env(safe-area-inset-top))}
+.nav-btn{width:40px;height:40px;border-radius:12px;background:var(--card);border:1px solid var(--border);
+color:var(--text2);font-size:16px;font-family:inherit;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.nav-btn:active{opacity:0.6}
+.nav-step{font-size:11px;font-weight:700;color:var(--text3);letter-spacing:1.4px;text-transform:uppercase}
+.prog{display:flex;gap:5px;padding:0 20px 18px}
+.prog-bar{flex:1;height:4px;border-radius:3px;background:rgba(255,238,224,0.09);cursor:pointer}
+.prog-bar.done{background:var(--green)}
+.prog-bar.now{background:var(--accent)}
+.prog-bar.skip{background:var(--gold)}
+.main{flex:1;padding:14px 22px 130px;max-width:640px;width:100%;margin:0 auto}
+
+/* type */
+.h1{font-size:25px;font-weight:700;letter-spacing:-0.2px;margin-bottom:6px}
+.p{font-size:14px;font-weight:400;color:var(--text2);line-height:1.6}
+.lbl{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--text3);margin:22px 0 8px}
+.box{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:24px;margin-top:20px;box-shadow:var(--shadow)}
+.quote{font-size:16px;font-style:italic;font-weight:400;color:var(--text);line-height:1.7;text-align:center}
+.quote-a{font-size:12px;font-weight:700;letter-spacing:0.4px;color:var(--accent);text-align:center;margin-top:14px}
+.tip{margin-top:20px;padding:16px 18px;background:var(--card);border:1px solid var(--border);border-radius:14px;border-left:2px solid var(--sky)}
+.tip-l{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--sky);margin-bottom:5px}
+.tip-t{font-size:13px;font-weight:400;color:var(--text2);line-height:1.6}
+
+/* controls */
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.chip{padding:12px 18px;border-radius:12px;background:var(--card);border:1px solid var(--border);
+font-family:inherit;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer}
+.chip.on{background:var(--accent2);border-color:var(--accent);color:var(--accent)}
+.input,textarea.input{width:100%;padding:15px 16px;border-radius:14px;border:1px solid var(--border);
+background:var(--card);font-family:inherit;font-size:15px;color:var(--text);outline:none;resize:none;line-height:1.5}
+.input::placeholder{color:var(--text3)}
+.input:focus{border-color:var(--accent)}
+.btn-row{display:flex;gap:10px;margin-top:18px;justify-content:center;flex-wrap:wrap}
+.btn-sec{padding:11px 18px;border-radius:11px;background:transparent;border:1px solid var(--border);
+font-family:inherit;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer}
+.btn-sec:active{opacity:0.6}
+.foot{position:sticky;bottom:0;padding:16px 22px calc(24px + env(safe-area-inset-bottom));background:var(--chrome);
+backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-top:1px solid var(--border);margin-top:auto}
+.foot-row{display:flex;gap:10px;max-width:640px;margin:0 auto}
+.btn-go{width:100%;padding:17px;border-radius:15px;background:var(--accent);border:none;font-family:inherit;
+font-size:15px;font-weight:700;color:#22190f;cursor:pointer;box-shadow:0 6px 20px rgba(232,160,108,0.22)}
+.btn-go:active{opacity:0.85}
+.open-warn{margin-bottom:16px;padding:14px 16px;background:var(--gold2);border-left:2px solid var(--gold);
+border-radius:12px;font-size:13px;font-weight:500;color:var(--gold);line-height:1.5}
+
+/* dashboard */
+.dash{padding:0;min-height:100%;display:flex;flex-direction:column;max-width:640px;width:100%;margin:0 auto}
+.dash-hdr{display:flex;align-items:center;justify-content:space-between;padding:calc(26px + env(safe-area-inset-top)) 22px 20px}
+.dash-hdr-title{font-size:19px;font-weight:600;letter-spacing:0.2px}
+.dash-hdr-date{font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-top:3px}
+.dash-streak{display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--border);border-radius:22px;padding:8px 15px}
+.dash-streak .sn{font-size:14px;font-weight:700;color:var(--accent)}
+.tiles{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 18px 16px}
+.tile{border-radius:22px;padding:20px;cursor:pointer;position:relative;display:flex;flex-direction:column;
+justify-content:space-between;min-height:130px;overflow:hidden;transition:transform 0.15s,background 0.15s;
+background:var(--card);border:1px solid var(--border);box-shadow:var(--shadow)}
+.tile:active{transform:scale(0.985);background:var(--card2)}
+.tile.done{background:var(--green2);border-color:rgba(143,207,166,0.28)}
+.tile.done .tile-s{color:var(--green)}
+.tile.skip{background:var(--gold2);border-color:rgba(227,196,137,0.28)}
+.tile.skip .tile-s{color:var(--gold)}
+.tile-ico{width:42px;height:42px;border-radius:13px;background:var(--accent2);display:flex;align-items:center;justify-content:center;font-size:20px}
+.tile-body{margin-top:18px}
+.tile-t{font-size:15px;font-weight:600;line-height:1.3;letter-spacing:0.1px}
+.tile-v{font-size:14px;font-weight:600;color:var(--accent);margin-top:4px;line-height:1.35}
+.tile-s{font-size:12px;font-weight:400;color:var(--text3);margin-top:4px;line-height:1.4}
+.tile.wide{grid-column:1 / -1;min-height:auto}
+.tile.hero{grid-column:1 / -1;background:linear-gradient(158deg,#2c231d,#241f1c);
+border:1px solid rgba(232,160,108,0.22);min-height:auto}
+.tile-q{font-size:17px;font-weight:400;font-style:italic;line-height:1.65;margin-top:16px}
+.tile-a{font-size:12px;font-weight:600;color:var(--accent);margin-top:12px;letter-spacing:0.3px}
+.tile-badge{position:absolute;top:18px;right:18px;width:22px;height:22px;border-radius:50%;display:flex;
+align-items:center;justify-content:center;font-size:11px;font-weight:700;background:var(--green);color:#1c1917}
+.tile.skip .tile-badge{background:var(--gold);color:#1c1917}
+.tile.evening{background:linear-gradient(158deg,#232130,#221f22);border-color:rgba(189,169,221,0.22)}
+.tile.evening .tile-ico{background:var(--purple2)}
+.tile.evening.due{border-color:rgba(189,169,221,0.55)}
+.focus-win-l{font-size:10px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.focus-win-t{font-size:18px;font-weight:600;line-height:1.4}
+.focus-t3{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.focus-pill{font-size:12px;font-weight:500;color:var(--text2);background:rgba(255,238,224,0.06);
+border:1px solid var(--border);border-radius:10px;padding:7px 12px}
+.dash-run{margin:6px 18px calc(30px + env(safe-area-inset-bottom));padding:17px;border-radius:16px;background:transparent;
+border:1px solid var(--border);font-family:inherit;font-size:14px;font-weight:600;color:var(--text2);cursor:pointer;letter-spacing:0.3px}
+.dash-run:active{opacity:0.8}
+
+/* meditation */
+.med-wrap{display:flex;flex-direction:column;align-items:center;padding:10px 0}
+.med-circle{width:210px;height:210px;border-radius:50%;background:radial-gradient(circle,rgba(232,160,108,0.28),rgba(232,160,108,0.08) 62%,transparent 76%);
+display:flex;align-items:center;justify-content:center;margin:22px 0}
+.med-inner{width:104px;height:104px;border-radius:50%;background:var(--accent);opacity:0.8;
+transition:transform 4s ease-in-out;display:flex;align-items:center;justify-content:center;color:#22190f;font-weight:700;font-size:13px}
+.med-time{font-size:40px;font-weight:700;letter-spacing:-1px}
+.med-phase{font-size:13px;font-weight:500;color:var(--text2);height:20px;margin-top:6px}
+
+/* software cards */
+.soft-card{min-height:210px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+text-align:center;cursor:pointer;padding:34px 24px}
+.soft-cat{font-size:10px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--accent);margin-bottom:18px}
+.soft-txt{font-size:21px;font-weight:600;line-height:1.5}
+.soft-hint{font-size:11px;color:var(--text3);margin-top:24px;font-weight:500}
+.soft-dots{display:flex;gap:5px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+.soft-dot{width:7px;height:7px;border-radius:50%;background:rgba(255,238,224,0.14)}
+.soft-dot.seen{background:var(--accent)}
+.soft-dot.now{background:var(--accent);transform:scale(1.5)}
+
+/* crossword */
+.cw-wrap{display:flex;flex-direction:column;align-items:center}
+.cw-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:3px;width:100%;max-width:300px;margin:0 auto}
+.cw-cell{position:relative;aspect-ratio:1;border-radius:7px;background:var(--card2);border:1px solid var(--border)}
+.cw-cell.blk{background:transparent;border-color:transparent}
+.cw-cell input{width:100%;height:100%;border:none;background:transparent;text-align:center;
+font-family:inherit;font-size:20px;font-weight:700;color:var(--text);text-transform:uppercase;outline:none;
+border-radius:7px;padding:0;caret-color:transparent}
+.cw-cell.hl{background:rgba(232,160,108,0.13)}
+.cw-cell.sel{background:rgba(232,160,108,0.3);border-color:var(--accent)}
+.cw-cell.bad input{color:#e08272}
+.cw-cell.good input{color:var(--green)}
+.cw-num{position:absolute;top:2px;left:4px;font-size:8px;font-weight:700;color:var(--text3);pointer-events:none}
+.cw-clue{margin-top:20px;padding:16px 18px;background:var(--card);border:1px solid var(--border);border-radius:14px;
+min-height:64px;display:flex;flex-direction:column;justify-content:center;width:100%}
+.cw-clue-l{font-size:9px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.cw-clue-t{font-size:15px;font-weight:500;line-height:1.45}
+.cw-list{margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.cw-list h4{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.cw-li{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:7px;cursor:pointer}
+.cw-li.on{color:var(--accent);font-weight:600}
+.cw-li.solved{color:var(--text3);text-decoration:line-through}
+.cw-msg{text-align:center;font-size:13px;font-weight:600;height:20px;margin-top:14px}
+
+/* recap */
+.recap-item{padding:16px 0;border-bottom:1px solid var(--border)}
+.recap-item:last-child{border:none}
+.recap-l{font-size:9px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.recap-t{font-size:15px;font-weight:500;line-height:1.55;white-space:pre-wrap}
+
+/* evening */
+.eve-q{font-size:16px;font-weight:600;margin-bottom:4px}
+.eve-sub{font-size:12px;color:var(--text3);margin-bottom:12px}
+.seg{display:flex;gap:8px}
+.seg button{flex:1;padding:13px 8px;border-radius:12px;background:var(--card);border:1px solid var(--border);
+font-family:inherit;font-size:13px;font-weight:600;color:var(--text2);cursor:pointer}
+.seg button.on{background:var(--accent2);border-color:var(--accent);color:var(--accent)}
+
+/* settings */
+.set-lbl{font-size:10px;font-weight:700;letter-spacing:1.1px;text-transform:uppercase;color:var(--text3);margin:24px 0 8px}
+.set-note{font-size:12px;color:var(--text3);line-height:1.55;margin-top:8px}
+.divider{height:1px;background:var(--border);margin:28px 0 0}
+</style>
+</head>
+<body>
+<div id="fx"></div>
+
+<!-- 0 DASHBOARD -->
+<div class="scr on" id="s0">
+<div class="dash">
+<div class="dash-hdr">
+<div><div class="dash-hdr-title">First Light</div><div class="dash-hdr-date" id="dashDate"></div></div>
+<div style="display:flex;align-items:center;gap:10px">
+<div class="dash-streak"><span>🔥</span><span class="sn" id="streakN">0</span></div>
+<button class="nav-btn" onclick="openSettings()" aria-label="Settings">⚙</button>
+</div>
+</div>
+<div class="tiles" id="tiles"></div>
+<button class="dash-run" onclick="go(1)">▶ Run the whole sequence</button>
+</div>
+</div>
+
+<!-- 1 SPARK -->
+<div class="scr" id="s1">
+<div class="nav"><button class="nav-btn" onclick="go(0)">←</button><div class="nav-step">Spark · 1 of 7</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="prog" id="p1"></div>
+<div class="main">
+<div class="h1">The Spark</div>
+<div class="p">One idea to carry into the day.</div>
+<div class="box">
+<div class="quote" id="sparkQ"></div>
+<div class="quote-a" id="sparkA"></div>
+</div>
+<div class="btn-row"><button class="btn-sec" onclick="newSpark()">↻ Another</button></div>
+<div class="tip"><div class="tip-l">Sit with it</div><div class="tip-t">What would today look like if this were true?</div></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-sec" style="padding:15px 18px" onclick="mark(1,'skip');go(2)">Skip</button><button class="btn-go" onclick="mark(1,'done');go(2)">Continue</button></div></div>
+</div>
+
+<!-- 2 LAUGH -->
+<div class="scr" id="s2">
+<div class="nav"><button class="nav-btn" onclick="go(1)">←</button><div class="nav-step">Laugh · 2 of 7</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="prog" id="p2"></div>
+<div class="main">
+<div class="h1">The Laugh</div>
+<div class="p">Life isn't that serious. Proof:</div>
+<div class="box"><div class="quote" id="jokeText" style="font-style:normal;font-weight:500;font-size:17px"></div></div>
+<div class="btn-row"><button class="btn-sec" onclick="newJoke()">↻ Another</button></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-sec" style="padding:15px 18px" onclick="mark(2,'skip');go(3)">Skip</button><button class="btn-go" onclick="mark(2,'done');go(3)">Continue</button></div></div>
+</div>
+
+<!-- 3 STORY -->
+<div class="scr" id="s3">
+<div class="nav"><button class="nav-btn" onclick="go(2)">←</button><div class="nav-step">Story · 3 of 7</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="prog" id="p3"></div>
+<div class="main">
+<div class="h1" id="storyTitle"></div>
+<div class="p" id="storyRead"></div>
+<div class="box"><div id="storyText" style="font-size:15.5px;line-height:1.85;color:var(--text);font-weight:400;white-space:pre-line"></div></div>
+<div class="tip" style="border-left-color:var(--accent)"><div class="tip-l" style="color:var(--accent)">The point</div><div class="tip-t" id="storyMoral" style="font-weight:500;color:var(--text);font-size:14px"></div></div>
+<div class="btn-row"><button class="btn-sec" onclick="newStory()">↻ Different story</button></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-sec" style="padding:15px 18px" onclick="mark(3,'skip');go(4)">Skip</button><button class="btn-go" onclick="mark(3,'done');go(4)">Continue</button></div></div>
+</div>
+
+<!-- 4 BREATHE -->
+<div class="scr" id="s4">
+<div class="nav"><button class="nav-btn" onclick="go(3)">←</button><div class="nav-step">Breathe · 4 of 7</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="prog" id="p4"></div>
+<div class="main">
+<div class="h1">Breathe</div>
+<div class="p">Be where you are. Life is right now.</div>
+<div class="chips" id="medChips">
+<button class="chip on" onclick="setMed(2,this)">2 min</button>
+<button class="chip" onclick="setMed(5,this)">5 min</button>
+<button class="chip" onclick="setMed(10,this)">10 min</button>
+</div>
+<div class="box med-wrap">
+<div class="med-time" id="medTime">2:00</div>
+<div class="med-phase" id="medPhase">Press start when ready</div>
+<div class="med-circle"><div class="med-inner" id="medBall">start</div></div>
+<div class="btn-row" style="margin-top:0">
+<button class="btn-sec" id="medBtn" onclick="medToggle()">▶ Start</button>
+<button class="btn-sec" onclick="medReset()">↺ Reset</button>
+</div>
+</div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-sec" style="padding:15px 18px" onclick="mark(4,'skip');go(5)">Skip</button><button class="btn-go" onclick="mark(4,'done');go(5)">Continue</button></div></div>
+</div>
+
+<!-- 5 SOFTWARE -->
+<div class="scr" id="s5">
+<div class="nav"><button class="nav-btn" onclick="go(4)">←</button><div class="nav-step">Software · 5 of 7</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="prog" id="p5"></div>
+<div class="main">
+<div class="h1">Load the Software</div>
+<div class="p">The operating system you already wrote. One line at a time — read it like you mean it.</div>
+<div class="box soft-card" id="softCard" onclick="softNext()">
+<div class="soft-cat" id="softCat"></div>
+<div class="soft-txt" id="softTxt"></div>
+<div class="soft-hint" id="softHint">Tap the card for the next one</div>
+</div>
+<div class="soft-dots" id="softDots"></div>
+<div class="btn-row">
+<button class="btn-sec" onclick="softPrev()">← Back</button>
+<button class="btn-sec" onclick="softNext()">Next →</button>
+<button class="btn-sec" onclick="softRestart()">↺ Start over</button>
+</div>
+<div class="p" style="margin-top:18px;font-size:12px;text-align:center">Edit your software any time in ⚙ Settings.</div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-sec" style="padding:15px 18px" onclick="mark(5,'skip');go(6)">Skip</button><button class="btn-go" id="softGo" onclick="softGoAction()">Software Loaded ✓</button></div></div>
+</div>
+
+<!-- 6 TODAY -->
+<div class="scr" id="s6">
+<div class="nav"><button class="nav-btn" onclick="go(5)">←</button><div class="nav-step">Today · 6 of 7</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="prog" id="p6"></div>
+<div class="main">
+<div class="h1">Point It at Today</div>
+<div class="p">Purge. Prioritize. Put into action.</div>
+<div class="lbl">Purge — what's cluttering your head?</div>
+<textarea class="input" id="purge" rows="3" placeholder="Dump it here so it stops taking up RAM"></textarea>
+<div class="lbl">Prioritize — top 3 today</div>
+<input class="input" id="t1" placeholder="1." style="margin-bottom:10px">
+<input class="input" id="t2" placeholder="2." style="margin-bottom:10px">
+<input class="input" id="t3" placeholder="3.">
+<div class="lbl">WIN — What's Important Now?</div>
+<input class="input" id="win" placeholder="If only one thing gets done today...">
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-sec" style="padding:15px 18px" onclick="mark(6,'skip');go(7)">Skip</button><button class="btn-go" onclick="mark(6,'done');go(7)">Continue</button></div></div>
+</div>
+
+<!-- 7 MINI CROSSWORD -->
+<div class="scr" id="s7">
+<div class="nav"><button class="nav-btn" onclick="go(6)">←</button><div class="nav-step">Mini · 7 of 7</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="prog" id="p7"></div>
+<div class="main">
+<div class="h1">The Mini</div>
+<div class="p">A five-by-five to wake the brain up. New puzzle every day.</div>
+<div class="box cw-wrap">
+<div class="cw-grid" id="cwGrid"></div>
+<div class="cw-clue"><div class="cw-clue-l" id="cwClueL">Across</div><div class="cw-clue-t" id="cwClueT"></div></div>
+<div class="cw-msg" id="cwMsg"></div>
+<div class="btn-row">
+<button class="btn-sec" onclick="cwCheck()">Check</button>
+<button class="btn-sec" onclick="cwRevealWord()">Reveal word</button>
+<button class="btn-sec" onclick="cwRevealAll()">Solve it</button>
+<button class="btn-sec" onclick="cwClear()">Clear</button>
+</div>
+<div class="cw-list" style="width:100%">
+<div><h4>Across</h4><div id="cwAcross"></div></div>
+<div><h4>Down</h4><div id="cwDown"></div></div>
+</div>
+</div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-sec" style="padding:15px 18px" onclick="mark(7,'skip');go(8)">Skip</button><button class="btn-go" onclick="mark(7,'done');go(8)">Finish</button></div></div>
+</div>
+
+<!-- 8 LAUNCH -->
+<div class="scr" id="s8">
+<div class="nav"><button class="nav-btn" onclick="go(7)">←</button><div class="nav-step">Launch</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="main">
+<div class="h1">Locked in. 🌅</div>
+<div class="p">Here's your day at a glance.</div>
+<div class="box" id="recapBox"></div>
+<div class="lbl">Freestyle note</div>
+<textarea class="input" id="note" rows="4" placeholder="Anything on your mind — dump it here"></textarea>
+<div class="p" id="yestNote" style="margin-top:14px;font-size:13px"></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-go" onclick="finishDay()">Launch the Day 🚀</button></div></div>
+</div>
+
+<!-- 9 SETTINGS -->
+<div class="scr" id="s9">
+<div class="nav"><button class="nav-btn" onclick="go(0)">←</button><div class="nav-step">Settings</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="main">
+<div class="h1">Make it yours</div>
+<div class="p">One per line. Format: <b>Category | Line</b> for reminders, <b>Quote | Author</b> for quotes.</div>
+<div class="set-lbl">Your Software — Daily Reminders</div>
+<textarea class="input" id="setAffirms" rows="10" spellcheck="false"></textarea>
+<div class="set-lbl">Quotes to Ponder</div>
+<textarea class="input" id="setQuotes" rows="10" spellcheck="false"></textarea>
+<div class="set-note">Quotes ship with warriors and poets — Sun Tzu, Musashi, Marcus Aurelius, Seneca, Rumi, Whitman, Oliver, Kipling and more. Add your own or clear the lot; your reminders stay separate.</div>
+<div class="divider"></div>
+<div class="set-lbl">Backup</div>
+<div class="p" style="font-size:13px">Everything lives on this device. Export it now and then so a cleared browser can't take it.</div>
+<div class="btn-row" style="justify-content:flex-start">
+<button class="btn-sec" onclick="exportData()">⬇ Export my data</button>
+<button class="btn-sec" onclick="copyData()">Copy to clipboard</button>
+<button class="btn-sec" onclick="document.getElementById('importFile').click()">⬆ Import a backup</button>
+</div>
+<input type="file" id="importFile" accept="application/json,.json,.txt" style="display:none" onchange="importFile(this)">
+<div class="set-note" id="backupMsg"></div>
+<div class="divider"></div>
+<div class="set-lbl">Install</div>
+<div class="p" style="font-size:13px" id="installTxt">On iPhone: Share → Add to Home Screen. On Android or desktop Chrome: menu → Install app. It then runs full-screen and offline.</div>
+<div class="btn-row" style="justify-content:flex-start"><button class="btn-sec" id="installBtn" style="display:none" onclick="doInstall()">📲 Install First Light</button></div>
+<div class="set-note" id="verLine"></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-go" onclick="saveSettings()">Save</button></div></div>
+</div>
+
+<!-- 10 EVENING -->
+<div class="scr" id="s10">
+<div class="nav"><button class="nav-btn" onclick="go(0)">←</button><div class="nav-step">Evening · Close-out</div><button class="nav-btn" onclick="go(0)">✕</button></div>
+<div class="main">
+<div class="h1">Close the loop. 🌙</div>
+<div class="p">Fifteen seconds. Then put the day down.</div>
+<div class="box">
+<div class="eve-q">Did you hit your WIN?</div>
+<div class="eve-sub" id="eveWin">No WIN was set this morning.</div>
+<div class="seg" id="eveSeg">
+<button onclick="eveHit('yes',this)">Yes</button>
+<button onclick="eveHit('almost',this)">Almost</button>
+<button onclick="eveHit('no',this)">No</button>
+</div>
+</div>
+<div class="lbl">What are you grateful for?</div>
+<input class="input" id="eveGrateful" placeholder="One line is enough">
+<div class="lbl">One win from today</div>
+<input class="input" id="eveWinNote" placeholder="Anything that went right — small counts">
+<div class="p" id="eveYest" style="margin-top:18px;font-size:13px"></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-go" onclick="saveEvening()">Close the Day 🌙</button></div></div>
+</div>
+
+<script>
+/* ============================= DATA ============================= */
+
+const DEF_AFFIRMS=[
+"Love & Presence | But first, Love.",
+"Love & Presence | Be where you are — life is right now.",
+"Love & Presence | Love is the quality of attention given to something.",
+"Positive Mindset | Happiness is a choice, not a result of circumstances.",
+"Positive Mindset | SMILE in adversity and everyday BS. Actually smile.",
+"Positive Mindset | Be more funny — life isn't that serious.",
+"Action | If you cannot measure it, you cannot improve it.",
+"Action | Action is the antidote to despair.",
+"Patience & Growth | Easy does it. Slow is smooth, smooth is fast.",
+"Patience & Growth | Embrace life's interruptions — they are opportunities for growth.",
+"Parenting | Be a better Dad and Coach, not just a disciplinarian.",
+"Parenting | Give your kids Puppy Love.",
+"Problem Solving | Focus on solutions, not complaints."
+];
+
+const DEF_QUOTES=[
+/* --- strategy & the warrior's mind --- */
+"Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win. | Sun Tzu, The Art of War",
+"In the midst of chaos, there is also opportunity. | Sun Tzu, The Art of War",
+"Opportunities multiply as they are seized. | Sun Tzu, The Art of War",
+"He will win who knows when to fight and when not to fight. | Sun Tzu, The Art of War",
+"The supreme art of war is to subdue the enemy without fighting. | Sun Tzu, The Art of War",
+"Do not act as your opponent expects. Move where he is not. | Sun Tzu, The Art of War",
+"Think lightly of yourself and deeply of the world. | Miyamoto Musashi, The Book of Five Rings",
+"Do nothing which is of no use. | Miyamoto Musashi, The Book of Five Rings",
+"Perceive that which cannot be seen with the eye. | Miyamoto Musashi, The Book of Five Rings",
+"You must understand that there is more than one path to the top of the mountain. | Miyamoto Musashi",
+"Today is victory over yourself of yesterday; tomorrow is your victory over lesser men. | Miyamoto Musashi",
+"Get beyond love and grief: exist for the good of man. | Miyamoto Musashi",
+"You have power over your mind — not outside events. Realize this, and you will find strength. | Marcus Aurelius, Meditations",
+"The impediment to action advances action. What stands in the way becomes the way. | Marcus Aurelius, Meditations",
+"Waste no more time arguing what a good man should be. Be one. | Marcus Aurelius, Meditations",
+"When you arise in the morning, think of what a privilege it is to be alive — to think, to enjoy, to love. | Marcus Aurelius, Meditations",
+"Confine yourself to the present. | Marcus Aurelius, Meditations",
+"It is not death that a man should fear, but never beginning to live. | Marcus Aurelius, Meditations",
+"We suffer more often in imagination than in reality. | Seneca",
+"It is not that we have a short time to live, but that we waste much of it. | Seneca, On the Shortness of Life",
+"Every new beginning comes from some other beginning's end. | Seneca",
+"Luck is what happens when preparation meets opportunity. | Seneca",
+"He who is brave is free. | Seneca",
+"It's not what happens to you, but how you react to it that matters. | Epictetus",
+"First say to yourself what you would be; and then do what you have to do. | Epictetus",
+"No man is free who is not master of himself. | Epictetus",
+"Wealth consists not in having great possessions, but in having few wants. | Epictetus",
+"Make the best use of what is in your power, and take the rest as it happens. | Epictetus",
+"Discipline equals freedom. | Jocko Willink",
+"The obstacle is the way. | Marcus Aurelius",
+/* --- poets --- */
+"What you seek is seeking you. | Rumi",
+"Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself. | Rumi",
+"The wound is the place where the Light enters you. | Rumi",
+"Let yourself be silently drawn by the strange pull of what you really love. It will not lead you astray. | Rumi",
+"Tell me, what is it you plan to do with your one wild and precious life? | Mary Oliver, The Summer Day",
+"Instructions for living a life: Pay attention. Be astonished. Tell about it. | Mary Oliver",
+"You do not have to be good. You only have to let the soft animal of your body love what it loves. | Mary Oliver, Wild Geese",
+"I do not ask the wounded person how he feels — I myself become the wounded person. | Walt Whitman, Song of Myself",
+"Keep your face always toward the sunshine, and shadows will fall behind you. | Walt Whitman",
+"Re-examine all you have been told. Dismiss what insults your soul. | Walt Whitman",
+"That you are here — that life exists, and identity; that the powerful play goes on, and you may contribute a verse. | Walt Whitman",
+"Be patient toward all that is unsolved in your heart, and try to love the questions themselves. | Rainer Maria Rilke, Letters to a Young Poet",
+"Perhaps all the dragons in our lives are princesses who are only waiting to see us act, just once, with beauty and courage. | Rainer Maria Rilke",
+"Let everything happen to you: beauty and terror. Just keep going. No feeling is final. | Rainer Maria Rilke",
+"Two roads diverged in a wood, and I — I took the one less traveled by, and that has made all the difference. | Robert Frost",
+"The best way out is always through. | Robert Frost",
+"The woods are lovely, dark and deep, but I have promises to keep, and miles to go before I sleep. | Robert Frost",
+"If you can keep your head when all about you are losing theirs and blaming it on you… yours is the Earth and everything that's in it. | Rudyard Kipling, If—",
+"If you can meet with Triumph and Disaster and treat those two impostors just the same. | Rudyard Kipling, If—",
+"If you can fill the unforgiving minute with sixty seconds' worth of distance run. | Rudyard Kipling, If—",
+"Come, my friends, 'tis not too late to seek a newer world. | Alfred, Lord Tennyson, Ulysses",
+"To strive, to seek, to find, and not to yield. | Alfred, Lord Tennyson, Ulysses",
+"You may not control all the events that happen to you, but you can decide not to be reduced by them. | Maya Angelou",
+"Nothing will work unless you do. | Maya Angelou",
+"We may encounter many defeats but we must not be defeated. | Maya Angelou",
+"What lies behind us and what lies before us are tiny matters compared to what lies within us. | Ralph Waldo Emerson",
+"Nothing can bring you peace but yourself. | Ralph Waldo Emerson",
+"Finish each day and be done with it. You have done what you could. | Ralph Waldo Emerson",
+"Start close in, don't take the second step or the third, start with the first thing close in, the step you don't want to take. | David Whyte",
+"Anything or anyone that does not bring you alive is too small for you. | David Whyte",
+/* --- steady hands --- */
+"The best time to plant a tree was 20 years ago. The second best time is now. | Chinese Proverb",
+"Wherever you go, there you are. | Jon Kabat-Zinn",
+"The quieter you become, the more you can hear. | Ram Dass",
+"Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor. | Thich Nhat Hanh",
+"Smile, breathe, and go slowly. | Thich Nhat Hanh",
+"Do what you can, with what you have, where you are. | Theodore Roosevelt",
+"How we spend our days is, of course, how we spend our lives. | Annie Dillard",
+"Almost everything will work again if you unplug it for a few minutes — including you. | Anne Lamott",
+"What you do today can improve all your tomorrows. | Ralph Marston"
+];
+
+const JOKES=[
+"I told my doctor I broke my arm in two places. He told me to stop going to those places.",
+"My therapist says I have a preoccupation with vengeance. We'll see about that.",
+"I used to think I was indecisive. Now I'm not so sure.",
+"The first rule of morning club: coffee first. There is no second rule until coffee.",
+"I bought a book on procrastination years ago. Still going to read it. The anticipation is incredible.",
+"Age is merely the number of years the world has been enjoying you. Act accordingly.",
+"My bed and I are perfect for each other, but my alarm clock keeps trying to break us up.",
+"I'm on a seafood diet. I see food, and I make a thoughtful, balanced decision. Usually.",
+"Blessed are those who can laugh at themselves, for they shall never cease to be amused.",
+"I asked the trainer if he could teach me to do the splits. He said, 'How flexible are you?' I said, 'I can't make Tuesdays.'",
+"Common sense is like deodorant. The people who need it most never use it.",
+"I finally decided to take control of my life. My life immediately requested a manager.",
+"A clean desk is a sign of a cluttered desk drawer.",
+"Some days you're the pigeon. Some days you're the statue. Today, be the pigeon.",
+"Hard work never killed anybody, but why take the chance?",
+"I named my dog 'Five Miles' so I can tell people I walk Five Miles every day.",
+"Experience is what you get when you didn't get what you wanted.",
+"I don't trip over things. I do random gravity checks.",
+"Every morning I make my bed, and every night my bed unmakes me. It's a partnership.",
+"Opportunity knocks once. Temptation leans on the doorbell.",
+"I'm not lazy. I'm on energy-saving mode.",
+"They say money talks. Mine just waves goodbye.",
+"A diamond is a lump of coal that handled pressure exceptionally well. Be the coal with a plan.",
+"My memory is so good I can remember things that haven't even happened yet. My worries, mostly. Cancelling that subscription today.",
+"Inside me there's a morning person. He's asleep.",
+"Do not take life too seriously. You will never get out of it alive anyway.",
+"I told my wife she should embrace her mistakes. She hugged me.",
+"I have a great work-life balance. Both of them are chaos, equally.",
+"The early bird gets the worm, but the second mouse gets the cheese. Timing is a personal decision.",
+"I'm reading a book about anti-gravity. It's impossible to put down."
+];
+
+const STORIES=[
+{t:"The Empty Cup",r:"1 min read",
+s:"A professor of philosophy, well published and widely respected, traveled a long way to visit a Zen master he had heard about for years. He arrived with a list of questions about the nature of wisdom.\n\nThe master welcomed him warmly and set water on to boil. But before a single question could be asked, the professor began to explain what he already understood. He described the schools he had studied, the books he had written, the debates he had won. He wanted the master to know he was not a beginner. Twenty minutes passed this way.\n\nThe master said nothing. He simply lifted the pot and began pouring tea into the professor's cup. The cup filled. The master kept pouring. Tea rose to the brim, spilled over the lip, ran across the table and dripped steadily onto the floor.\n\n“Stop!” the professor cried, jumping back. “It's full! No more will go in!”\n\nThe master set down the pot and looked at him with great kindness.\n\n“You are like this cup,” he said. “You came a long way and you are already full — of your opinions, your credentials, your certainty about how things are. How can I show you anything until you empty your cup?”\n\nThe professor sat back down. He was quiet for a long time. Then, for the first time in many years, he asked a question he did not already know the answer to.",
+m:"Start the day empty enough to actually learn something. Certainty is comfortable and it costs you everything new."},
+
+{t:"Two Monks and the River",r:"1 min read",
+s:"Two monks, one old and one young, were walking back to their monastery after a long day when they came to a river swollen with spring rain. On the bank stood a woman in fine clothes, afraid to cross. The current was fast and the stones underneath were slick.\n\nWithout a word, the older monk bent down, lifted her onto his back, waded across, and set her gently on dry ground on the other side. She thanked him. He nodded and walked on.\n\nThe younger monk followed in silence. But something was burning in him. Their order was strict: monks did not touch women. Not for any reason. He walked a mile thinking about it. Two miles. Three. The sun went down. He rehearsed what he would say, discarded it, rehearsed it again.\n\nFinally, as the monastery came into view, he could not hold it any longer.\n\n“How could you do that?” he burst out. “You know our vows. You picked her up. You carried her.”\n\nThe old monk kept walking a few more steps, then smiled — not unkindly.\n\n“I set that woman down at the riverbank hours ago,” he said. “Why are you still carrying her?”",
+m:"Whatever you are still carrying from yesterday — the argument, the email, the thing you should have said — set it down at the bank. You crossed that river already."},
+
+{t:"The Fisherman and the Consultant",r:"1 min read",
+s:"A businessman on vacation stood on a small dock watching a fisherman tie up his boat. It was barely past noon. In the bottom of the boat were several beautiful yellowfin tuna.\n\n“How long did it take you to catch those?” the businessman asked.\n\n“Only a little while.”\n\n“So why not stay out longer and catch more?”\n\n“This is enough for my family's needs.”\n\n“But what do you do with the rest of your time?”\n\nThe fisherman thought about it. “I sleep late, fish a little, play with my children, take a nap with my wife in the afternoon. In the evening I walk into the village, drink some wine and play guitar with my friends. I have a full life.”\n\nThe businessman drew himself up. “I have an MBA. Let me help you. You should spend more hours fishing and buy a bigger boat. With the proceeds from the bigger boat you buy several boats — eventually a fleet. Instead of selling your catch to a middleman, you sell directly to the processor, then open your own cannery. You'd control the product, the processing and the distribution. You'd have to leave this village and move to the city, then eventually to New York, to run your expanding enterprise.”\n\n“How long would all this take?”\n\n“Fifteen, maybe twenty years.”\n\n“And then what?”\n\nThe businessman laughed. “Then comes the best part. You announce an IPO, sell your company stock to the public and become very rich. You'd make millions.”\n\n“Millions? And then what?”\n\n“Then you'd retire. Move to a small fishing village, sleep late, fish a little, play with your kids, nap with your wife, and stroll into the village in the evenings to drink wine and play guitar with your friends.”\n\nThe fisherman smiled, picked up his tuna, and headed home.",
+m:"Make sure the ladder you are climbing is leaning against the right wall. Sometimes you are already standing where the ladder was supposed to take you."},
+
+{t:"The Stonecutter",r:"1 min read",
+s:"There was once a stonecutter who was dissatisfied with himself and with his position in life.\n\nOne day he passed a wealthy merchant's house. Through the open gateway he saw fine possessions and important visitors. “How powerful that merchant must be,” thought the stonecutter, and he became very envious. “I wish I could be like him.”\n\nTo his great surprise, he suddenly became the merchant, enjoying more luxury and power than he had ever dreamed of — envied and detested by those less wealthy. Soon a high official passed by, carried in a sedan chair, escorted by attendants and honored by everyone. “How powerful that official is,” he thought. “I wish I could be a high official.”\n\nThen he became the high official, carried everywhere in his embroidered chair, feared and hated by the people. It was a hot summer day, and he felt very uncomfortable. He looked up at the sun. It shone proudly in the sky, unaffected by his presence. “How powerful the sun is,” he thought. “I wish I could be the sun.”\n\nThen he became the sun, shining fiercely down on everyone, scorching the fields. But a huge black cloud moved between him and the earth, so that his light could no longer shine. “How powerful that storm cloud is,” he thought. “I wish I could be a cloud.”\n\nThen he became the cloud, flooding the fields and villages — until he found himself being pushed away by some great force, and realized it was the wind. “How powerful it is,” he thought. “I wish I could be the wind.”\n\nThen he became the wind, blowing tiles off roofs and uprooting trees, feared and hated by all below him — until, after a while, he ran up against something that would not move no matter how forcefully he blew against it: a huge, towering rock. “How powerful that rock is,” he thought. “I wish I could be a rock.”\n\nThen he became the rock, more powerful than anything else on earth. But as he stood there he heard the sound of a hammer pounding a chisel into the hard surface, and felt himself being changed.\n\n“What could be more powerful than I, the rock?” he thought. He looked down and saw, far below him, the figure of a stonecutter.",
+m:"You already are the thing you are chasing. Stop shopping for a different life and work your own stone."},
+
+{t:"Knowing Where to Tap",r:"1 min read",
+s:"A great ship's engine failed at sea and no one on board could fix it. The owner brought in expert after expert. Each one examined the machinery, made adjustments, charged a fee, and left the engine exactly as dead as they found it. Days passed. Cargo sat. Money burned.\n\nFinally the owner sent for an old engineer who had been fixing ships since he was a boy. He arrived carrying a small bag of tools. He did not open it right away. Instead he walked slowly through the engine room, running his hand along the pipes, tilting his head, listening. He watched the pistons for a long time without touching anything. Then he asked for a moment of quiet, and he listened again.\n\nAfter perhaps an hour, he reached into his bag, took out a small hammer, and gently tapped one valve. Immediately the engine lurched into life. He put the hammer away and left.\n\nA week later the owner received an invoice for ten thousand dollars.\n\n“Ten thousand!” the owner sputtered. “You barely did anything! Itemize this bill.”\n\nThe old engineer sent back a new invoice. It read:\n\nTapping with a hammer — $2.00\nKnowing where to tap — $9,998.00",
+m:"Your years were not wasted. You were not paid for the tap; you are paid for knowing where. Charge accordingly — and stop apologizing for the speed at which you can now do hard things."},
+
+{t:"Salt in the Water",r:"1 min read",
+s:"An aging master grew tired of his apprentice's constant complaining. The young man had a real gift for it — he could find the flaw in any day, the insult in any kindness, the disaster waiting inside any piece of good news.\n\nOne morning the master sent him for a handful of salt. When he returned, the master told him to stir the whole handful into a glass of water and drink it down.\n\n“How does it taste?” the master asked.\n\nThe apprentice spat on the ground. “Bitter. Awful.”\n\nThe master chuckled, then said, “Come with me.” The two walked in silence to a lake at the edge of the property. The master told the apprentice to take another handful of salt and throw it into the water. The young man did.\n\n“Now drink from the lake.”\n\nThe apprentice cupped his hands and drank. The master asked, “How does it taste?”\n\n“Fresh. Cold. Good.”\n\n“Do you taste the salt?”\n\n“No.”\n\nThe master sat down on the bank beside the young man and said:\n\n“The pain of life is pure salt — no more, no less. The amount of salt is the same in both cases. But the amount of bitterness we taste depends entirely on the container we put it in. So when you are in pain, the only thing you can do is to enlarge your sense of things. Stop being a glass. Become a lake.”",
+m:"You cannot always shrink the salt. You can always grow the lake — with breath, with perspective, with people, with a morning that starts before the noise does."},
+
+{t:"The Strawberry",r:"30 sec read",
+s:"A man walking across a field looked up and saw a tiger. He ran, the tiger after him. Coming to a cliff, he caught hold of the root of a wild vine and swung himself down over the edge. The tiger sniffed at him from above.\n\nTrembling, the man looked down. Far below, another tiger was waiting to eat him. Only the vine sustained him.\n\nTwo mice, one white and one black, little by little started to gnaw away at the vine.\n\nThe man saw a luscious strawberry growing near him on the cliff face. Holding the vine with one hand, he plucked the strawberry with the other.\n\nHow sweet it tasted.",
+m:"There is a tiger above and a tiger below every single day. Eat the strawberry anyway — and taste it while you do."},
+
+{t:"Diogenes and the Emperor",r:"30 sec read",
+s:"Alexander the Great had conquered most of the known world by the age of thirty. Cities emptied into the streets when he arrived. Kings sent gifts ahead of his army in the hope of being spared.\n\nIn Corinth, he heard about a philosopher named Diogenes who owned nothing at all — no house, no bed, no possessions beyond a cloak and a wooden bowl. He had given up the bowl after seeing a child drink from cupped hands.\n\nCurious, Alexander went to find him. He discovered the old man lying on the ground in the sun, doing nothing in particular.\n\nAlexander approached with his retinue, stood over the philosopher, and announced himself: he was Alexander, master of Greece and Persia and everything between. He had been moved by the philosopher's poverty. He would grant him anything he wished. Anything at all. Name it.\n\nDiogenes squinted up at the emperor blocking the light.\n\n“Yes,” he said. “Move a little to the left. You're standing in my sun.”\n\nHis officers laughed and jeered. Alexander did not. As they walked away, still mocking the old man, Alexander said quietly: “If I were not Alexander, I would wish to be Diogenes.”",
+m:"Know what is enough, and half the world's leverage over you quietly disappears."},
+
+{t:"The Jar of Rocks",r:"1 min read",
+s:"A professor stood before his class with a wide glass jar and set it on the table. Without a word, he began filling it with rocks about two inches across, until no more would fit.\n\n“Is the jar full?” he asked.\n\nThe students agreed that it was.\n\nHe then picked up a box of small pebbles and poured them in, shaking the jar lightly so they rolled down into the spaces between the rocks. He asked again if the jar was full. The class laughed and said yes.\n\nNext he took a bag of sand and poured it in. It filled everything that was left. “Full now?”\n\n“Yes.”\n\nHe then produced two cups of coffee and poured them into the jar, filling the empty space among the sand. The students laughed out loud.\n\n“Now,” he said, when the laughter died down, “I want you to see that this jar is your life. The rocks are the things that matter most — your health, your family, your friends, the work that is actually yours to do. If everything else was lost and only they remained, your life would still be full.\n\n“The pebbles are the other things that matter — the job, the house, the car. The sand is everything else: the small stuff, the noise, the notifications.\n\n“If you put the sand in first, there is no room for the pebbles or the rocks. If you spend all your energy on the small stuff, you will never have room for the things that are actually important to you. Pay attention to the things that are critical to your happiness. Take care of the rocks first — the rest is just sand.”\n\nA student raised her hand and asked what the coffee represented.\n\n“I'm glad you asked,” the professor said. “It shows that no matter how full your life may seem, there's always room for a cup of coffee with a friend.”",
+m:"Rocks first. That is exactly what your Top 3 and your WIN are for — they go in the jar before the day starts pouring sand."},
+
+{t:"The Two Arrows",r:"45 sec read",
+s:"The Buddha once asked a student: “If a person is struck by an arrow, is it painful?”\n\n“It is,” the student said.\n\n“And if the person is struck by a second arrow in exactly the same spot, is that more painful still?”\n\n“It is.”\n\nThe Buddha then explained. In life, we cannot always control the first arrow. A flat tire on the morning you cannot afford one. A cruel word. A diagnosis. A deal that falls through at the last hour. That arrow lands, and it hurts, and that pain is honest.\n\nThe second arrow is the one we fire into ourselves. It is the replaying at 2 a.m. It is the story we tell about what the first arrow means about us — that we are behind, that we are failing, that this always happens to us, that we should have known.\n\nThe first arrow is a wound. The second is a habit.\n\n“In life,” he said, “we cannot always control the first arrow. However, the second arrow is our reaction to the first. And this second arrow is optional.”",
+m:"Take today's first arrows — they come with the territory. Just stop firing the second ones."},
+
+{t:"The Trouble Tree",r:"1 min read",
+s:"A carpenter hired to help restore an old farmhouse had just finished a rough first day on the job. A flat tire made him lose an hour of work, his electric saw quit halfway through the afternoon, and now his ancient pickup truck refused to start.\n\nThe homeowner drove him home. He sat in stony silence the whole way.\n\nOn arriving, he invited his driver in to meet the family. As they walked toward the front door, the carpenter paused briefly at a small tree, touching the tips of the branches with both hands. When he opened the door he underwent an amazing transformation. His tanned face was wreathed in smiles and he hugged his two small children and gave his wife a kiss.\n\nAfterward he walked his guest back to the car. They passed the tree and curiosity got the better of the visitor. He asked about what he had seen the carpenter do earlier.\n\n“Oh, that's my trouble tree,” he replied. “I know I can't help having troubles on the job, but one thing's for sure — troubles don't belong in the house with my wife and the children. So I just hang them up on the tree every night when I come home and ask God to take care of them. Then in the morning I pick them up again.”\n\nHe paused. “Funny thing is,” he smiled, “when I come out in the morning to pick them up, there aren't nearly as many as I remember hanging up the night before.”",
+m:"Build yourself a trouble tree. The people in that house get the best of you, not what's left of you — and half the troubles evaporate overnight anyway."},
+
+{t:"The Window",r:"1 min read",
+s:"Two men, both seriously ill, occupied the same hospital room. One man was allowed to sit up in his bed for an hour each afternoon to help drain the fluid from his lungs. His bed was next to the room's only window. The other man had to spend all his time flat on his back.\n\nThe men talked for hours. They spoke of their wives and families, their homes, their jobs, their time in the service, where they had been on vacation.\n\nAnd every afternoon, when the man in the bed by the window could sit up, he would pass the time by describing to his roommate all the things he could see outside.\n\nThe man in the other bed began to live for those one-hour periods where his world would be broadened and enlivened by all the activity and color of the world outside. The window overlooked a park with a lovely lake. Ducks and swans played on the water while children sailed their model boats. Young lovers walked arm in arm amid flowers of every color, and a fine view of the city skyline could be seen in the distance.\n\nAs the man by the window described all this in exquisite detail, the man on the other side of the room would close his eyes and imagine the picturesque scene.\n\nOne warm afternoon the man by the window described a parade passing by. Although the other man could not hear the band, he could see it in his mind's eye.\n\nDays and weeks passed. One morning, the day nurse arrived to find the lifeless body of the man by the window, who had died peacefully in his sleep.\n\nAs soon as it seemed appropriate, the other man asked if he could be moved next to the window. The nurse was happy to make the switch, and after making sure he was comfortable, she left him alone.\n\nSlowly, painfully, he propped himself up on one elbow to take his first look at the world outside. Finally, he would have the joy of seeing it for himself. He strained to slowly turn to look out the window beside the bed.\n\nIt faced a blank wall.\n\nThe man called the nurse and asked what could have compelled his deceased roommate to describe such wonderful things outside this window.\n\nThe nurse responded that the man had been blind and could not even see the wall.\n\n“Perhaps,” she said, “he just wanted to encourage you.”",
+m:"You can hand somebody a better world just by how you choose to describe this one. That costs you nothing and it is not a small thing."},
+
+{t:"The Last House",r:"1 min read",
+s:"An elderly carpenter was ready to retire. He told his employer-contractor of his plans to leave the house-building business and live a more leisurely life with his wife, enjoying his extended family.\n\nHe would miss the paycheck, but he needed to retire. They could get by.\n\nThe contractor was sorry to see his good worker go and asked if he could build just one more house as a personal favor. The carpenter said yes, but in time it was easy to see that his heart was not in his work. He resorted to shoddy workmanship and used inferior materials. It was an unfortunate way to end a dedicated career.\n\nHe rushed the framing. He skipped the small corrections he would once have insisted on. He told himself it did not matter — it was the last one.\n\nWhen the carpenter finished his work, his employer came to inspect the house. Then he handed the front-door key to the carpenter.\n\n“This is your house,” he said. “My gift to you.”\n\nThe carpenter was shocked, and then ashamed. If he had only known he was building his own house, he would have done it all so differently. Now he had to live in the home he had built none too well.",
+m:"You are always building the house you will live in — the habits, the marriage, the body, the reputation. Build today like you are staying."},
+
+{t:"This Too Shall Pass",r:"45 sec read",
+s:"A powerful king, weary of being tossed between elation and despair, called his wise men together. He asked them for one thing: a sentence, short enough to fit on a ring, that would be true in every possible situation. Something to steady him whether he was celebrating a victory or standing in the ruins of a defeat.\n\nThe wise men argued for weeks. Finally they returned with a simple gold ring. Engraved inside it were four words:\n\nThis too shall pass.\n\nIn the years that followed, the king wore it constantly. When his armies won and the crowds chanted his name and he felt himself becoming something more than a man, he would turn the ring on his finger and read it, and the arrogance would drain out of him.\n\nAnd on the night his most trusted friend betrayed him, and later in the long winter when the harvest failed and he could not sleep, he would read it again — and this time it did not humble him. It carried him.",
+m:"Whatever today turns out to be — brilliant or brutal — it is weather, not climate. Hold the good loosely and the bad lightly."},
+
+{t:"Sharpening the Axe",r:"45 sec read",
+s:"Two woodcutters, one young and strong, one older, made a bet on who could fell more trees in a single day.\n\nAt sunrise they started. The young man attacked the forest without pause — no water, no rest, no lunch. Every time he glanced over, he noticed the older man had stopped again and was sitting down at the edge of the clearing. The young man grinned to himself and swung harder.\n\nEvery hour, the older man disappeared for about ten minutes, then came back and worked steadily until the next break.\n\nAt sundown they counted. The older man's pile was clearly larger.\n\nThe young man was furious. “I don't understand. I worked through every single break you took. I never stopped. How could you cut more than me?”\n\nThe older woodcutter picked up his axe and turned it so the last of the light caught the edge.\n\n“Every time I sat down,” he said, “I was sharpening my axe.”",
+m:"Your breaks are not stolen from the work. They are the work. That is the entire reason this app exists — five quiet minutes at dawn is you sharpening the axe."},
+
+{t:"The Farmer's Horse",r:"45 sec read",
+s:"There was an old farmer who had worked his crops for many years. One day his horse ran away. Upon hearing the news, his neighbors came to visit.\n\n“Such bad luck,” they said sympathetically.\n\n“We'll see,” the farmer replied.\n\nThe next morning the horse returned, bringing with it three other wild horses. “How wonderful,” the neighbors exclaimed.\n\n“We'll see,” replied the old man.\n\nThe following day, his son tried to ride one of the untamed horses, was thrown, and broke his leg. The neighbors again came to offer their sympathy on his misfortune.\n\n“We'll see,” answered the farmer.\n\nThe day after, military officials came to the village to draft young men into the army. Seeing that the son's leg was broken, they passed him by. The neighbors congratulated the farmer on how well things had turned out.\n\n“We'll see,” said the farmer.",
+m:"You almost never know, on the day it happens, whether a thing is good news or bad news. Rushing to judge it just costs you the peace you could have had while waiting to find out."},
+
+{t:"The Cracked Pot",r:"1 min read",
+s:"A water bearer in India had two large pots hanging on each end of a pole which he carried across his neck. One of the pots had a crack in it while the other pot was perfect and always delivered a full portion of water.\n\nAt the end of the long walk from the stream to the house, the cracked pot arrived only half full.\n\nFor two full years this went on daily, with the bearer delivering only one and a half pots full of water to his house. Of course, the perfect pot was proud of its accomplishments. But the poor cracked pot was ashamed of its own imperfection, and miserable that it was able to accomplish only half of what it had been made to do.\n\nAfter two years of what it perceived to be a bitter failure, it spoke to the water bearer one day by the stream.\n\n“I am ashamed of myself, and I want to apologize to you. I have been able to deliver only half my load because this crack in my side causes water to leak out all the way back to your house. Because of my flaws, you have to do all of this work, and you don't get full value from your efforts.”\n\nThe bearer said, “As we return to the house, I want you to notice the beautiful flowers along the path.”\n\nIndeed, as they went up the hill, the old cracked pot took notice of the sun warming the beautiful wild flowers on the side of the path, and this cheered it some. But at the end of the trail, it still felt bad because it had leaked out half its load, and so again it apologized to the bearer for its failure.\n\nThe bearer said to the pot, “Did you notice that there were flowers only on your side of the path, but not on the other pot's side? That's because I have always known about your flaw, and I took advantage of it. I planted flower seeds on your side of the path, and every day while we walk back from the stream, you've watered them.\n\n“For two years I have been able to pick these beautiful flowers to decorate the table. Without you being just the way you are, there would not be this beauty to grace the house.”",
+m:"The thing you keep apologizing for is often the thing that waters the flowers. Stop trying to be a perfect pot."},
+
+{t:"Two Rabbits",r:"30 sec read",
+s:"There is an old hunting proverb short enough to carve on the handle of a knife: the man who chases two rabbits catches neither.\n\nThat is the whole story. There is no twist, no wise master, no clever ending. A hunter sees two rabbits break in two directions. He wants both. He commits to neither. He turns halfway toward one, then halfway back toward the other, and by the time he decides, both are gone and he goes home hungry — having run just as hard as the man who came home fed.\n\nThe rabbit does not need a plot. Neither does your list.",
+m:"Pick the one rabbit. That is precisely why today has exactly one WIN and not five."}
+];
+
+const PUZZLES=[
+{r:["##RAM","#WAKE","LIMIT","OPEN#","TEN##"],c:{AKIN:"Similar to",LIMIT:"Line you decide not to cross",LOT:"Parking ___",MET:"Ran into",OPEN:"Not closed",RAM:"Male sheep with curled horns",RAMEN:"Noodles in a hot bowl",TEN:"A perfect score",WAKE:"What this whole app is for",WIPE:"Clean off the counter"}},
+{r:["##COW","#VANE","TASTE","ALTO#","BEE##"],c:{ALTO:"Voice between soprano and tenor",BEE:"Hive worker",CASTE:"Rigid social class",COW:"Barnyard milk source",ONTO:"Wise to, as a trick",TAB:"The bill at the bar",TASTE:"Sense at the dinner table",VALE:"Poetic valley",VANE:"Weather ___ on a barn roof",WEE:"Very small"}},
+{r:["##KEG","#MOLE","BOAST","IDLE#","TEA##"],c:{BIT:"Small piece",BOAST:"Brag",ELSE:"Something ___",GET:"Understand, informally",IDLE:"Running but going nowhere",KEG:"Barrel of beer",KOALA:"Eucalyptus eater",MODE:"Airplane ___",MOLE:"Tunneling garden pest",TEA:"Morning brew, for some"}},
+{r:["##MET","#FADE","ALIGN","GAZE#","EWE##"],c:{AGE:"It's just a number",ALIGN:"Line up",EDGE:"Border",EWE:"Female sheep",FADE:"Slowly disappear",FLAW:"Small imperfection",GAZE:"Long, steady look",MAIZE:"Corn, by another name",MET:"Encountered",TEN:"Digits on two hands"}},
+{r:["##DUG","#SAGE","GUILT","ALLY#","SKY##"],c:{ALLY:"Friend in a fight",DAILY:"Every single day",DUG:"Excavated",GAS:"Pedal on the right",GET:"Go fetch",GUILT:"What a conscience serves up",SAGE:"Wise elder (or a herb)",SKY:"Where first light shows up",SULK:"Pout",UGLY:"Hard on the eyes"}},
+{r:["##BET","#GAME","RESIN","UNIT#","MEN##"],c:{BASIN:"Bowl of the sink",BET:"Wager",EMIT:"Give off, as light",GAME:"It's on tonight",GENE:"DNA segment",MEN:"Guys",RESIN:"Sticky stuff from a pine",RUM:"Pirate's drink",TEN:"Pins in a bowling frame",UNIT:"One of many, measured"}},
+{r:["##SLY","#BLUE","HOIST","INCH#","SEE##"],c:{BLUE:"Sky color, or a mood",BONE:"Dog's prize",HIS:"Belonging to him",HOIST:"Raise the flag",INCH:"Move very slowly",LUSH:"Green and thick, as a lawn",SEE:"Get it now",SLICE:"Piece of pie",SLY:"Foxlike",YET:"So far"}},
+{r:["##VAN","#ROBE","BUILT","ONCE#","AGE##"],c:{ABLE:"Capable",AGE:"Vintage, in years",BOA:"Constricting snake",BUILT:"Constructed",NET:"What's left after costs",ONCE:"___ upon a time",ROBE:"Thrown on over pajamas",RUNG:"Step on a ladder",VAN:"Small moving truck",VOICE:"What you find, then use"}},
+{r:["##ICE","#CROW","PLANE","RATE#","OWE##"],c:{CLAW:"Cat's tool",CONE:"Ice cream holder",CROW:"Black bird that caws",EWE:"Lamb's mother",ICE:"Frozen water",IRATE:"Really angry",OWE:"Be in debt",PLANE:"Way to fly",PRO:"Not an amateur",RATE:"Score it 1 to 10"}},
+{r:["##RAT","#FILE","WAGON","ACHE#","NET##"],c:{ACHE:"Dull, steady pain",ALOE:"Burn-soothing plant",FACE:"What you wash first thing",FILE:"Folder's contents",NET:"Hoop's fringe",RAT:"Subway rodent",RIGHT:"Correct",TEN:"Top of the scale",WAGON:"Little red ___",WAN:"Pale"}},
+{r:["##HIP","#LUTE","RAMEN","ATOM#","PER##"],c:{ATOM:"Smallest bit of an element",HIP:"Cool (or a joint)",HUMOR:"What the Laugh module delivers",ITEM:"Thing on a list",LATE:"Behind schedule",LUTE:"Old stringed instrument",PEN:"It beats the sword, supposedly",PER:"For each",RAMEN:"Instant noodles",RAP:"Knock sharply"}},
+{r:["##COY","#RIPE","SEVEN","PAIN#","ARC##"],c:{ARC:"Curve of the rising sun",CIVIC:"___ duty",COY:"Playfully shy",OPEN:"Unlocked",PAIN:"The first arrow, in the fable",REAR:"Back end",RIPE:"Ready to pick",SEVEN:"Steps in the morning sequence",SPA:"Place for a long soak",YEN:"Japanese money, or a craving"}},
+{r:["RAM##","IRON#","PILOT","#DATA","##RED"],c:{ARID:"Bone dry",DATA:"Numbers you can measure",IRON:"Pump it, or press with it",MOLAR:"Back tooth",NOTE:"Freestyle line at the end of the flow",PILOT:"One in the cockpit",RAM:"Battering ___",RED:"Stop sign color",RIP:"Tear",TAD:"A little bit"}},
+{r:["LED##","OVEN#","BELOW","#RATE","##YET"],c:{BELOW:"Under",DELAY:"Postponement",EVER:"At any time",LED:"Guided from the front",LOB:"High, soft throw",NOTE:"Short written message",OVEN:"Where the bread bakes",RATE:"Rank it",WET:"Just in from the rain",YET:"Nevertheless"}},
+{r:["BAD##","AREA#","GIANT","#ALTO","##TEN"],c:{ALTO:"Choir part",ANTE:"Poker's opening chip",AREA:"Space in square feet",ARIA:"Opera solo",BAD:"Not good",BAG:"Paper or plastic",DEALT:"Handed out the cards",GIANT:"Huge",TEN:"Fingers, all told",TON:"2,000 pounds"}},
+{r:["GYM##","NEAT#","ULTRA","#PEER","##SET"],c:{ART:"The ___ of War",GNU:"African antelope",GYM:"Place to sweat on purpose",MATES:"Partners",NEAT:"Tidy (or straight up)",PEER:"An equal, or to look closely",SET:"Ready, ___, go",TREE:"The trouble ___ in the fable",ULTRA:"Beyond extreme",YELP:"Sharp cry"}},
+{r:["SLY##","HOOD#","ENDOW","#GENE","##LED"],c:{DONE:"Finished \u2014 the green tile",ENDOW:"Gift generously",GENE:"Unit of heredity",HOOD:"Rain jacket's top",LED:"Was out front",LONG:"Not short",SHE:"Pronoun",SLY:"Cunning",WED:"Marry",YODEL:"Alpine warble"}},
+{r:["OLD##","AURA#","KNELT","#GATE","##DON"],c:{ALTO:"Not soprano, not tenor",AURA:"Vibe a person gives off",DON:"Put on, as a coat",DREAD:"Deep fear of what is coming",GATE:"Airport waiting spot",KNELT:"Went down on one knee",LUNG:"Breathing organ",OAK:"Mighty tree from an acorn",OLD:"Not new",TEN:"A perfect ___"}}
+];
+
+/* ============================= STATE ============================= */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const dateKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const todayKey=()=>dateKey(new Date());
+function dayOfYear(){const d=new Date();return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)}
+function parsePair(s){const i=s.indexOf('|');return i<0?['',s.trim()]:[s.slice(0,i).trim(),s.slice(i+1).trim()]}
+function readJSON(k,fb){try{return JSON.parse(localStorage.getItem(k))||fb}catch(e){return fb}}
+
+const S=Object.assign({affirms:DEF_AFFIRMS.slice(),quotes:DEF_QUOTES.slice()},readJSON('flSettings',{}));
+if(!S.affirms||!S.affirms.length)S.affirms=DEF_AFFIRMS.slice();
+if(!S.quotes||!S.quotes.length)S.quotes=DEF_QUOTES.slice();
+let DAY=readJSON('flDay-'+todayKey(),{});
+const FIELDS=['win','t1','t2','t3','purge','note'];
+function saveDay(){FIELDS.forEach(k=>{const el=$(k);if(el)DAY[k]=el.value});
+  try{localStorage.setItem('flDay-'+todayKey(),JSON.stringify(DAY))}catch(e){}}
+function loadDayFields(){FIELDS.forEach(k=>{const el=$(k);if(el&&DAY[k]!=null)el.value=DAY[k]})}
+
+/* ============================= FX ============================= */
+(function(){const fx=$('fx');const R=(a,b)=>a+Math.random()*(b-a);
+const mk=st=>{const d=document.createElement('div');d.className='fx-p';Object.assign(d.style,st);fx.appendChild(d)};
+mk({width:'340px',height:'340px',left:'50%',marginLeft:'-170px',top:'56%',
+  background:'radial-gradient(circle,rgba(232,160,108,0.20),rgba(232,160,108,0.07) 45%,transparent 68%)',animation:'sunpulse 8s ease infinite'});
+mk({width:'170px',height:'170px',left:'50%',marginLeft:'-85px',top:'64%',
+  background:'radial-gradient(circle,rgba(240,196,140,0.26),rgba(240,196,140,0.10) 55%,transparent 75%)',animation:'sunpulse 6s ease infinite'});
+for(let i=0;i<4;i++){mk({width:R(140,230)+'px',height:R(26,44)+'px',left:R(-10,70)+'%',top:R(4,26)+'%',
+  background:'rgba(255,242,232,0.045)',borderRadius:'50%',filter:'blur(18px)',
+  animation:'cloudmove '+R(70,120)+'s linear '+R(-70,0)+'s infinite'})}})();
+
+/* ============================= NAV ============================= */
+function show(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));$(id).classList.add('on');
+  const el=$(id);if(el)el.scrollTop=0}
+function statusOf(n){return (DAY.status||{})[n]||'todo'}
+function mark(n,st){DAY.status=DAY.status||{};DAY.status[n]=st;saveDay()}
+function stClass(j,cur){const st=statusOf(j);if(j===cur)return' now';if(st==='done')return' done';if(st==='skip')return' skip';return''}
+function prog(step){for(let i=1;i<=7;i++){const el=$('p'+i);if(!el)continue;el.innerHTML='';
+  for(let j=1;j<=7;j++){const d=document.createElement('div');d.className='prog-bar'+stClass(j,step);
+  d.title=STEP_NAMES[j-1];d.onclick=()=>go(j);el.appendChild(d)}}}
+const STEP_NAMES=['Spark','Laugh','Story','Breathe','Software','Today','Mini'];
+function go(n){
+  saveDay();
+  if(n===0){syncDash();show('s0');return}
+  if(n===10){renderEvening();show('s10');return}
+  if(n>=1&&n<=7)prog(n);
+  show('s'+n);
+  if(n===1)renderSpark();
+  if(n===2)renderJoke();
+  if(n===3)renderStory();
+  if(n===4)renderMed();
+  if(n===5)softStart();
+  if(n===6)loadDayFields();
+  if(n===7)cwOpen();
+  if(n===8)renderRecap();
+}
+
+/* ============================= DASHBOARD ============================= */
+const CARDS=[
+{n:2,ico:'😄',t:'Laugh',s:'Loosen up',c:'gold'},
+{n:3,ico:'📖',t:'Story',s:'A fable to chew on',c:'sky'},
+{n:4,ico:'🌬',t:'Breathe',s:'Center yourself',c:'green'},
+{n:5,ico:'🧠',t:'Software',s:'Load your OS',c:'purple'},
+{n:7,ico:'🧩',t:'The Mini',s:'5x5 crossword',c:'accent'}
+];
+let sparkI=null,jokeI=null,storyI=null;
+function badge(st){return st==='done'?'<div class="tile-badge">✓</div>':st==='skip'?'<div class="tile-badge">!</div>':''}
+function syncDash(){
+  $('dashDate').textContent=new Date().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  $('streakN').textContent=+localStorage.getItem('flStreak')||0;
+  if(sparkI===null)sparkI=Math.floor(Math.random()*S.quotes.length);
+  const [sq,sa]=parsePair(S.quotes[sparkI]);
+  const g=$('tiles');g.innerHTML='';
+
+  const hero=document.createElement('div');hero.className='tile hero';hero.onclick=()=>go(1);
+  hero.innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start">'+
+    '<div class="tile-ico">✨</div>'+
+    '<button class="btn-sec" style="padding:7px 13px" onclick="event.stopPropagation();newSpark();syncDash()">↻</button></div>'+
+    '<div class="tile-q">'+esc(sq||S.quotes[sparkI])+'</div>'+(sa?'<div class="tile-a">— '+esc(sa)+'</div>':'');
+  g.appendChild(hero);
+
+  const t3=[DAY.t1,DAY.t2,DAY.t3].filter(Boolean);
+  const hasFocus=DAY.win||t3.length;
+  const f=document.createElement('div');f.className='tile wide'+(statusOf(6)==='done'?' done':'');f.onclick=()=>go(6);
+  f.innerHTML=hasFocus
+    ? badge(statusOf(6))+'<div class="focus-win-l">🎯 What\'s Important Now</div>'+
+      '<div class="focus-win-t">'+esc(DAY.win||'(no WIN set yet)')+'</div>'+
+      (t3.length?'<div class="focus-t3">'+t3.map((x,i)=>'<span class="focus-pill">'+(i+1)+'. '+esc(x)+'</span>').join('')+'</div>':'')
+    : '<div class="tile-ico">🎯</div><div class="tile-body"><div class="tile-t">Set Today\'s Focus</div>'+
+      '<div class="tile-s">WIN + Top 3 — tap to set</div></div>';
+  g.appendChild(f);
+
+  CARDS.forEach(c=>{
+    const st=statusOf(c.n);
+    const d=document.createElement('div');d.className='tile '+(st==='todo'?'':st);d.onclick=()=>go(c.n);
+    let val='';
+    if(c.n===3&&storyI!==null&&st==='done')val='<div class="tile-v">'+esc(STORIES[storyI].t)+'</div>';
+    if(c.n===7&&DAY.cwSolved)val='<div class="tile-v">Solved ✓</div>';
+    const tint=st==='todo'?' style="background:var(--'+c.c+'2)"':'';
+    d.innerHTML=badge(st)+'<div class="tile-ico"'+tint+'>'+c.ico+'</div>'+
+      '<div class="tile-body"><div class="tile-t">'+c.t+'</div>'+(val||'<div class="tile-s">'+c.s+'</div>')+'</div>';
+    g.appendChild(d);
+  });
+
+  const eveDone=!!(DAY.eve&&DAY.eve.saved);
+  const due=new Date().getHours()>=17;
+  const e=document.createElement('div');
+  e.className='tile wide evening'+(eveDone?' done':'')+(due&&!eveDone?' due':'');
+  e.onclick=()=>go(10);
+  e.innerHTML=badge(eveDone?'done':'')+'<div style="display:flex;align-items:center;gap:16px">'+
+    '<div class="tile-ico">🌙</div><div><div class="tile-t">Evening Close-out</div>'+
+    '<div class="tile-s">'+(eveDone?'Day closed — see you at first light':(due?'15 seconds. Close the loop.':'Ready when the sun goes down'))+
+    '</div></div></div>';
+  g.appendChild(e);
+}
+
+/* ============================= SPARK / LAUGH / STORY ============================= */
+function renderSpark(){sparkI=Math.floor(Math.random()*S.quotes.length);
+  const [q,a]=parsePair(S.quotes[sparkI]);
+  $('sparkQ').textContent='"'+(q||S.quotes[sparkI])+'"';$('sparkA').textContent=a?'— '+a:''}
+function newSpark(){if(S.quotes.length<2)return renderSpark();
+  sparkI=(sparkI+1+Math.floor(Math.random()*(S.quotes.length-1)))%S.quotes.length;
+  const [q,a]=parsePair(S.quotes[sparkI]);
+  if($('sparkQ')){$('sparkQ').textContent='"'+(q||S.quotes[sparkI])+'"';$('sparkA').textContent=a?'— '+a:''}}
+function renderJoke(){jokeI=Math.floor(Math.random()*JOKES.length);$('jokeText').textContent=JOKES[jokeI]}
+function newJoke(){jokeI=(jokeI+1+Math.floor(Math.random()*(JOKES.length-1)))%JOKES.length;$('jokeText').textContent=JOKES[jokeI]}
+function paintStory(){const st=STORIES[storyI];
+  $('storyTitle').textContent=st.t;$('storyRead').textContent=st.r;
+  $('storyText').textContent=st.s;$('storyMoral').textContent=st.m;
+  const el=$('s3');if(el)el.scrollTop=0}
+function renderStory(){storyI=Math.floor(Math.random()*STORIES.length);paintStory()}
+function newStory(){storyI=(storyI+1+Math.floor(Math.random()*(STORIES.length-1)))%STORIES.length;paintStory()}
+
+/* ============================= BREATHE ============================= */
+let medDur=120,medLeft=120,medRun=false,medTimer=null,medBreath=null;
+function fmt(s){s=Math.max(0,s);return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function renderMed(){$('medTime').textContent=fmt(medLeft)}
+function setMed(m,btn){medDur=m*60;medReset();
+  document.querySelectorAll('#medChips .chip').forEach(x=>x.classList.remove('on'));btn.classList.add('on')}
+function breathe(){$('medPhase').textContent='Breathe in…';$('medBall').style.transform='scale(1.5)';
+  setTimeout(()=>{if(medRun){$('medPhase').textContent='Breathe out…';$('medBall').style.transform='scale(1)'}},4000)}
+function medToggle(){
+  if(medRun){clearInterval(medTimer);clearInterval(medBreath);medRun=false;
+    $('medBtn').textContent='▶ Resume';$('medPhase').textContent='Paused';return}
+  medRun=true;$('medBtn').textContent='⏸ Pause';$('medBall').textContent='';breathe();
+  medBreath=setInterval(breathe,8000);
+  medTimer=setInterval(()=>{medLeft--;$('medTime').textContent=fmt(medLeft);
+    if(medLeft<=0){clearInterval(medTimer);clearInterval(medBreath);medRun=false;
+      $('medPhase').textContent='Complete 🙏';$('medBall').style.transform='scale(1)';$('medBall').textContent='done';
+      $('medBtn').textContent='▶ Start';chime();DAY.med=true;saveDay()}},1000)}
+function medReset(){clearInterval(medTimer);clearInterval(medBreath);medRun=false;medLeft=medDur;
+  $('medTime').textContent=fmt(medLeft);$('medPhase').textContent='Press start when ready';
+  $('medBtn').textContent='▶ Start';$('medBall').style.transform='scale(1)';$('medBall').textContent='start'}
+function chime(){try{const ctx=new (window.AudioContext||window.webkitAudioContext)();
+  [523,659,784].forEach((f,i)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);
+  o.frequency.value=f;g.gain.setValueAtTime(0.001,ctx.currentTime+i*0.35);
+  g.gain.exponentialRampToValueAtTime(0.18,ctx.currentTime+i*0.35+0.05);
+  g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+i*0.35+1.2);
+  o.start(ctx.currentTime+i*0.35);o.stop(ctx.currentTime+i*0.35+1.3)})}catch(e){}}
+
+/* ============================= SOFTWARE (one card at a time) ============================= */
+let softI=0,softMax=0;
+function softStart(){softI=0;softMax=0;paintSoft()}
+function softRestart(){softStart()}
+function paintSoft(){
+  const list=S.affirms;
+  if(!list.length){$('softCat').textContent='';$('softTxt').textContent='No reminders yet — add some in Settings.';
+    $('softHint').textContent='';$('softDots').innerHTML='';return}
+  softI=Math.max(0,Math.min(softI,list.length-1));
+  softMax=Math.max(softMax,softI);
+  const [cat,txt]=parsePair(list[softI]);
+  $('softCat').textContent=cat||'Daily Reminder';
+  $('softTxt').textContent=txt;
+  const last=softI===list.length-1;
+  $('softHint').textContent=(softI+1)+' of '+list.length+(last?' — that\'s the whole system.':' · tap for the next one');
+  const dots=$('softDots');dots.innerHTML='';
+  list.forEach((_,i)=>{const d=document.createElement('div');
+    d.className='soft-dot'+(i===softI?' now':(i<=softMax?' seen':''));dots.appendChild(d)});
+  $('softGo').textContent=last?'Software Loaded ✓':'Next reminder →';
+}
+function softNext(){if(softI<S.affirms.length-1){softI++;paintSoft()}else{mark(5,'done');go(6)}}
+function softGoAction(){softNext()}
+function softPrev(){if(softI>0){softI--;paintSoft()}}
+
+/* ============================= THE MINI (5x5 crossword) ============================= */
+let CW=null;
+function cwPuzzle(){return PUZZLES[dayOfYear()%PUZZLES.length]}
+function cwBuild(p){
+  const g=p.r.map(r=>r.split(''));
+  const num={},cells=[],across=[],down=[];let n=0;
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+    if(g[r][c]==='#')continue;
+    const startA=(c===0||g[r][c-1]==='#')&&(c<4&&g[r][c+1]!=='#');
+    const startD=(r===0||g[r-1][c]==='#')&&(r<4&&g[r+1][c]!=='#');
+    if(startA||startD)num[r+','+c]=++n;
+    if(startA){const e=[];for(let i=c;i<5&&g[r][i]!=='#';i++)e.push([r,i]);across.push({n:n,cells:e,dir:'a'})}
+    if(startD){const e=[];for(let i=r;i<5&&g[i][c]!=='#';i++)e.push([i,c]);down.push({n:n,cells:e,dir:'d'})}
+  }
+  [].concat(across,down).forEach(e=>{
+    e.answer=e.cells.map(([r,c])=>g[r][c]).join('');
+    e.clue=p.c[e.answer]||'';
+  });
+  return {g:g,num:num,across:across,down:down,entries:across.concat(down)};
+}
+function cwOpen(){
+  const p=cwPuzzle();
+  CW=cwBuild(p);
+  CW.key='flCW-'+todayKey();
+  CW.letters=readJSON(CW.key,{});
+  CW.dir='a';CW.sel=null;
+  cwRender();
+  const first=CW.across[0];
+  cwSelect(first.cells[0][0],first.cells[0][1],'a',false);
+}
+function cwRender(){
+  const grid=$('cwGrid');grid.innerHTML='';
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+    const cell=document.createElement('div');
+    if(CW.g[r][c]==='#'){cell.className='cw-cell blk';grid.appendChild(cell);continue}
+    cell.className='cw-cell';cell.id='cw-'+r+'-'+c;
+    const nm=CW.num[r+','+c];
+    if(nm)cell.innerHTML='<span class="cw-num">'+nm+'</span>';
+    const inp=document.createElement('input');
+    inp.type='text';inp.maxLength=1;inp.autocapitalize='characters';inp.autocomplete='off';
+    inp.spellcheck=false;inp.value=CW.letters[r+','+c]||'';
+    inp.onfocus=()=>cwSelect(r,c,CW.dir,false);
+    inp.onmousedown=e=>{if(CW.sel&&CW.sel[0]===r&&CW.sel[1]===c){e.preventDefault();cwSelect(r,c,CW.dir==='a'?'d':'a',true)}};
+    inp.oninput=e=>{
+      const v=(e.target.value||'').replace(/[^a-zA-Z]/g,'').toUpperCase().slice(-1);
+      e.target.value=v;
+      cell.classList.remove('bad','good');
+      if(v){CW.letters[r+','+c]=v;cwSave();cwStep(1)}else{delete CW.letters[r+','+c];cwSave()}
+      cwPaintList();
+    };
+    inp.onkeydown=e=>{
+      if(e.key==='Backspace'&&!e.target.value){e.preventDefault();cwStep(-1)}
+      else if(e.key==='ArrowRight'){e.preventDefault();cwMove(r,c+1,'a')}
+      else if(e.key==='ArrowLeft'){e.preventDefault();cwMove(r,c-1,'a')}
+      else if(e.key==='ArrowDown'){e.preventDefault();cwMove(r+1,c,'d')}
+      else if(e.key==='ArrowUp'){e.preventDefault();cwMove(r-1,c,'d')}
+      else if(e.key===' '){e.preventDefault();cwSelect(r,c,CW.dir==='a'?'d':'a',true)}
+      else if(e.key==='Enter'){e.preventDefault();cwCheck()}
+    };
+    cell.appendChild(inp);grid.appendChild(cell);
+  }
+  cwPaintList();
+}
+function cwSave(){try{localStorage.setItem(CW.key,JSON.stringify(CW.letters))}catch(e){}}
+function cwEntryAt(r,c,dir){
+  return CW.entries.find(e=>e.dir===dir&&e.cells.some(x=>x[0]===r&&x[1]===c));
+}
+function cwSelect(r,c,dir,focus){
+  if(CW.g[r][c]==='#')return;
+  if(!cwEntryAt(r,c,dir))dir=dir==='a'?'d':'a';
+  CW.sel=[r,c];CW.dir=dir;
+  const e=cwEntryAt(r,c,dir);
+  document.querySelectorAll('.cw-cell').forEach(x=>x.classList.remove('hl','sel'));
+  if(e)e.cells.forEach(([rr,cc])=>{const el=$('cw-'+rr+'-'+cc);if(el)el.classList.add('hl')});
+  const cur=$('cw-'+r+'-'+c);if(cur)cur.classList.add('sel');
+  if(e){$('cwClueL').textContent=(dir==='a'?'Across':'Down')+' · '+e.n;$('cwClueT').textContent=e.clue}
+  if(focus&&cur)cur.querySelector('input').focus();
+  cwPaintList();
+}
+function cwMove(r,c,dir){
+  if(r<0||r>4||c<0||c>4||CW.g[r][c]==='#')return;
+  cwSelect(r,c,dir,true);
+}
+function cwStep(d){
+  if(!CW.sel)return;
+  const [r,c]=CW.sel;
+  const e=cwEntryAt(r,c,CW.dir);if(!e)return;
+  const i=e.cells.findIndex(x=>x[0]===r&&x[1]===c);
+  const nx=e.cells[i+d];
+  if(nx)cwSelect(nx[0],nx[1],CW.dir,true);
+}
+function cwWordDone(e){return e.cells.every(([r,c])=>(CW.letters[r+','+c]||'')===e.answer[e.cells.findIndex(x=>x[0]===r&&x[1]===c)])}
+function cwPaintList(){
+  ['across','down'].forEach(k=>{
+    const box=$(k==='across'?'cwAcross':'cwDown');box.innerHTML='';
+    CW[k].forEach(e=>{
+      const d=document.createElement('div');
+      const sel=CW.sel&&CW.dir===(k==='across'?'a':'d')&&e.cells.some(x=>x[0]===CW.sel[0]&&x[1]===CW.sel[1]);
+      d.className='cw-li'+(sel?' on':'')+(cwWordDone(e)?' solved':'');
+      d.textContent=e.n+'. '+e.clue;
+      d.onclick=()=>cwSelect(e.cells[0][0],e.cells[0][1],e.dir,true);
+      box.appendChild(d);
+    });
+  });
+}
+function cwAllFilled(){return CW.entries.every(e=>e.cells.every(([r,c])=>CW.letters[r+','+c]))}
+function cwSolvedNow(){
+  return CW.entries.every(e=>e.cells.every(([r,c],i)=>(CW.letters[r+','+c]||'')===e.answer[i]));
+}
+function cwCheck(){
+  let wrong=0,blank=0;
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+    if(CW.g[r][c]==='#')continue;
+    const el=$('cw-'+r+'-'+c);el.classList.remove('bad','good');
+    const v=CW.letters[r+','+c];
+    if(!v){blank++;continue}
+    if(v===CW.g[r][c])el.classList.add('good');else{el.classList.add('bad');wrong++}
+  }
+  const m=$('cwMsg');
+  if(!wrong&&!blank){cwWin()}
+  else if(wrong){m.style.color='#e08272';m.textContent=wrong+(wrong===1?' letter is':' letters are')+' off — fixable.'}
+  else{m.style.color='var(--text3)';m.textContent='So far so good — '+blank+' to go.'}
+}
+function cwWin(){
+  const m=$('cwMsg');m.style.color='var(--green)';m.textContent='✅ Solved. Brain is officially awake.';
+  if(!DAY.cwSolved){DAY.cwSolved=true;saveDay();chime()}
+}
+function cwRevealWord(){
+  if(!CW.sel)return;
+  const e=cwEntryAt(CW.sel[0],CW.sel[1],CW.dir);if(!e)return;
+  e.cells.forEach(([r,c],i)=>{CW.letters[r+','+c]=e.answer[i];
+    const el=$('cw-'+r+'-'+c);el.querySelector('input').value=e.answer[i];el.classList.remove('bad')});
+  cwSave();cwPaintList();
+  if(cwSolvedNow())cwWin();
+  else{$('cwMsg').style.color='var(--gold)';$('cwMsg').textContent='Filled in '+e.answer+'.'}
+}
+function cwRevealAll(){
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+    if(CW.g[r][c]==='#')continue;
+    CW.letters[r+','+c]=CW.g[r][c];
+    const el=$('cw-'+r+'-'+c);el.querySelector('input').value=CW.g[r][c];el.classList.remove('bad','good');
+  }
+  cwSave();cwPaintList();
+  $('cwMsg').style.color='var(--gold)';$('cwMsg').textContent='Answers filled in. Tomorrow brings a new one.';
+}
+function cwClear(){
+  CW.letters={};cwSave();
+  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+    if(CW.g[r][c]==='#')continue;
+    const el=$('cw-'+r+'-'+c);el.querySelector('input').value='';el.classList.remove('bad','good');
+  }
+  $('cwMsg').textContent='';cwPaintList();
+}
+
+/* ============================= LAUNCH / RECAP ============================= */
+function renderRecap(){
+  saveDay();
+  const open=[];for(let i=1;i<=7;i++){if(statusOf(i)!=='done')open.push(STEP_NAMES[i-1])}
+  const rows=[];
+  const add=(l,t)=>{if(t&&String(t).trim())rows.push('<div class="recap-item"><div class="recap-l">'+l+
+    '</div><div class="recap-t">'+esc(t)+'</div></div>')};
+  add("WIN — What's Important Now",DAY.win);
+  add('Top 3',[DAY.t1,DAY.t2,DAY.t3].filter(Boolean).map((x,i)=>(i+1)+'. '+x).join('\n'));
+  add('Purged',DAY.purge);
+  $('recapBox').innerHTML=(open.length?'<div class="open-warn">Still open: '+open.join(', ')+
+    ' — tap the bar up top to jump back.</div>':'')+
+    (rows.length?rows.join(''):'<div class="p">Nothing entered yet — go back and fill in your plan.</div>');
+  const y=new Date();y.setDate(y.getDate()-1);
+  const yd=readJSON('flDay-'+dateKey(y),{});
+  const bits=[];
+  if(yd.note)bits.push("Yesterday's note: "+yd.note);
+  if(yd.eve&&yd.eve.grateful)bits.push('Yesterday you were grateful for: '+yd.eve.grateful);
+  $('yestNote').textContent=bits.join('  ·  ');
+}
+function finishDay(){
+  saveDay();
+  if(localStorage.getItem('flDone')!==todayKey()){
+    const y=new Date();y.setDate(y.getDate()-1);
+    const last=localStorage.getItem('flDone');
+    const streak=(last===dateKey(y))?(+localStorage.getItem('flStreak')||0)+1:1;
+    try{localStorage.setItem('flStreak',streak);localStorage.setItem('flDone',todayKey())}catch(e){}
+  }
+  go(0);
+}
+
+/* ============================= EVENING BOOKEND ============================= */
+function renderEvening(){
+  DAY.eve=DAY.eve||{};
+  $('eveWin').textContent=DAY.win?('This morning you said: '+DAY.win):'No WIN was set this morning.';
+  document.querySelectorAll('#eveSeg button').forEach(b=>b.classList.remove('on'));
+  const map={yes:0,almost:1,no:2};
+  if(DAY.eve.hit!=null&&map[DAY.eve.hit]!=null)
+    document.querySelectorAll('#eveSeg button')[map[DAY.eve.hit]].classList.add('on');
+  $('eveGrateful').value=DAY.eve.grateful||'';
+  $('eveWinNote').value=DAY.eve.win||'';
+  const y=new Date();y.setDate(y.getDate()-1);
+  const yd=readJSON('flDay-'+dateKey(y),{});
+  $('eveYest').textContent=(yd.eve&&yd.eve.grateful)?('Last night you were grateful for: '+yd.eve.grateful):'';
+}
+function eveHit(v,btn){
+  DAY.eve=DAY.eve||{};DAY.eve.hit=v;
+  document.querySelectorAll('#eveSeg button').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');saveDay();
+}
+function saveEvening(){
+  DAY.eve=DAY.eve||{};
+  DAY.eve.grateful=$('eveGrateful').value.trim();
+  DAY.eve.win=$('eveWinNote').value.trim();
+  DAY.eve.saved=true;DAY.eve.at=new Date().toISOString();
+  saveDay();
+  try{localStorage.setItem('flEve',todayKey())}catch(e){}
+  go(0);
+}
+
+/* ============================= SETTINGS ============================= */
+function openSettings(){
+  $('setAffirms').value=S.affirms.join('\n');
+  $('setQuotes').value=S.quotes.join('\n');
+  $('backupMsg').textContent='';
+  $('verLine').textContent='First Light · '+APP_VERSION;
+  show('s9');
+}
+function saveSettings(){
+  const a=$('setAffirms').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  const q=$('setQuotes').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  S.affirms=a.length?a:DEF_AFFIRMS.slice();
+  S.quotes=q.length?q:DEF_QUOTES.slice();
+  try{localStorage.setItem('flSettings',JSON.stringify({affirms:S.affirms,quotes:S.quotes}))}catch(e){}
+  sparkI=null;softI=0;
+  go(0);
+}
+
+/* ============================= EXPORT / IMPORT ============================= */
+function collectData(){
+  const out={app:'first-light',version:APP_VERSION,exported:new Date().toISOString(),data:{}};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.indexOf('fl')===0)out.data[k]=localStorage.getItem(k);
+  }
+  return out;
+}
+function backupName(){return 'first-light-backup-'+todayKey()+'.json'}
+function exportData(){
+  const txt=JSON.stringify(collectData(),null,2);
+  try{
+    const blob=new Blob([txt],{type:'application/json'});
+    const url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=backupName();
+    document.body.appendChild(a);a.click();document.body.removeChild(a);
+    setTimeout(()=>URL.revokeObjectURL(url),2000);
+    $('backupMsg').textContent='Saved '+backupName()+' to your downloads. Keep it somewhere safe.';
+  }catch(e){
+    copyData();
+  }
+}
+function copyData(){
+  const txt=JSON.stringify(collectData(),null,2);
+  const done=()=>{$('backupMsg').textContent='Backup copied to the clipboard — paste it into a note or an email to yourself.'};
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done,()=>fallbackCopy(txt,done));
+  }else fallbackCopy(txt,done);
+}
+function fallbackCopy(txt,done){
+  const t=document.createElement('textarea');t.value=txt;t.style.position='fixed';t.style.opacity='0';
+  document.body.appendChild(t);t.select();
+  try{document.execCommand('copy');done()}catch(e){$('backupMsg').textContent='Could not copy automatically. Use Export instead.'}
+  document.body.removeChild(t);
+}
+function importFile(input){
+  const f=input.files&&input.files[0];if(!f)return;
+  const rd=new FileReader();
+  rd.onload=()=>{applyImport(String(rd.result));input.value=''};
+  rd.onerror=()=>{$('backupMsg').textContent='Could not read that file.';input.value=''};
+  rd.readAsText(f);
+}
+function applyImport(text){
+  let obj;
+  try{obj=JSON.parse(text)}catch(e){$('backupMsg').textContent='That file is not a First Light backup (bad JSON).';return}
+  const data=obj&&obj.data&&typeof obj.data==='object'?obj.data:null;
+  if(!data){$('backupMsg').textContent='That file is not a First Light backup.';return}
+  const keys=Object.keys(data).filter(k=>k.indexOf('fl')===0);
+  if(!keys.length){$('backupMsg').textContent='Nothing to restore in that file.';return}
+  if(!confirm('Restore '+keys.length+' saved items? This replaces what is on this device now.'))return;
+  keys.forEach(k=>{try{localStorage.setItem(k,String(data[k]))}catch(e){}});
+  $('backupMsg').textContent='Restored. Reloading…';
+  setTimeout(()=>location.reload(),700);
+}
+
+/* ============================= PWA ============================= */
+const APP_VERSION='v1.0';
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault();deferredPrompt=e;
+  const b=$('installBtn');if(b)b.style.display='';
+});
+function doInstall(){
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  deferredPrompt.userChoice.then(()=>{deferredPrompt=null;const b=$('installBtn');if(b)b.style.display='none'});
+}
+if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){
+  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{})});
+}
+
+/* ============================= BOOT ============================= */
+FIELDS.forEach(k=>{const el=$(k);if(el)el.addEventListener('input',()=>{DAY[k]=el.value;saveDay()})});
+loadDayFields();
+syncDash();
+let openedOn=todayKey();
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden||todayKey()===openedOn)return;
+  openedOn=todayKey();                       // midnight rolled over while the app was open
+  DAY=readJSON('flDay-'+openedOn,{});
+  FIELDS.forEach(k=>{const el=$(k);if(el)el.value=DAY[k]||''});
+  sparkI=null;storyI=null;
+  if($('s0').classList.contains('on'))syncDash();
+});
+</script>
+</body>
+</html>
