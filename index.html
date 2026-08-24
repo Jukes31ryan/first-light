@@ -313,7 +313,15 @@ justify-content:center;text-align:center;cursor:pointer}
 .soft-dot.now{background:var(--accent);opacity:1}
 
 /* ── the mini ── */
+.cw-meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;
+font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.cw-clock{font-variant-numeric:tabular-nums;letter-spacing:.08em}
 .cw-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:0;width:100%;max-width:288px;margin:0 auto}
+.cw-grid.big{max-width:322px}
+.cw-grid.big .cw-cell input{font-size:17px}
+.cw-grid.big .cw-num{font-size:7px}
+.cw-cell.won{animation:cellWon .5s var(--spring) both}
+@keyframes cellWon{0%{transform:scale(1)}45%{transform:scale(1.14);background:var(--accent-q)}100%{transform:scale(1)}}
 .cw-cell{position:relative;aspect-ratio:1;background:var(--cell);border:1px solid var(--rule2)}
 .cw-cell.blk{background:none;border:none}
 .cw-cell input{width:100%;height:100%;border:none;background:none;text-align:center;
@@ -533,7 +541,8 @@ color:var(--ink3);cursor:pointer}
 <div class="prog" id="p7"></div>
 <div class="main">
 <div class="h1 disp">The Mini</div>
-<div class="p">A five-by-five to wake the brain up. New puzzle every day.</div>
+<div class="p">Wake the brain up. A new one every day &mdash; and a bigger one at the weekend.</div>
+<div class="cw-meta"><span id="cwSize"></span><span class="cw-clock" id="cwTime">0:00</span></div>
 <div class="sheet" style="padding:26px 20px">
 <div class="cw-grid" id="cwGrid"></div>
 <div class="cw-clue"><div class="cw-clue-l" id="cwClueL">Across</div><div class="cw-clue-t disp" id="cwClueT"></div></div>
@@ -837,24 +846,32 @@ m:"Pick the one rabbit. That is precisely why today has exactly one WIN and not 
 ];
 
 const PUZZLES=[
-{r:["##RAM","#WAKE","LIMIT","OPEN#","TEN##"],c:{AKIN:"Similar to",LIMIT:"Line you decide not to cross",LOT:"Parking ___",MET:"Ran into",OPEN:"Not closed",RAM:"Male sheep with curled horns",RAMEN:"Noodles in a hot bowl",TEN:"A perfect score",WAKE:"What this whole app is for",WIPE:"Clean off the counter"}},
-{r:["##COW","#VANE","TASTE","ALTO#","BEE##"],c:{ALTO:"Voice between soprano and tenor",BEE:"Hive worker",CASTE:"Rigid social class",COW:"Barnyard milk source",ONTO:"Wise to, as a trick",TAB:"The bill at the bar",TASTE:"Sense at the dinner table",VALE:"Poetic valley",VANE:"Weather ___ on a barn roof",WEE:"Very small"}},
-{r:["##KEG","#MOLE","BOAST","IDLE#","TEA##"],c:{BIT:"Small piece",BOAST:"Brag",ELSE:"Something ___",GET:"Understand, informally",IDLE:"Running but going nowhere",KEG:"Barrel of beer",KOALA:"Eucalyptus eater",MODE:"Airplane ___",MOLE:"Tunneling garden pest",TEA:"Morning brew, for some"}},
-{r:["##MET","#FADE","ALIGN","GAZE#","EWE##"],c:{AGE:"It's just a number",ALIGN:"Line up",EDGE:"Border",EWE:"Female sheep",FADE:"Slowly disappear",FLAW:"Small imperfection",GAZE:"Long, steady look",MAIZE:"Corn, by another name",MET:"Encountered",TEN:"Digits on two hands"}},
-{r:["##DUG","#SAGE","GUILT","ALLY#","SKY##"],c:{ALLY:"Friend in a fight",DAILY:"Every single day",DUG:"Excavated",GAS:"Pedal on the right",GET:"Go fetch",GUILT:"What a conscience serves up",SAGE:"Wise elder (or a herb)",SKY:"Where first light shows up",SULK:"Pout",UGLY:"Hard on the eyes"}},
-{r:["##BET","#GAME","RESIN","UNIT#","MEN##"],c:{BASIN:"Bowl of the sink",BET:"Wager",EMIT:"Give off, as light",GAME:"It's on tonight",GENE:"DNA segment",MEN:"Guys",RESIN:"Sticky stuff from a pine",RUM:"Pirate's drink",TEN:"Pins in a bowling frame",UNIT:"One of many, measured"}},
-{r:["##SLY","#BLUE","HOIST","INCH#","SEE##"],c:{BLUE:"Sky color, or a mood",BONE:"Dog's prize",HIS:"Belonging to him",HOIST:"Raise the flag",INCH:"Move very slowly",LUSH:"Green and thick, as a lawn",SEE:"Get it now",SLICE:"Piece of pie",SLY:"Foxlike",YET:"So far"}},
-{r:["##VAN","#ROBE","BUILT","ONCE#","AGE##"],c:{ABLE:"Capable",AGE:"Vintage, in years",BOA:"Constricting snake",BUILT:"Constructed",NET:"What's left after costs",ONCE:"___ upon a time",ROBE:"Thrown on over pajamas",RUNG:"Step on a ladder",VAN:"Small moving truck",VOICE:"What you find, then use"}},
-{r:["##ICE","#CROW","PLANE","RATE#","OWE##"],c:{CLAW:"Cat's tool",CONE:"Ice cream holder",CROW:"Black bird that caws",EWE:"Lamb's mother",ICE:"Frozen water",IRATE:"Really angry",OWE:"Be in debt",PLANE:"Way to fly",PRO:"Not an amateur",RATE:"Score it 1 to 10"}},
-{r:["##RAT","#FILE","WAGON","ACHE#","NET##"],c:{ACHE:"Dull, steady pain",ALOE:"Burn-soothing plant",FACE:"What you wash first thing",FILE:"Folder's contents",NET:"Hoop's fringe",RAT:"Subway rodent",RIGHT:"Correct",TEN:"Top of the scale",WAGON:"Little red ___",WAN:"Pale"}},
-{r:["##HIP","#LUTE","RAMEN","ATOM#","PER##"],c:{ATOM:"Smallest bit of an element",HIP:"Cool (or a joint)",HUMOR:"What the Laugh module delivers",ITEM:"Thing on a list",LATE:"Behind schedule",LUTE:"Old stringed instrument",PEN:"It beats the sword, supposedly",PER:"For each",RAMEN:"Instant noodles",RAP:"Knock sharply"}},
-{r:["##COY","#RIPE","SEVEN","PAIN#","ARC##"],c:{ARC:"Curve of the rising sun",CIVIC:"___ duty",COY:"Playfully shy",OPEN:"Unlocked",PAIN:"The first arrow, in the fable",REAR:"Back end",RIPE:"Ready to pick",SEVEN:"Steps in the morning sequence",SPA:"Place for a long soak",YEN:"Japanese money, or a craving"}},
-{r:["RAM##","IRON#","PILOT","#DATA","##RED"],c:{ARID:"Bone dry",DATA:"Numbers you can measure",IRON:"Pump it, or press with it",MOLAR:"Back tooth",NOTE:"Freestyle line at the end of the flow",PILOT:"One in the cockpit",RAM:"Battering ___",RED:"Stop sign color",RIP:"Tear",TAD:"A little bit"}},
-{r:["LED##","OVEN#","BELOW","#RATE","##YET"],c:{BELOW:"Under",DELAY:"Postponement",EVER:"At any time",LED:"Guided from the front",LOB:"High, soft throw",NOTE:"Short written message",OVEN:"Where the bread bakes",RATE:"Rank it",WET:"Just in from the rain",YET:"Nevertheless"}},
-{r:["BAD##","AREA#","GIANT","#ALTO","##TEN"],c:{ALTO:"Choir part",ANTE:"Poker's opening chip",AREA:"Space in square feet",ARIA:"Opera solo",BAD:"Not good",BAG:"Paper or plastic",DEALT:"Handed out the cards",GIANT:"Huge",TEN:"Fingers, all told",TON:"2,000 pounds"}},
-{r:["GYM##","NEAT#","ULTRA","#PEER","##SET"],c:{ART:"The ___ of War",GNU:"African antelope",GYM:"Place to sweat on purpose",MATES:"Partners",NEAT:"Tidy (or straight up)",PEER:"An equal, or to look closely",SET:"Ready, ___, go",TREE:"The trouble ___ in the fable",ULTRA:"Beyond extreme",YELP:"Sharp cry"}},
-{r:["SLY##","HOOD#","ENDOW","#GENE","##LED"],c:{DONE:"Finished \u2014 the green tile",ENDOW:"Gift generously",GENE:"Unit of heredity",HOOD:"Rain jacket's top",LED:"Was out front",LONG:"Not short",SHE:"Pronoun",SLY:"Cunning",WED:"Marry",YODEL:"Alpine warble"}},
-{r:["OLD##","AURA#","KNELT","#GATE","##DON"],c:{ALTO:"Not soprano, not tenor",AURA:"Vibe a person gives off",DON:"Put on, as a coat",DREAD:"Deep fear of what is coming",GATE:"Airport waiting spot",KNELT:"Went down on one knee",LUNG:"Breathing organ",OAK:"Mighty tree from an acorn",OLD:"Not new",TEN:"A perfect ___"}}
+{r:["##RAM","#WAKE","LIMIT","OPEN#","TEN##"],c:{AKIN:"Cut from the same cloth",LIMIT:"The sky's the ___",LOT:"Auction parcel",MET:"Ran into",OPEN:"Like an all-night diner",RAM:"It might butt in",RAMEN:"Dorm-room dinner",TEN:"Bo Derek, famously",WAKE:"Boat's trail, or a send-off for the departed",WIPE:"Erase, or a baby-bag staple"}},
+{r:["##COW","#VANE","TASTE","ALTO#","BEE##"],c:{ALTO:"Between soprano and tenor",BEE:"Spelling contest",CASTE:"Ladder you can't climb",COW:"Intimidate",ONTO:"Wise to",TAB:"It gets picked up after dinner",TASTE:"There's no accounting for it",VALE:"Poetic dale",VANE:"It knows which way the wind blows",WEE:"Like the hours after midnight"}},
+{r:["##KEG","#MOLE","BOAST","IDLE#","TEA##"],c:{BIT:"Small role, or a horse's mouthpiece",BOAST:"Blow your own horn",ELSE:"Or ___",GET:"Understand, informally",IDLE:"Running but going nowhere",KEG:"Party centerpiece, for short",KOALA:"Eucalyptus addict",MODE:"Most common value",MOLE:"Spy in the ranks",TEA:"Gossip, in slang"}},
+{r:["##MET","#FADE","ALIGN","GAZE#","EWE##"],c:{AGE:"It's just a number",ALIGN:"Get on the same page",EDGE:"Advantage",EWE:"She's got the wool",FADE:"What jeans and memories both do",FLAW:"Chink in the armor",GAZE:"Long look",MAIZE:"Corn, formally",MET:"Bumped into",TEN:"Digits on two hands"}},
+{r:["##DUG","#SAGE","GUILT","ALLY#","SKY##"],c:{ALLY:"Friend in a fight",DAILY:"Like this app, ideally",DUG:"Got to the bottom of it?",GAS:"Pedal on the right",GET:"Go fetch",GUILT:"The gift that keeps on giving",SAGE:"Wise one, or Thanksgiving seasoning",SKY:"Where first light shows up",SULK:"Pout",UGLY:"Hard on the eyes"}},
+{r:["##BET","#GAME","RESIN","UNIT#","MEN##"],c:{BASIN:"Sink bowl, or a river's drainage",BET:"You can ___ on it",EMIT:"Give off",GAME:"Willing \u2014 or what's on tonight",GENE:"Inherited bit",MEN:"Chess pieces, collectively",RESIN:"A pine's sticky output",RUM:"Pirate's tipple",TEN:"Pins in a frame",UNIT:"One of many, measured"}},
+{r:["##SLY","#BLUE","HOIST","INCH#","SEE##"],c:{BLUE:"Down, or overhead",BONE:"Dog's reward",HIS:"Towel label",HOIST:"Run up the flagpole",INCH:"Move by degrees",LUSH:"Thick and green",SEE:"Get it now",SLICE:"Golfer's mishit, or a piece of pie",SLY:"Foxy",YET:"Nevertheless"}},
+{r:["##VAN","#ROBE","BUILT","ONCE#","AGE##"],c:{ABLE:"Up to the task",AGE:"Mature, as cheddar",BOA:"Squeezer, or a feathery scarf",BUILT:"Put up",NET:"What's left after costs",ONCE:"___ upon a time",ROBE:"Thrown on over pajamas",RUNG:"Step up?",VAN:"Head of a procession",VOICE:"What you find, then use"}},
+{r:["##ICE","#CROW","PLANE","RATE#","OWE##"],c:{CLAW:"Cat's tool, or a crane's grabber",CONE:"It holds a scoop, or slows traffic",CROW:"Boast \u2014 or the bird that does",EWE:"Lamb's mother",ICE:"It breaks at a party",IRATE:"Seeing red",OWE:"Be in the red to",PLANE:"Carpenter's smoother, or a way to fly",PRO:"Not an amateur",RATE:"Score it 1 to 10"}},
+{r:["##RAT","#FILE","WAGON","ACHE#","NET##"],c:{ACHE:"Long, in a way",ALOE:"Burn soother",FACE:"What you wash first thing",FILE:"Nail smoother, or a folder's contents",NET:"Hoop's fringe",RAT:"Informer",RIGHT:"Not a privilege, but a ___",TEN:"Top of the scale",WAGON:"On the ___ (off the drink)",WAN:"Pale"}},
+{r:["##HIP","#LUTE","RAMEN","ATOM#","PER##"],c:{ATOM:"Splittable bit",HIP:"Cool \u2014 or a joint",HUMOR:"What the Laugh delivers",ITEM:"Thing on a list, or a couple in gossip",LATE:"Behind schedule, or the dearly departed",LUTE:"Renaissance strummer",PEN:"It's mightier than the sword",PER:"For each",RAMEN:"Instant noodles",RAP:"Knock, or a genre"}},
+{r:["##COY","#RIPE","SEVEN","PAIN#","ARC##"],c:{ARC:"The sun's path",CIVIC:"Honda model, or a duty",COY:"Playing hard to get",OPEN:"Unlocked",PAIN:"The first arrow, in the fable",REAR:"Bring up",RIPE:"Ready to pick, or smelling of it",SEVEN:"Steps in the morning sequence",SPA:"Place for a long soak",YEN:"Craving, or Tokyo money"}},
+{r:["RAM##","IRON#","PILOT","#DATA","##RED"],c:{ARID:"Bone dry",DATA:"What you can't improve without measuring",IRON:"Pump it, or press with it",MOLAR:"Grinder in the back",NOTE:"The freestyle line at the end",PILOT:"First episode, or the one flying",RAM:"Battering ___",RED:"In the ___",RIP:"Tear along the dotted line",TAD:"A little bit"}},
+{r:["LED##","OVEN#","BELOW","#RATE","##YET"],c:{BELOW:"Under",DELAY:"Airport announcement",EVER:"At any time",LED:"Was out front, or a modern bulb",LOB:"High, soft throw",NOTE:"Short written message",OVEN:"Where the bread bakes",RATE:"Rank it",WET:"Just in from the rain",YET:"So far"}},
+{r:["BAD##","AREA#","GIANT","#ALTO","##TEN"],c:{ALTO:"Choir part",ANTE:"Poker's opening chip",AREA:"Square feet",ARIA:"Opera solo",BAD:"Michael Jackson album",BAG:"Paper or plastic",DEALT:"Handed out the cards",GIANT:"Jack's foe",TEN:"Fingers, all told",TON:"2,000 pounds"}},
+{r:["GYM##","NEAT#","ULTRA","#PEER","##SET"],c:{ART:"The ___ of War",GNU:"Wildebeest",GYM:"Place to sweat on purpose",MATES:"Partners",NEAT:"Tidy \u2014 or how you take your whiskey",PEER:"An equal, or to look closely",SET:"Ready, ___, go",TREE:"The trouble ___ in the fable",ULTRA:"Beyond extreme",YELP:"Sharp cry, or a review site"}},
+{r:["SLY##","HOOD#","ENDOW","#GENE","##LED"],c:{DONE:"Finished",ENDOW:"Gift generously",GENE:"Unit of heredity",HOOD:"A jacket's top, or a car's",LED:"Guided",LONG:"Not short, or to yearn",SHE:"Pronoun",SLY:"Cunning",WED:"Marry",YODEL:"Alpine warble"}},
+{r:["OLD##","AURA#","KNELT","#GATE","##DON"],c:{ALTO:"Not soprano, not tenor",AURA:"Vibe a person gives off",DON:"Put on, as a coat \u2014 or a boss",DREAD:"Deep fear of what's coming",GATE:"Airport waiting spot",KNELT:"Went down on one knee",LUNG:"Breathing organ",OAK:"It starts as an acorn",OLD:"Not new",TEN:"A perfect ___"}}
+];
+const PUZZLES7=[
+{r:["YES#PET","EAT#AGE","TREASON","##ART##","COMMUTE","AWE#ROW","PER#EYE"],c:{AGE:"Mature",ARM:"Branch of the service, or to supply one",ART:"The ___ of War",AWE:"Shock and ___",CAP:"Upper limit",COMMUTE:"The grind before the grind \u2014 or to shorten a sentence",EAR:"You can lend it",EAT:"Have a bite",EGO:"It needs stroking",EWE:"Wool on the hoof",EYE:"The storm's calm middle",OWE:"Be down to someone",PASTURE:"Where an old horse gets put out",PER:"For each",PET:"Teacher's favorite",ROW:"A quarrel, or what rowers do",STEAMER:"Clam that gets its name from the cooking",TEN:"Perfect score",TOY:"Plaything",TREASON:"The only crime the U.S. Constitution bothers to define",YES:"The answer you're hoping for",YET:"All the same"}},
+{r:["LAG#TON","OIL#ADO","BLANKET","##SUE##","RESTORE","IRE#FUN","GAS#FED"],c:{ADO:"Much ___ About Nothing",AIL:"Trouble, as a patient",BLANKET:"Sweeping, as a statement",END:"At the ___ of the day",ERA:"Stretch of history",FED:"Nourished, or a G-man",FUN:"A barrel of laughs",GAS:"Pedal on the right",GLASSES:"You raise them, or you see through them",IRE:"Wrath",LAG:"Fall behind",LOB:"Gentle arc over the net",NOT:"Hardly",NUT:"Bolt's partner, or a fanatic",ODE:"Keats output",OIL:"It won't mix with water",RESTORE:"Bring back \u2014 what the import button does",RIG:"Set up, or fix dishonestly",RUE:"Regret",SUE:"Take to court",TAKEOFF:"A parody, or the start of a flight",TON:"A whole lot"}},
+{r:["SEW#GAS","PEA#RIP","ALREADY","##FAN##","SHARING","HER#TIE","EWE#ELM"],c:{AID:"Band-___",ALREADY:"Enough ___!",EAR:"Corn unit",EEL:"Slippery swimmer",ELM:"Nightmare street",EWE:"She's got the wool",FAN:"A supporter, or a cooler",GAS:"Fill 'er up with it",GEM:"A prize, or what's in the rough",GRANITE:"Countertop stone",HER:"Possessive pronoun",HEW:"Chop, or stick to (a line)",NIL:"Zip, in soccer",PEA:"A princess's problem",RIP:"Tear, or letters on a stone",SEW:"Patch up",SHARING:"It's caring, they say",SHE:"Pronoun",SPA:"Where you go to soak",SPY:"One in from the cold",TIE:"A draw, or neckwear",WARFARE:"Sun Tzu's subject"}},
+{r:["EVE#PEG","AIL#ORE","RADICAL","##ELK##","MARKETS","OIL#TOT","PRY#SPY"],c:{AIL:"Be under the weather",AIR:"Put it on the ___",EAR:"It hears you out",ELDERLY:"Getting on in years",ELK:"Antlered lodge member?",ERA:"A historical stretch",EVE:"The night before",GEL:"Hair goop, or what a plan finally does",ILK:"Of that ___",MARKETS:"Where bulls meet bears",MOP:"Floor cleaner, or a head of unruly hair",OIL:"Midnight ___",ORE:"It's mined for metal",PEG:"Take down a ___",POCKETS:"Deep ___ (wealth)",PRY:"Nose around",RADICAL:"Extreme \u2014 or a surfer's compliment",SPY:"I ___ with my little eye",STY:"Pig's place, or an eyelid bump",TOP:"Spinning toy, or the very best",TOT:"A little one, or a little drink",VIA:"By way of"}},
+{r:["PEP#SAD","OAR#TRY","PRODUCE","##CAM##","TREMBLE","WEE#LAY","ODD#EWE"],c:{ARC:"The sun's path",CAM:"Engine part that opens the valves",DAM:"A beaver's project",DYE:"Tint",EAR:"It gets lent",EWE:"Lamb's mother",EYE:"Needle's hole",LAW:"Murphy's ___",LAY:"Put down, or a ballad",OAR:"Blade in the water",ODD:"Not even",PEP:"___ talk",POP:"Soda, or dad",PROCEED:"Carry on",PRODUCE:"The grocery aisle, or to make",RED:"In the ___",SAD:"Blue",STUMBLE:"Trip up",TREMBLE:"Shake in your boots",TRY:"Give it a go",TWO:"It takes ___ to tango",WEE:"Small, or the hours after midnight"}},
+{r:["ACT#SEA","ROE#TAR","CONFIRM","##AIR##","CENTRAL","ART#EGO","WAS#DEW"],c:{ACT:"Part of a play, or to pretend",AGE:"It's just a number",AIR:"What you clear by talking it out",ARC:"A curve",ARM:"A limb, or to supply weapons",ART:"Sun Tzu's book, partly",CAW:"A crow's call",CENTRAL:"Grand ___ Station",CONFIRM:"Nail down",COO:"A dove's sound, or to talk sweetly",DEW:"Morning's first wet",EAR:"Ache spot",EGO:"It bruises easily",ERA:"An age",FIT:"In shape, or a tantrum",LOW:"Cattle sound, or not high",ROE:"Caviar, essentially",SEA:"The deep blue",STIRRED:"Shaken, not ___",TAR:"Road goo, or an old sailor",TENANTS:"They pay the landlord",WAS:"Used to be"}}
 ];
 
 /* ============================= STATE ============================= */
@@ -1317,39 +1334,63 @@ function carryOver(){
   DAY.items=left.map(t=>({id:uid(),text:t,done:false,carried:true}));
   saveDay();
 }
-/* ============================= THE MINI (5x5 crossword) ============================= */
-let CW=null;
-function cwPuzzle(){return PUZZLES[dayOfYear()%PUZZLES.length]}
+/* ============================= THE MINI ==============================
+   5x5 on weekdays, 7x7 at the weekend. Grid size is read from the puzzle,
+   so nothing below is hardcoded to a width. */
+let CW=null,cwTimer=null,cwStart=0,cwElapsed=0;
+function cwIsWeekend(){const d=new Date().getDay();return d===0||d===6}
+function cwPuzzle(){
+  const bank=cwIsWeekend()?PUZZLES7:PUZZLES;
+  return bank[dayOfYear()%bank.length];
+}
 function cwBuild(p){
+  const N=p.r.length;
   const g=p.r.map(r=>r.split(''));
-  const num={},cells=[],across=[],down=[];let n=0;
-  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+  const num={},across=[],down=[];let n=0;
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
     if(g[r][c]==='#')continue;
-    const startA=(c===0||g[r][c-1]==='#')&&(c<4&&g[r][c+1]!=='#');
-    const startD=(r===0||g[r-1][c]==='#')&&(r<4&&g[r+1][c]!=='#');
+    const startA=(c===0||g[r][c-1]==='#')&&(c<N-1&&g[r][c+1]!=='#');
+    const startD=(r===0||g[r-1][c]==='#')&&(r<N-1&&g[r+1][c]!=='#');
     if(startA||startD)num[r+','+c]=++n;
-    if(startA){const e=[];for(let i=c;i<5&&g[r][i]!=='#';i++)e.push([r,i]);across.push({n:n,cells:e,dir:'a'})}
-    if(startD){const e=[];for(let i=r;i<5&&g[i][c]!=='#';i++)e.push([i,c]);down.push({n:n,cells:e,dir:'d'})}
+    if(startA){const e=[];for(let i=c;i<N&&g[r][i]!=='#';i++)e.push([r,i]);across.push({n:n,cells:e,dir:'a'})}
+    if(startD){const e=[];for(let i=r;i<N&&g[i][c]!=='#';i++)e.push([i,c]);down.push({n:n,cells:e,dir:'d'})}
   }
   [].concat(across,down).forEach(e=>{
     e.answer=e.cells.map(([r,c])=>g[r][c]).join('');
     e.clue=p.c[e.answer]||'';
   });
-  return {g:g,num:num,across:across,down:down,entries:across.concat(down)};
+  return {N:N,g:g,num:num,across:across,down:down,entries:across.concat(down)};
 }
 function cwOpen(){
-  const p=cwPuzzle();
-  CW=cwBuild(p);
+  CW=cwBuild(cwPuzzle());
   CW.key='flCW-'+todayKey();
   CW.letters=readJSON(CW.key,{});
   CW.dir='a';CW.sel=null;
+  cwElapsed=+(readJSON(CW.key+'-t',{t:0}).t)||0;
+  cwStart=0;
+  $('cwSize').textContent=CW.N+'×'+CW.N+(cwIsWeekend()?' · weekend':'');
   cwRender();
   const first=CW.across[0];
   cwSelect(first.cells[0][0],first.cells[0][1],'a',false);
+  cwPaintTime();
 }
+/* the clock starts when you actually commit a letter, not when you arrive */
+function cwTick(){
+  if(DAY.cwSolved||cwStart)return;
+  cwStart=Date.now();
+  cwTimer=setInterval(()=>{cwPaintTime();cwSaveTime()},1000);
+}
+function cwNow(){return cwElapsed+(cwStart?Math.floor((Date.now()-cwStart)/1000):0)}
+function cwSaveTime(){try{localStorage.setItem(CW.key+'-t',JSON.stringify({t:cwNow()}))}catch(e){}}
+function cwStop(){if(cwTimer){clearInterval(cwTimer);cwTimer=null}
+  if(cwStart){cwElapsed=cwNow();cwStart=0;cwSaveTime()}}
+function cwPaintTime(){const el=$('cwTime');if(el)el.textContent=fmt(cwNow())}
 function cwRender(){
-  const grid=$('cwGrid');grid.innerHTML='';
-  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+  const N=CW.N,grid=$('cwGrid');
+  grid.style.gridTemplateColumns='repeat('+N+',1fr)';
+  grid.classList.toggle('big',N>5);
+  grid.innerHTML='';
+  for(let r=0;r<N;r++)for(let c=0;c<N;c++){
     const cell=document.createElement('div');
     if(CW.g[r][c]==='#'){cell.className='cw-cell blk';grid.appendChild(cell);continue}
     cell.className='cw-cell';cell.id='cw-'+r+'-'+c;
@@ -1364,8 +1405,10 @@ function cwRender(){
       const v=(e.target.value||'').replace(/[^a-zA-Z]/g,'').toUpperCase().slice(-1);
       e.target.value=v;
       cell.classList.remove('bad','good');
-      if(v){CW.letters[r+','+c]=v;cwSave();cwStep(1)}else{delete CW.letters[r+','+c];cwSave()}
+      if(v){cwTick();CW.letters[r+','+c]=v;cwSave();haptic(5);cwStep(1)}
+      else{delete CW.letters[r+','+c];cwSave()}
       cwPaintList();
+      if(cwAllFilled()&&cwSolvedNow())cwWin();
     };
     inp.onkeydown=e=>{
       if(e.key==='Backspace'&&!e.target.value){e.preventDefault();cwStep(-1)}
@@ -1381,9 +1424,7 @@ function cwRender(){
   cwPaintList();
 }
 function cwSave(){try{localStorage.setItem(CW.key,JSON.stringify(CW.letters))}catch(e){}}
-function cwEntryAt(r,c,dir){
-  return CW.entries.find(e=>e.dir===dir&&e.cells.some(x=>x[0]===r&&x[1]===c));
-}
+function cwEntryAt(r,c,dir){return CW.entries.find(e=>e.dir===dir&&e.cells.some(x=>x[0]===r&&x[1]===c))}
 function cwSelect(r,c,dir,focus){
   if(CW.g[r][c]==='#')return;
   if(!cwEntryAt(r,c,dir))dir=dir==='a'?'d':'a';
@@ -1397,7 +1438,7 @@ function cwSelect(r,c,dir,focus){
   cwPaintList();
 }
 function cwMove(r,c,dir){
-  if(r<0||r>4||c<0||c>4||CW.g[r][c]==='#')return;
+  if(r<0||r>=CW.N||c<0||c>=CW.N||CW.g[r][c]==='#')return;
   cwSelect(r,c,dir,true);
 }
 function cwStep(d){
@@ -1408,7 +1449,7 @@ function cwStep(d){
   const nx=e.cells[i+d];
   if(nx)cwSelect(nx[0],nx[1],CW.dir,true);
 }
-function cwWordDone(e){return e.cells.every(([r,c])=>(CW.letters[r+','+c]||'')===e.answer[e.cells.findIndex(x=>x[0]===r&&x[1]===c)])}
+function cwWordDone(e){return e.cells.every(([r,c],i)=>(CW.letters[r+','+c]||'')===e.answer[i])}
 function cwPaintList(){
   ['across','down'].forEach(k=>{
     const box=$(k==='across'?'cwAcross':'cwDown');box.innerHTML='';
@@ -1423,12 +1464,10 @@ function cwPaintList(){
   });
 }
 function cwAllFilled(){return CW.entries.every(e=>e.cells.every(([r,c])=>CW.letters[r+','+c]))}
-function cwSolvedNow(){
-  return CW.entries.every(e=>e.cells.every(([r,c],i)=>(CW.letters[r+','+c]||'')===e.answer[i]));
-}
+function cwSolvedNow(){return CW.entries.every(e=>e.cells.every(([r,c],i)=>(CW.letters[r+','+c]||'')===e.answer[i]))}
 function cwCheck(){
   let wrong=0,blank=0;
-  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+  for(let r=0;r<CW.N;r++)for(let c=0;c<CW.N;c++){
     if(CW.g[r][c]==='#')continue;
     const el=$('cw-'+r+'-'+c);el.classList.remove('bad','good');
     const v=CW.letters[r+','+c];
@@ -1437,24 +1476,41 @@ function cwCheck(){
   }
   const m=$('cwMsg');
   if(!wrong&&!blank){cwWin()}
-  else if(wrong){m.style.color='var(--bad)';m.textContent=wrong+(wrong===1?' letter is':' letters are')+' off — fixable.'}
+  else if(wrong){m.style.color='var(--bad)';m.textContent=wrong+(wrong===1?' letter is':' letters are')+' off — fixable.';haptic([10,40,10])}
   else{m.style.color='var(--ink3)';m.textContent='So far so good — '+blank+' to go.'}
 }
+/* Solving it should feel like something. */
 function cwWin(){
-  const m=$('cwMsg');m.style.color='var(--done)';m.textContent='Solved. Brain is officially awake.';
-  if(!DAY.cwSolved){DAY.cwSolved=true;saveDay();chime()}
+  if(DAY.cwSolved)return;
+  cwStop();
+  DAY.cwSolved=true;DAY.cwTime=cwNow();saveDay();
+  const key='flBest'+CW.N;
+  const prev=+localStorage.getItem(key)||0;
+  const beat=(!prev||DAY.cwTime<prev);
+  if(beat){try{localStorage.setItem(key,DAY.cwTime)}catch(e){}}
+  burst();fanfare();haptic([18,40,22,40,60]);
+  const m=$('cwMsg');m.style.color='var(--done)';
+  m.textContent=beat
+    ? 'Solved in '+fmt(DAY.cwTime)+' — a new best.'
+    : 'Solved in '+fmt(DAY.cwTime)+'. Best: '+fmt(prev)+'.';
+  document.querySelectorAll('.cw-cell:not(.blk)').forEach((el,i)=>{
+    el.classList.add('won');el.style.animationDelay=(i*22)+'ms';
+  });
+  mark(7,'done');
 }
 function cwRevealWord(){
   if(!CW.sel)return;
   const e=cwEntryAt(CW.sel[0],CW.sel[1],CW.dir);if(!e)return;
+  cwTick();
   e.cells.forEach(([r,c],i)=>{CW.letters[r+','+c]=e.answer[i];
     const el=$('cw-'+r+'-'+c);el.querySelector('input').value=e.answer[i];el.classList.remove('bad')});
-  cwSave();cwPaintList();
+  cwSave();cwPaintList();haptic(10);
   if(cwSolvedNow())cwWin();
   else{$('cwMsg').style.color='var(--skip)';$('cwMsg').textContent='Filled in '+e.answer+'.'}
 }
 function cwRevealAll(){
-  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+  cwStop();
+  for(let r=0;r<CW.N;r++)for(let c=0;c<CW.N;c++){
     if(CW.g[r][c]==='#')continue;
     CW.letters[r+','+c]=CW.g[r][c];
     const el=$('cw-'+r+'-'+c);el.querySelector('input').value=CW.g[r][c];el.classList.remove('bad','good');
@@ -1464,9 +1520,9 @@ function cwRevealAll(){
 }
 function cwClear(){
   CW.letters={};cwSave();
-  for(let r=0;r<5;r++)for(let c=0;c<5;c++){
+  for(let r=0;r<CW.N;r++)for(let c=0;c<CW.N;c++){
     if(CW.g[r][c]==='#')continue;
-    const el=$('cw-'+r+'-'+c);el.querySelector('input').value='';el.classList.remove('bad','good');
+    const el=$('cw-'+r+'-'+c);el.querySelector('input').value='';el.classList.remove('bad','good','won');
   }
   $('cwMsg').textContent='';cwPaintList();
 }
