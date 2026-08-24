@@ -285,6 +285,28 @@ transition:transform .2s var(--spring),background .25s ease,border-color .25s ea
 .win-choice.on .star{opacity:1;color:var(--accent);transform:scale(1.22) rotate(72deg)}
 .win-choice.on .star svg{fill:var(--accent)}
 
+/* ── the month, and looking back ── */
+.month{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:18px}
+.m-h{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);
+text-align:center;padding-bottom:4px}
+.m-d{aspect-ratio:1;border-radius:2px;border:1px solid var(--rule);display:flex;align-items:center;
+justify-content:center;font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.m-d.blank{border-color:transparent}
+.m-d.on{background:var(--accent);border-color:var(--accent);color:var(--btn-text);font-weight:600}
+.m-d.today{border-color:var(--ink);border-width:1.5px;color:var(--ink);font-weight:600}
+.m-d.on.today{color:var(--btn-text)}
+.m-d.future{opacity:.35}
+.lookback{margin-top:22px;padding:0 0 3px;background:none;border:none;border-bottom:1px solid var(--rule2);
+font-family:inherit;font-size:12px;font-weight:500;color:var(--ink2);cursor:pointer}
+.look-day{padding:22px 0;border-bottom:1px solid var(--rule)}
+.look-date{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--ink3);
+display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.look-hit{font-weight:600}
+.look-win{font-size:18px;line-height:1.4;margin-top:10px;letter-spacing:-.008em}
+.look-sub{font-size:13px;color:var(--ink2);line-height:1.55;margin-top:8px}
+.look-sub b{font-weight:600;color:var(--ink3);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+display:block;margin-bottom:3px}
+
 /* ── breathe ── */
 .med{display:flex;flex-direction:column;align-items:center;padding:16px 0}
 .med-time{font-size:52px;font-weight:400;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
@@ -292,11 +314,12 @@ transition:transform .2s var(--spring),background .25s ease,border-color .25s ea
 .med-circle{position:relative;width:232px;height:232px;border-radius:50%;
 display:flex;align-items:center;justify-content:center;margin:34px 0 6px}
 .med-ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--rule2);opacity:.55}
+.med-circle{--breath:4.4s}
 .med-glow{position:absolute;width:200px;height:200px;border-radius:50%;
 background:radial-gradient(circle,var(--accent) 0%,transparent 66%);opacity:.30;
-transition:transform 4.4s cubic-bezier(.37,0,.24,1),opacity 4.4s cubic-bezier(.37,0,.24,1)}
+transition:transform var(--breath) cubic-bezier(.37,0,.24,1),opacity var(--breath) cubic-bezier(.37,0,.24,1)}
 .med-inner{position:relative;width:104px;height:104px;border-radius:50%;background:var(--accent);opacity:.22;
-transition:transform 4.4s cubic-bezier(.37,0,.24,1),opacity 4.4s cubic-bezier(.37,0,.24,1)}
+transition:transform var(--breath) cubic-bezier(.37,0,.24,1),opacity var(--breath) cubic-bezier(.37,0,.24,1)}
 .med-circle.inhale .med-inner{transform:scale(1.62);opacity:.42}
 .med-circle.inhale .med-glow{transform:scale(1.3);opacity:.72}
 .med-circle.running .med-glow{animation:none}
@@ -398,6 +421,12 @@ color:var(--ink3);cursor:pointer}
 <div class="idx" id="idx"></div>
 </div>
 
+<div class="sect">
+<div class="sect-l"><span id="monthName"></span><span id="monthCount"></span></div>
+<div class="month" id="month"></div>
+<button class="lookback" onclick="go(11)">Look back &#8594;</button>
+</div>
+
 <button class="begin" onclick="go(1)">Begin the sequence</button>
 </div>
 </div>
@@ -458,6 +487,12 @@ color:var(--ink3);cursor:pointer}
 <button class="chip" onclick="setMed(5,this)">5 min</button>
 <button class="chip" onclick="setMed(10,this)">10 min</button>
 </div>
+<div class="chips" id="patChips" style="margin-top:12px">
+<button class="chip on" data-pat="calm" onclick="setPat('calm',this)">Calm 4&ndash;4</button>
+<button class="chip" data-pat="box" onclick="setPat('box',this)">Box 4&ndash;4&ndash;4&ndash;4</button>
+<button class="chip" data-pat="478" onclick="setPat('478',this)">4&ndash;7&ndash;8</button>
+</div>
+<div class="p" id="patNote" style="margin-top:12px;font-size:12px"></div>
 <div class="sheet med">
 <div class="med-time disp" id="medTime">2:00</div>
 <div class="med-phase" id="medPhase">Press start when ready</div>
@@ -618,6 +653,16 @@ color:var(--ink3);cursor:pointer}
 <div class="set-note" id="verLine"></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-go" onclick="saveSettings()">Save</button></div></div>
+</div>
+
+<!-- 11 LOOK BACK -->
+<div class="scr" id="s11">
+<div class="nav"><button class="nav-btn" onclick="go(0)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Look back</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="main">
+<div class="h1 disp">Look back</div>
+<div class="p">Every morning you showed up, and what you said mattered that day.</div>
+<div id="lookList"></div>
+</div>
 </div>
 
 <!-- 10 EVENING -->
@@ -1015,6 +1060,7 @@ function go(n){
   haptic(7);                                 // touch feedback yes, sound no
   if(n===0){syncDash();show('s0',dir);return}
   if(n===10){renderEvening();show('s10',dir);return}
+  if(n===11){renderLook();show('s11',dir);return}
   if(n>=1&&n<=7)prog(n);
   show('s'+n,dir);
   if(n===1)renderSpark();
@@ -1041,13 +1087,15 @@ const MARK={done:'Done',skip:'Skipped',todo:''};
 function syncDash(){
   const now=new Date();
   const streak=+localStorage.getItem('flStreak')||0;
+  const info=streakInfo();
+  const savedTxt=info.saved?' · '+info.saved+' saved':'';
   const dateTxt=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
   if(streak&&pendingStreak){
-    $('dashDate').innerHTML=dateTxt+'  ·  Day <span id="streakN">'+(streak-1)+'</span>';
+    $('dashDate').innerHTML=dateTxt+'  ·  Day <span id="streakN">'+(streak-1)+'</span>'+savedTxt;
     pendingStreak=false;
     setTimeout(()=>{const el=$('streakN');if(el)countUp(el,streak,900)},260);
   }else{
-    $('dashDate').textContent=dateTxt+(streak?'  ·  Day '+streak:'');
+    $('dashDate').textContent=dateTxt+(streak?'  ·  Day '+streak+savedTxt:'');
   }
 
   if(sparkI===null)sparkI=Math.floor(Math.random()*S.quotes.length);
@@ -1063,6 +1111,8 @@ function syncDash(){
   $('focusMark').textContent=statusOf(6)==='done'?'Set':'';
   $('focusMark').style.color='var(--done)';
   $('winList').innerHTML=t3.map((x,i)=>'<div class="win-item"><i>'+(i+1)+'</i><span>'+esc(x)+'</span></div>').join('');
+
+  renderMonth();
 
   // the sequence, as a contents list
   const done=[1,2,3,4,5,6,7].filter(n=>statusOf(n)==='done').length;
@@ -1099,6 +1149,55 @@ function syncDash(){
   justDone=null;
 }
 
+/* the streak as a shape, not just a number */
+function renderMonth(){
+  const box=$('month');if(!box)return;
+  const h=history(),now=new Date();
+  const y=now.getFullYear(),m=now.getMonth();
+  $('monthName').textContent=now.toLocaleDateString(undefined,{month:'long'});
+  const first=new Date(y,m,1),days=new Date(y,m+1,0).getDate();
+  let count=0;
+  box.innerHTML='';
+  ['M','T','W','T','F','S','S'].forEach(d=>{
+    const e=document.createElement('div');e.className='m-h';e.textContent=d;box.appendChild(e);
+  });
+  let lead=(first.getDay()+6)%7;                 // weeks start Monday
+  for(let i=0;i<lead;i++){const e=document.createElement('div');e.className='m-d blank';box.appendChild(e)}
+  for(let d=1;d<=days;d++){
+    const k=dateKey(new Date(y,m,d));
+    const e=document.createElement('div');
+    const on=!!h[k],isToday=k===todayKey();
+    if(on)count++;
+    e.className='m-d'+(on?' on':'')+(isToday?' today':'')+(k>todayKey()?' future':'');
+    e.textContent=d;e.title=k;
+    box.appendChild(e);
+  }
+  $('monthCount').textContent=count+' of '+days;
+}
+
+function renderLook(){
+  const h=history();
+  const keys=Object.keys(h).sort().reverse().slice(0,60);
+  const box=$('lookList');box.innerHTML='';
+  if(!keys.length){box.innerHTML='<div class="p" style="margin-top:26px">Nothing yet. Finish a morning and it starts here.</div>';return}
+  keys.forEach(k=>{
+    const d=readJSON('flDay-'+k,{});
+    const eve=d.eve||{};
+    const hit=eve.hit;
+    const el=document.createElement('div');el.className='look-day';
+    const nice=new Date(k+'T12:00:00').toLocaleDateString(undefined,{weekday:'short',month:'short',day:'numeric'});
+    const hitTxt=hit==='yes'?'<span class="look-hit" style="color:var(--done)">Hit it</span>'
+      :hit==='almost'?'<span class="look-hit" style="color:var(--skip)">Almost</span>'
+      :hit==='no'?'<span class="look-hit" style="color:var(--ink3)">Missed</span>':'';
+    el.innerHTML='<div class="look-date"><span>'+nice+'</span>'+hitTxt+'</div>'+
+      (d.win?'<div class="look-win disp">'+esc(d.win)+'</div>':'<div class="look-win disp" style="color:var(--ink3)">No WIN set</div>')+
+      (eve.grateful?'<div class="look-sub"><b>Grateful for</b>'+esc(eve.grateful)+'</div>':'')+
+      (eve.win?'<div class="look-sub"><b>Win of the day</b>'+esc(eve.win)+'</div>':'')+
+      (d.note?'<div class="look-sub"><b>Note</b>'+esc(d.note)+'</div>':'');
+    box.appendChild(el);
+  });
+}
+
 /* ============================= SPARK / LAUGH / STORY ============================= */
 function renderSpark(){sparkI=Math.floor(Math.random()*S.quotes.length);paintSpark()}
 function paintSpark(){const [q,a]=parsePair(S.quotes[sparkI]);
@@ -1120,28 +1219,53 @@ function fmt(s){s=Math.max(0,s);return Math.floor(s/60)+':'+String(s%60).padStar
 function renderMed(){$('medTime').textContent=fmt(medLeft)}
 function setMed(m,btn){medDur=m*60;medReset();
   document.querySelectorAll('#medChips .chip').forEach(x=>x.classList.remove('on'));btn.classList.add('on')}
-/* One breath = 4.4s in, a beat, 4.4s out. The circle carries it; the
-   text only names what the circle is already doing. */
-const BREATH_IN=4400,BREATH_HOLD=700,BREATH_CYCLE=BREATH_IN*2+BREATH_HOLD*2;
+/* A pattern is a list of phases: [label, seconds, expanded?]. The circle
+   eases to whatever phase is running, so a new pattern is just data. */
+const PATTERNS={
+  calm:{note:'A long, even breath. Nothing to count.',
+        phases:[['Breathe in',4.4,1],['Hold',0.7,1],['Breathe out',4.4,0],['Hold',0.7,0]]},
+  box :{note:'Four counts each way. What people use before something hard.',
+        phases:[['Breathe in',4,1],['Hold',4,1],['Breathe out',4,0],['Hold',4,0]]},
+  '478':{note:'A long exhale, twice the inhale. The one for settling down.',
+        phases:[['Breathe in',4,1],['Hold',7,1],['Breathe out',8,0]]}
+};
+let medPat='calm',medPhaseI=0,medPhaseT=null;
+function setPat(k,btn){
+  medPat=PATTERNS[k]?k:'calm';medPhaseI=0;
+  try{localStorage.setItem('flPattern',medPat)}catch(e){}
+  document.querySelectorAll('#patChips .chip').forEach(x=>x.classList.toggle('on',x.dataset.pat===medPat));
+  $('patNote').textContent=PATTERNS[medPat].note;
+  const c=$('medCircle');if(c)c.style.setProperty('--breath',PATTERNS[medPat].phases[0][1]+'s');
+  if(medRun){clearTimeout(medPhaseT);breathe()}
+}
 function breathe(){
   const c=$('medCircle');if(!c)return;
-  c.classList.add('inhale');$('medPhase').textContent='Breathe in';haptic(6);
-  medHold=setTimeout(()=>{if(!medRun)return;$('medPhase').textContent='Hold';},BREATH_IN);
-  medOut=setTimeout(()=>{if(!medRun)return;
-    c.classList.remove('inhale');$('medPhase').textContent='Breathe out';haptic(6);},BREATH_IN+BREATH_HOLD);
+  const ph=PATTERNS[medPat].phases;
+  medPhaseI=0;
+  const step=()=>{
+    if(!medRun)return;
+    const p=ph[medPhaseI%ph.length];
+    c.style.setProperty('--breath',p[1]+'s');
+    c.classList.toggle('inhale',!!p[2]);
+    $('medPhase').textContent=p[0];
+    if(p[0]!=='Hold')haptic(6);
+    medPhaseI++;
+    medPhaseT=setTimeout(step,p[1]*1000);
+  };
+  step();
 }
 function medToggle(){
   audio();                                   // first gesture unlocks sound on iOS
   if(medRun){medStopTimers();medRun=false;$('medCircle').classList.remove('inhale');
     $('medBtn').textContent='Resume';$('medPhase').textContent='Paused';return}
   medRun=true;$('medBtn').textContent='Pause';haptic(10);
-  breathe();medBreath=setInterval(breathe,BREATH_CYCLE);
+  breathe();
   medTimer=setInterval(()=>{medLeft--;$('medTime').textContent=fmt(medLeft);
     if(medLeft<=0){medStopTimers();medRun=false;
       $('medCircle').classList.remove('inhale');
       $('medPhase').textContent='Complete';$('medBtn').textContent='Start';
       chime();haptic([14,40,20]);DAY.med=true;saveDay()}},1000)}
-function medStopTimers(){clearInterval(medTimer);clearInterval(medBreath);clearTimeout(medHold);clearTimeout(medOut)}
+function medStopTimers(){clearInterval(medTimer);clearInterval(medBreath);clearTimeout(medPhaseT)}
 function medReset(){medStopTimers();medRun=false;medLeft=medDur;
   $('medTime').textContent=fmt(medLeft);$('medPhase').textContent='Press start when ready';
   $('medBtn').textContent='Start';$('medCircle').classList.remove('inhale')}
@@ -1529,7 +1653,7 @@ function cwClear(){
 
 /* ============================= LAUNCH / RECAP ============================= */
 /* Day one explains itself in place, then gets out of the way for good. */
-const isFirstRun=()=>!localStorage.getItem('flDone');
+const isFirstRun=()=>!localStorage.getItem('flDone')&&!Object.keys(history()).length;
 function applyEmptyState(){const el=$('firstRun');if(el)el.style.display=isFirstRun()?'':'none'}
 
 /* the same line every morning stops landing after a week */
@@ -1566,14 +1690,60 @@ function renderRecap(){
   if(yd.eve&&yd.eve.grateful)bits.push('Yesterday you were grateful for: '+yd.eve.grateful);
   $('yestNote').textContent=bits.join('  ·  ');
 }
+/* Completed mornings, so the month grid and Look Back have something to
+   read. Backfilled once from existing day records. */
+function history(){return readJSON('flHistory',null)||backfillHistory()}
+function backfillHistory(){
+  const h={};
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(!k||k.indexOf('flDay-')!==0||k.length!==16)continue;
+    const d=readJSON(k,{});
+    const done=(d.status&&Object.keys(d.status).some(n=>d.status[n]==='done'))||d.win||d.note;
+    if(done)h[k.slice(6)]=1;
+  }
+  const last=localStorage.getItem('flDone');if(last)h[last]=1;
+  try{localStorage.setItem('flHistory',JSON.stringify(h))}catch(e){}
+  return h;
+}
+function recordDay(k){
+  const h=history();h[k]=1;
+  try{localStorage.setItem('flHistory',JSON.stringify(h))}catch(e){}
+}
+const dayBefore=(k,n)=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()-(n||1));return dateKey(d)};
+
+/* One grace day a week: a 40-day streak shouldn't die to one bad Tuesday,
+   and pretending the gap didn't happen would be worse than saying so. */
+function streakInfo(){
+  return {n:+localStorage.getItem('flStreak')||0,saved:+localStorage.getItem('flSaved')||0};
+}
+function bumpStreak(){
+  const today=todayKey(),last=localStorage.getItem('flDone');
+  if(last===today)return;
+  let n=+localStorage.getItem('flStreak')||0;
+  let saved=+localStorage.getItem('flSaved')||0;
+  let usedGrace=false;
+  if(last===dayBefore(today,1)){n+=1}
+  else if(last===dayBefore(today,2)&&graceAvailable()){n+=1;saved+=1;usedGrace=true;
+    try{localStorage.setItem('flGrace',today)}catch(e){}}
+  else{n=1;saved=0}
+  try{localStorage.setItem('flStreak',n);localStorage.setItem('flDone',today);
+      localStorage.setItem('flSaved',saved)}catch(e){}
+  return usedGrace;
+}
+function graceAvailable(){
+  const g=localStorage.getItem('flGrace');
+  if(!g)return true;
+  const days=Math.round((new Date(todayKey()+'T12:00:00')-new Date(g+'T12:00:00'))/864e5);
+  return days>=7;
+}
+
 let pendingStreak=false;
 function finishDay(){
   saveDay();
   if(localStorage.getItem('flDone')!==todayKey()){
-    const y=new Date();y.setDate(y.getDate()-1);
-    const last=localStorage.getItem('flDone');
-    const streak=(last===dateKey(y))?(+localStorage.getItem('flStreak')||0)+1:1;
-    try{localStorage.setItem('flStreak',streak);localStorage.setItem('flDone',todayKey())}catch(e){}
+    DAY.graced=bumpStreak();
+    recordDay(todayKey());
     pendingStreak=true;
   }
   burst();fanfare();haptic([18,40,22,40,50]);
@@ -1755,6 +1925,7 @@ loadDayFields();
 migrateItems();
 carryOver();        // yesterday's unfinished items are waiting this morning
 paintFeel();
+setPat(localStorage.getItem('flPattern')||'calm');
 (function(){
   const el=$('itemInput');if(!el)return;
   el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addItem()}});
