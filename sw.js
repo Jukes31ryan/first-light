@@ -1,5 +1,7 @@
-/* First Light service worker — offline app shell */
-const CACHE = 'first-light-v1';
+/* First Light service worker — offline app shell.
+   Bump CACHE on every release: the name is the version, and a new name is
+   what evicts the old files and tells open tabs an update is waiting. */
+const CACHE = 'first-light-v2';
 const SHELL = [
   './',
   './index.html',
@@ -11,10 +13,15 @@ const SHELL = [
 
 self.addEventListener('install', e => {
   e.waitUntil(
+    // No skipWaiting here on purpose: the new worker waits until the user
+    // taps "update", so a release never reloads the page mid-sentence.
     caches.open(CACHE)
       .then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => {}))))
-      .then(() => self.skipWaiting())
   );
+});
+
+self.addEventListener('message', e => {
+  if (e.data === 'skipWaiting') self.skipWaiting();
 });
 
 self.addEventListener('activate', e => {
