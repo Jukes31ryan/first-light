@@ -1,7 +1,7 @@
 /* First Light service worker — offline app shell.
    Bump CACHE on every release: the name is the version, and a new name is
    what evicts the old files and tells open tabs an update is waiting. */
-const CACHE = 'first-light-v3';
+const CACHE = 'first-light-v4';
 const SHELL = [
   './',
   './index.html',

@@ -34,7 +34,7 @@
 --bggrad:linear-gradient(178deg,#f0d9b6 0%,#ebe0cd 26%,#e8dfd0 58%,#e5dccd 100%);
 --sun1:rgba(206,142,64,0.22);--sun2:rgba(226,178,104,0.26);
 --cloud:rgba(255,252,244,0.42);--fx-op:0.8;
---cell:#f7f2e9;--cell-hl:rgba(159,68,23,0.13);
+--cell:#f7f2e9;--cell-hl:rgba(159,68,23,0.13);--grain:0.055;
 --theme-meta:#e8dfd0;
 }
 /* ── DUSK ───────────────────────────────────────────────────────── */
@@ -49,7 +49,7 @@ body[data-theme="dusk"]{
 --bggrad:linear-gradient(178deg,#2e2318 0%,#201a14 32%,#17130f 100%);
 --sun1:rgba(217,138,78,0.17);--sun2:rgba(230,180,120,0.20);
 --cloud:rgba(255,244,230,0.045);--fx-op:1;
---cell:#251f19;--cell-hl:rgba(217,138,78,0.16);
+--cell:#251f19;--cell-hl:rgba(217,138,78,0.16);--grain:0.05;
 --theme-meta:#17130f;
 }
 
@@ -73,6 +73,11 @@ text-transform:uppercase;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.22);an
 .disp{font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Georgia,serif;
 font-optical-sizing:auto;font-variation-settings:'SOFT' 20,'WONK' 1}
 
+/* Grain is what separates "printed on stock" from "a white div". */
+#grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:var(--grain);
+background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='140' height='140' filter='url(%23n)' opacity='0.5'/></svg>");
+mix-blend-mode:multiply}
+body[data-theme="dusk"] #grain{mix-blend-mode:screen}
 #fx{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;opacity:var(--fx-op)}
 .fx-p{position:absolute;border-radius:50%}
 .fx-sun{background:radial-gradient(circle,var(--sun1),transparent 68%);animation:sunpulse 9s ease infinite}
@@ -183,6 +188,11 @@ letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);cursor:pointer;p
 .open-warn{margin-bottom:24px;padding-left:16px;border-left:2px solid var(--skip);
 font-size:13px;line-height:1.55;color:var(--ink2)}
 
+/* the mark under the masthead — engraved almanac, not clip art */
+.mark{margin-top:16px;color:var(--accent);opacity:.85}
+.mark svg{width:200px;max-width:100%;height:auto;display:block;stroke:currentColor;fill:none;
+stroke-width:1.1;stroke-linecap:round}
+
 /* ── the daily page (dashboard) ── */
 .page{min-height:100%;display:flex;flex-direction:column;width:100%;max-width:600px;margin:0 auto;
 padding:calc(34px + env(safe-area-inset-top)) 24px calc(30px + env(safe-area-inset-bottom))}
@@ -199,19 +209,29 @@ cursor:pointer;letter-spacing:.04em;flex:0 0 auto}
 .sect{margin-top:34px;padding-top:26px;border-top:1px solid var(--rule)}
 .sect-l{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);
 display:flex;justify-content:space-between;align-items:center}
-.win-t{font-size:22px;line-height:1.34;letter-spacing:-.012em;margin-top:14px;cursor:pointer}
-.win-t.empty{color:var(--ink3)}
+.win-frame{display:flex;gap:16px;margin-top:16px;padding-left:16px;
+border-left:2px solid var(--accent);cursor:pointer}
+.win-frame.empty{border-left-color:var(--rule2)}
+.win-star{flex:0 0 18px;width:18px;height:18px;margin-top:6px;color:var(--accent)}
+.win-star svg{width:18px;height:18px;stroke:currentColor;fill:currentColor;stroke-width:1;stroke-linejoin:round}
+.win-frame.empty .win-star{color:var(--ink3)}
+.win-frame.empty .win-star svg{fill:none}
+.win-t{flex:1;font-size:25px;line-height:1.28;letter-spacing:-.016em}
+.win-t.empty{color:var(--ink3);font-size:22px}
 .win-list{margin-top:16px;display:flex;flex-direction:column;gap:9px}
 .win-item{font-size:13px;color:var(--ink2);display:flex;gap:11px;line-height:1.4}
 .win-item i{font-style:normal;color:var(--ink3);font-variant-numeric:tabular-nums;font-size:11px;padding-top:1px}
 
 /* index of modules — a printed contents list, not a tile grid */
-.idx{margin-top:8px}
+.seq-rule{height:2px;background:var(--rule);margin-top:14px;overflow:hidden}
+.seq-rule i{display:block;height:100%;background:var(--accent);width:0;transition:width .8s var(--ease)}
+.idx{margin-top:4px}
 .idx-row{display:flex;align-items:baseline;gap:16px;padding:17px 0;border-bottom:1px solid var(--rule);
 cursor:pointer;position:relative}
 .idx-row:active{opacity:.55}
-.idx-n{font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums;letter-spacing:.06em;
-flex:0 0 20px;padding-top:2px}
+.idx-n{font-size:11px;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.06em;
+flex:0 0 20px;padding-top:2px;font-weight:600}
+.idx-row.done .idx-n,.idx-row.skip .idx-n{color:var(--ink3);font-weight:400}
 .idx-b{flex:1;min-width:0}
 .idx-t{font-size:19px;line-height:1.25;letter-spacing:-.01em}
 .idx-s{font-size:12px;color:var(--ink3);margin-top:5px;line-height:1.45;
@@ -219,6 +239,7 @@ overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .idx-mark{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
 color:var(--ink3);flex:0 0 auto;padding-top:4px}
 .idx-row.done .idx-t{color:var(--ink2)}
+.idx-row.done .idx-s{opacity:.7}
 .idx-row.done .idx-mark{color:var(--done)}
 .idx-row.skip .idx-mark{color:var(--skip)}
 .begin{margin-top:34px;padding:17px;border:1px solid var(--ink);border-radius:3px;background:none;
@@ -386,6 +407,7 @@ color:var(--ink3);cursor:pointer}
 </head>
 <body data-theme="dawn">
 <div id="fx"></div>
+<div id="grain"></div>
 <div id="burst"></div>
 <button id="updateBar" style="display:none">A newer First Light is ready &mdash; tap to load it</button>
 
@@ -400,6 +422,7 @@ color:var(--ink3);cursor:pointer}
 </div>
 </div>
 
+<div class="mark" aria-hidden="true"><svg viewBox="0 0 200 26"><path d="M2 22h78"/><path d="M120 22h78"/><path d="M89 22a11 11 0 0 1 22 0"/><path d="M100 3v5"/><path d="M83 8l3 3.5"/><path d="M117 8l-3 3.5"/></svg></div>
 <div class="p" id="firstRun" style="display:none;margin-top:22px;font-size:13px;padding-left:14px;border-left:2px solid var(--accent)">Five minutes, top to bottom &mdash; or tap any one of them on its own. Skip whatever you like; it keeps your place.</div>
 
 <div class="hero" onclick="go(1)">
@@ -412,19 +435,23 @@ color:var(--ink3);cursor:pointer}
 
 <div class="sect" id="focusSect" onclick="go(6)">
 <div class="sect-l"><span id="focusL">What&#8217;s important now</span><span id="focusMark"></span></div>
+<div class="win-frame" id="winFrame">
+<span class="win-star"><svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9z"/></svg></span>
 <div class="win-t disp" id="winT"></div>
-<div class="win-list" id="winList"></div>
 </div>
-
-<div class="sect">
-<div class="sect-l"><span>The sequence</span><span id="seqCount"></span></div>
-<div class="idx" id="idx"></div>
+<div class="win-list" id="winList"></div>
 </div>
 
 <div class="sect">
 <div class="sect-l"><span id="monthName"></span><span id="monthCount"></span></div>
 <div class="month" id="month"></div>
 <button class="lookback" onclick="go(11)">Look back &#8594;</button>
+</div>
+
+<div class="sect">
+<div class="sect-l"><span>The sequence</span><span id="seqCount"></span></div>
+<div class="seq-rule"><i id="seqFill"></i></div>
+<div class="idx" id="idx"></div>
 </div>
 
 <button class="begin" onclick="go(1)">Begin the sequence</button>
@@ -1108,6 +1135,8 @@ function syncDash(){
   const win=(DAY.win||'').trim();
   $('winT').textContent=win||'Name the one thing.';
   $('winT').className='win-t disp'+(win?'':' empty');
+  $('winFrame').className='win-frame'+(win?'':' empty');
+  $('winFrame').onclick=()=>go(6);
   $('focusMark').textContent=statusOf(6)==='done'?'Set':'';
   $('focusMark').style.color='var(--done)';
   $('winList').innerHTML=t3.map((x,i)=>'<div class="win-item"><i>'+(i+1)+'</i><span>'+esc(x)+'</span></div>').join('');
@@ -1117,6 +1146,7 @@ function syncDash(){
   // the sequence, as a contents list
   const done=[1,2,3,4,5,6,7].filter(n=>statusOf(n)==='done').length;
   $('seqCount').textContent=done+'/7';
+  setTimeout(()=>{const f=$('seqFill');if(f)f.style.width=Math.round(done/7*100)+'%'},60);
   const idx=$('idx');idx.innerHTML='';
   const rows=[{n:1,t:'The Spark',s:'One idea to carry'}].concat(CARDS).concat([{n:6,t:'Today',s:'Purge, prioritise, name the win'}]);
   rows.sort((a,b)=>a.n-b.n).forEach(c=>{
@@ -1297,6 +1327,10 @@ function softPrev(){if(softI>0){softI--;paintSoft()}}
 /* ============================= THE THREE P'S ============================= */
 let ppStage=1;
 const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+/* People type list punctuation out of habit — "license," — and then the WIN
+   reads as a fragment. Strip it from the end only; commas inside a line are
+   the writer's and stay put. */
+function cleanItem(t){return String(t||'').trim().replace(/[\s,;]+$/,'').trim()}
 
 /* Items are objects keyed by id, so rewording one doesn't silently drop it
    from your Top 3 the way text-matching did. */
@@ -1313,9 +1347,14 @@ function ppSetPicks(ids){
 }
 /* older days stored a plain textarea string and text-keyed picks */
 function migrateItems(){
-  if(DAY.items)return;
+  if(DAY.items){                      // tidy anything already stored with commas
+    let changed=false;
+    DAY.items.forEach(i=>{const c=cleanItem(i.text);if(c&&c!==i.text){i.text=c;changed=true}});
+    if(changed)saveDay();
+    return;
+  }
   const lines=(DAY.purge||'').split('\n').map(x=>x.trim()).filter(Boolean);
-  DAY.items=lines.map(t=>({id:uid(),text:t,done:false,carried:false}));
+  DAY.items=lines.map(t=>({id:uid(),text:cleanItem(t),done:false,carried:false}));
   if(DAY.picks&&DAY.picks.length&&typeof DAY.picks[0]==='string'&&!itemById(DAY.picks[0])){
     DAY.picks=DAY.picks.map(t=>{const it=DAY.items.find(i=>i.text===t);return it?it.id:null}).filter(Boolean);
   }
@@ -1323,8 +1362,8 @@ function migrateItems(){
 }
 
 function addItem(){
-  const el=$('itemInput');const t=(el.value||'').trim();
-  if(!t){el.focus();return}
+  const el=$('itemInput');const t=cleanItem(el.value);
+  if(!t){el.value='';el.focus();return}
   DAY.items=ppItems().concat([{id:uid(),text:t,done:false,carried:false}]);
   el.value='';saveDay();haptic(8);tick(620);ppPaint();el.focus();
 }
@@ -1455,7 +1494,7 @@ function carryOver(){
     left=yd.purge.split('\n').map(x=>x.trim()).filter(x=>x&&picked.indexOf(x)<0);
   }
   if(!left.length)return;
-  DAY.items=left.map(t=>({id:uid(),text:t,done:false,carried:true}));
+  DAY.items=left.map(t=>({id:uid(),text:cleanItem(t),done:false,carried:true}));
   saveDay();
 }
 /* ============================= THE MINI ==============================
@@ -1856,7 +1895,7 @@ function applyImport(text){
 }
 
 /* ============================= PWA ============================= */
-const APP_VERSION='v1.2 · 2026-08-24';
+const APP_VERSION='v1.3 · 2026-08-24';
 let deferredPrompt=null,swReg=null;
 /* a stuck install should never need devtools to escape */
 function checkUpdates(){
