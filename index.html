@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<title>First Light</title>
+<title>Calibrate</title>
 <meta name="description" content="A personal morning launcher — a boot sequence for the brain.">
 <meta name="theme-color" content="#e8dfd0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="First Light">
+<meta name="apple-mobile-web-app-title" content="Calibrate">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-180.png">
@@ -31,10 +31,14 @@
 --done:#5d6b45;--skip:#8d6f2f;
 --chrome:rgba(232,223,208,0.94);
 --btn-text:#f2ebe0;
---bggrad:linear-gradient(178deg,#f0d9b6 0%,#ebe0cd 26%,#e8dfd0 58%,#e5dccd 100%);
+--bggrad:#e8dfd0;
 --sun1:rgba(206,142,64,0.22);--sun2:rgba(226,178,104,0.26);
 --cloud:rgba(255,252,244,0.42);--fx-op:0.8;
 --cell:#f7f2e9;--cell-hl:rgba(159,68,23,0.13);--grain:0.055;
+--cool:#3b6672;
+--s1:#785c1c;--s2:#a54218;--s3:#4f5f92;--s4:#296b62;--s5:#844d89;--s6:#58663d;--s7:#935125;
+--band:linear-gradient(180deg,#f7c98d 0%,#f4d5a5 34%,#eddcc3 68%,#e8dfd0 100%);
+--band-h:rgba(36,29,22,0.14);
 --theme-meta:#e8dfd0;
 }
 /* ── DUSK ───────────────────────────────────────────────────────── */
@@ -46,10 +50,14 @@ body[data-theme="dusk"]{
 --done:#8fa06a;--skip:#c6a25c;
 --chrome:rgba(23,19,15,0.94);
 --btn-text:#17130f;
---bggrad:linear-gradient(178deg,#2e2318 0%,#201a14 32%,#17130f 100%);
+--bggrad:#17130f;
 --sun1:rgba(217,138,78,0.17);--sun2:rgba(230,180,120,0.20);
 --cloud:rgba(255,244,230,0.045);--fx-op:1;
 --cell:#251f19;--cell-hl:rgba(217,138,78,0.16);--grain:0.05;
+--cool:#5797a8;
+--s1:#cf9f30;--s2:#df5920;--s3:#6d7eb0;--s4:#46b9aa;--s5:#a76cac;--s6:#8a9f60;--s7:#cc7033;
+--band:linear-gradient(180deg,#3d2a1c 0%,#2e2118 42%,#221a13 74%,#17130f 100%);
+--band-h:rgba(239,231,218,0.16);
 --theme-meta:#17130f;
 }
 
@@ -188,6 +196,12 @@ letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);cursor:pointer;p
 .open-warn{margin-bottom:24px;padding-left:16px;border-left:2px solid var(--skip);
 font-size:13px;line-height:1.55;color:var(--ink2)}
 
+/* The top of the page is sky; the rest is paper. */
+.band{position:absolute;left:0;right:0;top:0;height:var(--band-height,420px);
+background:var(--band);z-index:-1;pointer-events:none}
+.band::after{content:'';position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--band-h)}
+.page{position:relative}
+
 /* the mark under the masthead — engraved almanac, not clip art */
 .mark{margin-top:16px;color:var(--accent);opacity:.85}
 .mark svg{width:200px;max-width:100%;height:auto;display:block;stroke:currentColor;fill:none;
@@ -198,7 +212,8 @@ stroke-width:1.1;stroke-linecap:round}
 padding:calc(34px + env(safe-area-inset-top)) 24px calc(30px + env(safe-area-inset-bottom))}
 .masthead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px}
 .mh-title{font-size:12px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:var(--ink)}
-.mh-meta{font-size:12px;color:var(--ink3);margin-top:7px;letter-spacing:.01em}
+.mh-tag{font-size:9px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--cool);margin-top:5px;opacity:.85}
+.mh-meta{font-size:12px;color:var(--cool);margin-top:7px;letter-spacing:.01em}
 .mh-actions{display:flex;gap:4px;margin:-8px -8px 0 0}
 .hero{margin:34px 0 0}
 .hero-q{font-size:27px;line-height:1.34;letter-spacing:-.016em;font-weight:400}
@@ -207,7 +222,7 @@ padding:calc(34px + env(safe-area-inset-top)) 24px calc(30px + env(safe-area-ins
 .hero-new{font-size:11px;color:var(--ink3);background:none;border:none;font-family:inherit;
 cursor:pointer;letter-spacing:.04em;flex:0 0 auto}
 .sect{margin-top:34px;padding-top:26px;border-top:1px solid var(--rule)}
-.sect-l{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);
+.sect-l{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cool);
 display:flex;justify-content:space-between;align-items:center}
 .win-frame{display:flex;gap:16px;margin-top:16px;padding-left:16px;
 border-left:2px solid var(--accent);cursor:pointer}
@@ -223,15 +238,16 @@ border-left:2px solid var(--accent);cursor:pointer}
 .win-item i{font-style:normal;color:var(--ink3);font-variant-numeric:tabular-nums;font-size:11px;padding-top:1px}
 
 /* index of modules — a printed contents list, not a tile grid */
-.seq-rule{height:2px;background:var(--rule);margin-top:14px;overflow:hidden}
-.seq-rule i{display:block;height:100%;background:var(--accent);width:0;transition:width .8s var(--ease)}
+.seq-rule{display:flex;gap:3px;margin-top:14px}
+.seq-rule i{flex:1;height:3px;background:var(--rule);transition:background .45s var(--ease)}
+.seq-rule i.on{background:var(--seg)}
 .idx{margin-top:4px}
 .idx-row{display:flex;align-items:baseline;gap:16px;padding:17px 0;border-bottom:1px solid var(--rule);
 cursor:pointer;position:relative}
 .idx-row:active{opacity:.55}
-.idx-n{font-size:11px;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:.06em;
+.idx-n{font-size:11px;color:var(--seg,var(--accent));font-variant-numeric:tabular-nums;letter-spacing:.06em;
 flex:0 0 20px;padding-top:2px;font-weight:600}
-.idx-row.done .idx-n,.idx-row.skip .idx-n{color:var(--ink3);font-weight:400}
+.idx-row.skip .idx-n{color:var(--ink3);font-weight:400}
 .idx-b{flex:1;min-width:0}
 .idx-t{font-size:19px;line-height:1.25;letter-spacing:-.01em}
 .idx-s{font-size:12px;color:var(--ink3);margin-top:5px;line-height:1.45;
@@ -308,8 +324,8 @@ transition:transform .2s var(--spring),background .25s ease,border-color .25s ea
 
 /* ── the month, and looking back ── */
 .month{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:18px}
-.m-h{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);
-text-align:center;padding-bottom:4px}
+.m-h{font-size:9px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--cool);
+text-align:center;padding-bottom:4px;opacity:.75}
 .m-d{aspect-ratio:1;border-radius:2px;border:1px solid var(--rule);display:flex;align-items:center;
 justify-content:center;font-size:11px;color:var(--ink3);font-variant-numeric:tabular-nums}
 .m-d.blank{border-color:transparent}
@@ -409,13 +425,14 @@ color:var(--ink3);cursor:pointer}
 <div id="fx"></div>
 <div id="grain"></div>
 <div id="burst"></div>
-<button id="updateBar" style="display:none">A newer First Light is ready &mdash; tap to load it</button>
+<button id="updateBar" style="display:none">A newer Calibrate is ready &mdash; tap to load it</button>
 
 <!-- 0 THE DAILY PAGE -->
 <div class="scr on" id="s0">
 <div class="page">
+<div class="band" id="band"></div>
 <div class="masthead">
-<div><div class="mh-title">First Light</div><div class="mh-meta" id="dashDate"></div></div>
+<div><div class="mh-title">Calibrate</div><div class="mh-tag">Point the day</div><div class="mh-meta" id="dashDate"></div></div>
 <div class="mh-actions">
 <button class="nav-btn" id="themeBtn" onclick="toggleTheme()" aria-label="Switch between light and dark"></button>
 <button class="nav-btn" onclick="openSettings()" aria-label="Settings"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-2.9 1.2v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0-1.2-2.9H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 2.9 1.2l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
@@ -450,7 +467,7 @@ color:var(--ink3);cursor:pointer}
 
 <div class="sect">
 <div class="sect-l"><span>The sequence</span><span id="seqCount"></span></div>
-<div class="seq-rule"><i id="seqFill"></i></div>
+<div class="seq-rule" id="seqRule"></div>
 <div class="idx" id="idx"></div>
 </div>
 
@@ -676,7 +693,7 @@ color:var(--ink3);cursor:pointer}
 <div class="divider"></div>
 <div class="set-lbl">Install</div>
 <div class="p" style="font-size:13px" id="installTxt">On iPhone: Share → Add to Home Screen. On Android or desktop Chrome: menu → Install app. It then runs full-screen and offline.</div>
-<div class="btn-row" style="justify-content:flex-start"><button class="btn-sec" id="installBtn" style="display:none" onclick="doInstall()">Install First Light</button><button class="btn-sec" onclick="checkUpdates()">Check for updates</button></div>
+<div class="btn-row" style="justify-content:flex-start"><button class="btn-sec" id="installBtn" style="display:none" onclick="doInstall()">Install Calibrate</button><button class="btn-sec" onclick="checkUpdates()">Check for updates</button></div>
 <div class="set-note" id="verLine"></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-go" onclick="saveSettings()">Save</button></div></div>
@@ -976,8 +993,8 @@ function loadDayFields(){FIELDS.forEach(k=>{const el=$(k);if(el&&DAY[k]!=null)el
 /* ============================= FX ============================= */
 (function(){const fx=$('fx');const R=(a,b)=>a+Math.random()*(b-a);
 const mk=(cls,st)=>{const d=document.createElement('div');d.className='fx-p '+cls;Object.assign(d.style,st);fx.appendChild(d)};
-mk('fx-sun',{width:'340px',height:'340px',left:'50%',marginLeft:'-170px',top:'56%'});
-mk('fx-sun2',{width:'170px',height:'170px',left:'50%',marginLeft:'-85px',top:'64%'});
+mk('fx-sun',{width:'320px',height:'320px',left:'50%',marginLeft:'-160px',top:'-90px'});
+mk('fx-sun2',{width:'170px',height:'170px',left:'50%',marginLeft:'-85px',top:'-30px'});
 for(let i=0;i<4;i++){mk('fx-cloud',{width:R(140,230)+'px',height:R(26,44)+'px',left:R(-10,70)+'%',top:R(4,26)+'%',
   borderRadius:'50%',animation:'cloudmove '+R(70,120)+'s linear '+R(-70,0)+'s infinite'})}})();
 
@@ -1141,18 +1158,27 @@ function syncDash(){
   $('focusMark').style.color='var(--done)';
   $('winList').innerHTML=t3.map((x,i)=>'<div class="win-item"><i>'+(i+1)+'</i><span>'+esc(x)+'</span></div>').join('');
 
+  const foot=document.querySelector('.hero-foot');
+  if(foot)$('band').style.setProperty('--band-height',(foot.offsetTop+foot.offsetHeight+34)+'px');
   renderMonth();
 
   // the sequence, as a contents list
   const done=[1,2,3,4,5,6,7].filter(n=>statusOf(n)==='done').length;
   $('seqCount').textContent=done+'/7';
-  setTimeout(()=>{const f=$('seqFill');if(f)f.style.width=Math.round(done/7*100)+'%'},60);
+  const rule=$('seqRule');rule.innerHTML='';
+  for(let n=1;n<=7;n++){
+    const seg=document.createElement('i');
+    seg.style.setProperty('--seg','var(--s'+n+')');
+    if(statusOf(n)==='done')setTimeout(()=>seg.classList.add('on'),60+n*45);
+    rule.appendChild(seg);
+  }
   const idx=$('idx');idx.innerHTML='';
   const rows=[{n:1,t:'The Spark',s:'One idea to carry'}].concat(CARDS).concat([{n:6,t:'Today',s:'Purge, prioritise, name the win'}]);
   rows.sort((a,b)=>a.n-b.n).forEach(c=>{
     const st=statusOf(c.n);
     const r=document.createElement('div');
     r.className='idx-row '+st;
+    r.style.setProperty('--seg','var(--s'+c.n+')');
     r.onclick=()=>go(c.n);
     let sub=c.s;
     if(c.n===3&&storyI!==null&&st==='done')sub=STORIES[storyI].t;
@@ -1825,7 +1851,7 @@ function openSettings(){
   $('backupMsg').textContent='';
   applyTheme(document.body.getAttribute('data-theme'));
   paintFeel();
-  $('verLine').textContent='First Light · '+APP_VERSION;
+  $('verLine').textContent='Calibrate · '+APP_VERSION;
   show('s9');
 }
 function saveSettings(){
@@ -1847,7 +1873,7 @@ function collectData(){
   }
   return out;
 }
-function backupName(){return 'first-light-backup-'+todayKey()+'.json'}
+function backupName(){return 'calibrate-backup-'+todayKey()+'.json'}
 function exportData(){
   const txt=JSON.stringify(collectData(),null,2);
   try{
@@ -1883,9 +1909,9 @@ function importFile(input){
 }
 function applyImport(text){
   let obj;
-  try{obj=JSON.parse(text)}catch(e){$('backupMsg').textContent='That file is not a First Light backup (bad JSON).';return}
+  try{obj=JSON.parse(text)}catch(e){$('backupMsg').textContent='That file is not a Calibrate backup (bad JSON).';return}
   const data=obj&&obj.data&&typeof obj.data==='object'?obj.data:null;
-  if(!data){$('backupMsg').textContent='That file is not a First Light backup.';return}
+  if(!data){$('backupMsg').textContent='That file is not a Calibrate backup.';return}
   const keys=Object.keys(data).filter(k=>k.indexOf('fl')===0);
   if(!keys.length){$('backupMsg').textContent='Nothing to restore in that file.';return}
   if(!confirm('Restore '+keys.length+' saved items? This replaces what is on this device now.'))return;
@@ -1895,7 +1921,7 @@ function applyImport(text){
 }
 
 /* ============================= PWA ============================= */
-const APP_VERSION='v1.3 · 2026-08-24';
+const APP_VERSION='v1.4 · 2026-08-24';
 let deferredPrompt=null,swReg=null;
 /* a stuck install should never need devtools to escape */
 function checkUpdates(){

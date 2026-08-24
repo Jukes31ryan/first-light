@@ -1,6 +1,6 @@
-# 🌅 First Light
+# 🌅 Calibrate
 
-> A personal morning launcher — a boot sequence for the brain. Open it when you wake up: warm up, center, reload your operating principles, and point yourself at the day. No accounts, no ads, no network required.
+> Point the day. A personal morning launcher — a boot sequence for the brain. Open it when you wake up: warm up, center, reload your operating principles, and point yourself at the day. No accounts, no ads, no network required.
 
 [![Website](https://img.shields.io/badge/Website-Live-e8a06c?style=for-the-badge&logo=googlechrome&logoColor=white)](https://jukes31ryan.github.io/first-light/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)

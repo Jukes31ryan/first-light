@@ -1,6 +1,6 @@
 {
-  "name": "First Light",
-  "short_name": "First Light",
+  "name": "Calibrate",
+  "short_name": "Calibrate",
   "description": "A personal morning launcher — a boot sequence for the brain.",
   "start_url": ".",
   "scope": ".",
