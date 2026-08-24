@@ -226,6 +226,35 @@ font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.18em;text-tra
 color:var(--ink);cursor:pointer;width:100%}
 .begin:active{background:var(--ink);color:var(--btn-text)}
 
+/* ── the task list ── */
+.add-row{display:flex;gap:0;align-items:stretch;margin-top:26px;border-bottom:1px solid var(--rule2)}
+.add-row .input{border:none;flex:1;padding-left:0}
+.add-btn{flex:0 0 auto;padding:0 4px 0 16px;background:none;border:none;font-family:inherit;font-size:11px;
+font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);cursor:pointer;
+transition:transform .2s var(--spring),opacity .2s ease}
+.add-btn:active{transform:scale(.9)}
+.add-btn:disabled{color:var(--ink3);opacity:.45}
+.items{margin-top:8px}
+.item{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--rule);
+animation:riseIn .3s ease}
+.item-check{flex:0 0 19px;width:19px;height:19px;border:1px solid var(--rule2);border-radius:2px;
+background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;
+transition:transform .2s var(--spring),background .2s ease,border-color .2s ease}
+.item-check:active{transform:scale(.86)}
+.item-check svg{width:12px;height:12px;stroke:var(--btn-text);fill:none;stroke-width:2.4;
+stroke-linecap:round;stroke-linejoin:round;opacity:0;transition:opacity .18s ease}
+.item.done .item-check{background:var(--done);border-color:var(--done)}
+.item.done .item-check svg{opacity:1}
+.item-t{flex:1;font-size:15px;line-height:1.4;color:var(--ink);word-break:break-word}
+.item.done .item-t{color:var(--ink3);text-decoration:line-through}
+.item-tag{flex:0 0 auto;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+color:var(--skip);border:1px solid var(--skip);border-radius:2px;padding:3px 6px;opacity:.85}
+.item-x{flex:0 0 auto;background:none;border:none;color:var(--ink3);font-family:inherit;font-size:19px;
+line-height:1;cursor:pointer;padding:4px 2px 4px 8px;transition:transform .2s var(--spring),color .2s ease}
+.item-x:active{transform:scale(.8)}
+.carried-note{font-size:11px;letter-spacing:.03em;color:var(--ink3);margin:22px 0 6px;
+padding-left:14px;border-left:2px solid var(--skip);line-height:1.5}
+
 /* ── the three P's ── */
 .pp{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:30px}
 .pp-step{flex:1;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;
@@ -471,9 +500,13 @@ color:var(--ink3);cursor:pointer}
 
 <div class="stage" id="stage1">
 <div class="h1 disp">Purge</div>
-<div class="p">Everything swirling around up there, one per line. This is the only place you type.</div>
-<textarea class="input" id="purge" rows="8" placeholder="Reply to the Henderson email&#10;Book the dentist&#10;Finish the deck&#10;Call Mom back"></textarea>
-<div class="p" id="purgeCount" style="margin-top:14px;font-size:12px;color:var(--ink3)"></div>
+<div class="p">Everything swirling around up there. One at a time &mdash; get it out so it stops taking up RAM.</div>
+<div class="add-row">
+<input class="input" id="itemInput" placeholder="What's on your mind?" autocomplete="off" enterkeyhint="done">
+<button class="add-btn" onclick="addItem()">Add</button>
+</div>
+<div class="items" id="itemList"></div>
+<div class="p" id="purgeCount" style="margin-top:18px;font-size:12px"></div>
 </div>
 
 <div class="stage" id="stage2" style="display:none">
@@ -572,7 +605,7 @@ color:var(--ink3);cursor:pointer}
 <div class="divider"></div>
 <div class="set-lbl">Install</div>
 <div class="p" style="font-size:13px" id="installTxt">On iPhone: Share → Add to Home Screen. On Android or desktop Chrome: menu → Install app. It then runs full-screen and offline.</div>
-<div class="btn-row" style="justify-content:flex-start"><button class="btn-sec" id="installBtn" style="display:none" onclick="doInstall()">Install First Light</button></div>
+<div class="btn-row" style="justify-content:flex-start"><button class="btn-sec" id="installBtn" style="display:none" onclick="doInstall()">Install First Light</button><button class="btn-sec" onclick="checkUpdates()">Check for updates</button></div>
 <div class="set-note" id="verLine"></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-go" onclick="saveSettings()">Save</button></div></div>
@@ -837,9 +870,18 @@ const S=Object.assign({affirms:DEF_AFFIRMS.slice(),quotes:DEF_QUOTES.slice()},re
 if(!S.affirms||!S.affirms.length)S.affirms=DEF_AFFIRMS.slice();
 if(!S.quotes||!S.quotes.length)S.quotes=DEF_QUOTES.slice();
 let DAY=readJSON('flDay-'+todayKey(),{});
-const FIELDS=['purge','note'];
+const FIELDS=['note'];   // tasks are objects now; only the freestyle note is a raw field
 function saveDay(){FIELDS.forEach(k=>{const el=$(k);if(el)DAY[k]=el.value});
+  syncDerived();
   try{localStorage.setItem('flDay-'+todayKey(),JSON.stringify(DAY))}catch(e){}}
+/* t1..t3 and win are display copies of the picked items — keep them true on
+   every save so nothing downstream can read a stale title. */
+function syncDerived(){
+  if(!DAY.items)return;
+  const t=(DAY.picks||[]).map(id=>{const it=itemById(id);return it?it.text:''}).filter(Boolean);
+  DAY.t1=t[0]||'';DAY.t2=t[1]||'';DAY.t3=t[2]||'';
+  DAY.win=DAY.winId?((itemById(DAY.winId)||{}).text||''):'';
+}
 function loadDayFields(){FIELDS.forEach(k=>{const el=$(k);if(el&&DAY[k]!=null)el.value=DAY[k]})}
 
 /* ============================= FX ============================= */
@@ -1113,13 +1155,74 @@ function softPrev(){if(softI>0){softI--;paintSoft()}}
 
 /* ============================= THE THREE P'S ============================= */
 let ppStage=1;
-function ppItems(){return ($('purge').value||'').split('\n').map(x=>x.trim()).filter(Boolean)}
-function ppPicks(){return (DAY.picks||[]).slice()}
-function ppSetPicks(p){DAY.picks=p;DAY.t1=p[0]||'';DAY.t2=p[1]||'';DAY.t3=p[2]||'';saveDay()}
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+
+/* Items are objects keyed by id, so rewording one doesn't silently drop it
+   from your Top 3 the way text-matching did. */
+function ppItems(){return DAY.items||[]}
+function liveItems(){return ppItems().filter(i=>!i.done)}
+function itemById(id){return ppItems().find(i=>i.id===id)}
+function ppPicks(){return (DAY.picks||[]).filter(id=>itemById(id))}
+function ppSetPicks(ids){
+  DAY.picks=ids;
+  const t=ids.map(id=>(itemById(id)||{}).text||'');
+  DAY.t1=t[0]||'';DAY.t2=t[1]||'';DAY.t3=t[2]||'';
+  DAY.win=DAY.winId?((itemById(DAY.winId)||{}).text||''):'';
+  saveDay();
+}
+/* older days stored a plain textarea string and text-keyed picks */
+function migrateItems(){
+  if(DAY.items)return;
+  const lines=(DAY.purge||'').split('\n').map(x=>x.trim()).filter(Boolean);
+  DAY.items=lines.map(t=>({id:uid(),text:t,done:false,carried:false}));
+  if(DAY.picks&&DAY.picks.length&&typeof DAY.picks[0]==='string'&&!itemById(DAY.picks[0])){
+    DAY.picks=DAY.picks.map(t=>{const it=DAY.items.find(i=>i.text===t);return it?it.id:null}).filter(Boolean);
+  }
+  if(DAY.win&&!DAY.winId){const it=DAY.items.find(i=>i.text===DAY.win);if(it)DAY.winId=it.id}
+}
+
+function addItem(){
+  const el=$('itemInput');const t=(el.value||'').trim();
+  if(!t){el.focus();return}
+  DAY.items=ppItems().concat([{id:uid(),text:t,done:false,carried:false}]);
+  el.value='';saveDay();haptic(8);tick(620);ppPaint();el.focus();
+}
+function removeItem(id){
+  DAY.items=ppItems().filter(i=>i.id!==id);
+  DAY.picks=ppPicks().filter(x=>x!==id);
+  if(DAY.winId===id)DAY.winId='';
+  ppSetPicks(DAY.picks);haptic(10);ppPaint();
+}
+function toggleItemDone(id){
+  const it=itemById(id);if(!it)return;
+  it.done=!it.done;
+  if(it.done){DAY.picks=ppPicks().filter(x=>x!==id);if(DAY.winId===id)DAY.winId=''}
+  ppSetPicks(DAY.picks||[]);haptic(it.done?[12,24,14]:8);if(it.done)tick(720);ppPaint();
+}
+function renderItems(){
+  const box=$('itemList');box.innerHTML='';
+  const items=ppItems();
+  const carried=items.filter(i=>i.carried).length;
+  if(carried){
+    const n=document.createElement('div');n.className='carried-note';
+    n.textContent=carried+(carried===1?' item carried over from yesterday. Cross off what you finished, ':' items carried over from yesterday. Cross off what you finished, ')+'or × what no longer matters.';
+    box.appendChild(n);
+  }
+  items.forEach(it=>{
+    const r=document.createElement('div');r.className='item'+(it.done?' done':'');
+    r.innerHTML='<button class="item-check" aria-label="Mark done"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></button>'+
+      '<div class="item-t">'+esc(it.text)+'</div>'+
+      (it.carried?'<span class="item-tag">Yesterday</span>':'')+
+      '<button class="item-x" aria-label="Remove">&times;</button>';
+    r.querySelector('.item-check').onclick=()=>toggleItemDone(it.id);
+    r.querySelector('.item-x').onclick=()=>removeItem(it.id);
+    box.appendChild(r);
+  });
+}
 
 function ppOpen(){
-  if($('purge').value==='')$('purge').value=DAY.purge||'';
-  ppStage=(DAY.win?3:((DAY.picks&&DAY.picks.length)?2:1));
+  migrateItems();
+  ppStage=(DAY.winId?3:(ppPicks().length?2:1));
   ppPaint();
 }
 function ppGo(n){
@@ -1136,78 +1239,84 @@ function ppPaint(){
   [1,2,3].forEach(i=>{
     const st=$('pp'+i);
     st.classList.toggle('on',i===ppStage);
-    st.classList.toggle('did',(i===1&&ppItems().length)||(i===2&&ppPicks().length)||(i===3&&!!DAY.win));
+    st.classList.toggle('did',(i===1&&ppItems().length)||(i===2&&ppPicks().length)||(i===3&&!!DAY.winId));
     $('stage'+i).style.display=i===ppStage?'':'none';
   });
-  const items=ppItems(),picks=ppPicks();
-  $('purgeCount').textContent=items.length?(items.length+(items.length===1?' thing out of your head':' things out of your head')):'';
+  renderItems();
+  const open=liveItems(),picks=ppPicks(),total=ppItems().length;
+  const doneN=total-open.length;
+  $('purgeCount').textContent=total?(total+(total===1?' thing':' things')+' out of your head'+(doneN?', '+doneN+' crossed off':'')):'';
 
-  // stage 2 — the dump becomes chips
+  // stage 2 — what you dumped becomes what you choose from
   const box=$('pickChips');box.innerHTML='';
-  items.forEach(t=>{
-    const on=picks.indexOf(t)>=0;
+  open.forEach(it=>{
+    const on=picks.indexOf(it.id)>=0;
     const b=document.createElement('button');
     b.className='pick'+(on?' on':'')+((!on&&picks.length>=3)?' full':'');
-    b.innerHTML=(on?'<span class="pick-n">'+(picks.indexOf(t)+1)+'</span>':'')+esc(t);
-    b.onclick=()=>ppToggle(t);
+    b.innerHTML=(on?'<span class="pick-n">'+(picks.indexOf(it.id)+1)+'</span>':'')+esc(it.text);
+    b.onclick=()=>ppToggle(it.id);
     box.appendChild(b);
   });
-  if(!items.length)box.innerHTML='<div class="p">Nothing dumped yet — go back to Purge.</div>';
+  if(!open.length)box.innerHTML='<div class="p">Nothing left to choose from — go back to Purge.</div>';
   $('pickCount').textContent=picks.length?(picks.length+' of 3 chosen'):'Tap up to three.';
 
   // stage 3 — the three become one
   const wb=$('winChips');wb.innerHTML='';
-  picks.forEach(t=>{
-    const on=DAY.win===t;
+  picks.forEach(id=>{
+    const it=itemById(id);if(!it)return;
+    const on=DAY.winId===id;
     const b=document.createElement('button');
     b.className='win-choice'+(on?' on':'');
-    b.innerHTML='<span class="star"><svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9z"/></svg></span><span>'+esc(t)+'</span>';
-    b.onclick=()=>ppWin(t);
+    b.innerHTML='<span class="star"><svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9z"/></svg></span><span>'+esc(it.text)+'</span>';
+    b.onclick=()=>ppWin(id);
     wb.appendChild(b);
   });
   if(!picks.length)wb.innerHTML='<div class="p">Pick your three first.</div>';
-  $('winNote').textContent=DAY.win?'That\u2019s your WIN. It rides the dashboard all day.':'';
-  $('ppBtn').textContent=ppStage===3?(DAY.win?'Locked in':'Continue'):'Next';
+  $('winNote').textContent=DAY.winId?'That’s your WIN. It rides the dashboard all day.':'';
+  $('ppBtn').textContent=ppStage===3?(DAY.winId?'Locked in':'Continue'):'Next';
 }
-function ppToggle(t){
-  let p=ppPicks();const i=p.indexOf(t);
-  if(i>=0){p.splice(i,1);if(DAY.win===t)DAY.win=''}
-  else{ if(p.length>=3){haptic([10,40,10]);$('pickCount').textContent='Three is the point. Un-tap one first.';return} p.push(t)}
+function ppToggle(id){
+  let p=ppPicks();const i=p.indexOf(id);
+  if(i>=0){p.splice(i,1);if(DAY.winId===id)DAY.winId=''}
+  else{ if(p.length>=3){haptic([10,40,10]);$('pickCount').textContent='Three is the point. Un-tap one first.';return} p.push(id)}
   ppSetPicks(p);tick();haptic(8);ppPaint();
 }
-function ppWin(t){
-  DAY.win=(DAY.win===t?'':t);
-  if(DAY.win){const p=ppPicks().filter(x=>x!==t);ppSetPicks([t].concat(p));haptic([12,30,14]);tick(660)}
-  else{haptic(8);tick()}
-  saveDay();ppPaint();
+function ppWin(id){
+  DAY.winId=(DAY.winId===id?'':id);
+  if(DAY.winId){const p=ppPicks().filter(x=>x!==id);ppSetPicks([id].concat(p));haptic([12,30,14]);tick(660)}
+  else{ppSetPicks(ppPicks());haptic(8);tick()}
+  ppPaint();
 }
 function ppNext(){
-  if(ppStage===1){DAY.purge=$('purge').value;reconcilePicks();saveDay();
-    if(!ppItems().length){mark(6,'skip');return go(7)}
+  if(ppStage===1){reconcilePicks();
+    if(!liveItems().length){mark(6,'skip');return go(7)}
     return ppGo(2)}
   if(ppStage===2){if(!ppPicks().length)return ppNudge('Tap at least one.');return ppGo(3)}
-  mark(6,'done');celebrateRow(6);go(7);
+  mark(6,'done');go(7);
 }
 function reconcilePicks(){
-  const items=ppItems();
-  const p=ppPicks().filter(x=>items.indexOf(x)>=0);
+  const p=ppPicks().filter(id=>{const it=itemById(id);return it&&!it.done});
+  if(DAY.winId&&p.indexOf(DAY.winId)<0)DAY.winId='';
   ppSetPicks(p);
-  if(DAY.win&&p.indexOf(DAY.win)<0)DAY.win='';
 }
-/* unpicked items roll into tomorrow's dump so nothing falls through */
+/* Yesterday's unfinished items are waiting this morning, each with an x so
+   you can clear whatever you actually got done. */
 function carryOver(){
-  if(DAY.purge!=null&&DAY.purge!=='')return;
+  if(DAY.items&&DAY.items.length)return;
+  if(DAY.purge)return;                       // a legacy day still to migrate
   const y=new Date();y.setDate(y.getDate()-1);
   const yd=readJSON('flDay-'+dateKey(y),{});
-  if(!yd.purge)return;
-  const picked=(yd.picks||[]);
-  const left=yd.purge.split('\n').map(x=>x.trim()).filter(x=>x&&picked.indexOf(x)<0);
+  let left=[];
+  if(yd.items&&yd.items.length){
+    left=yd.items.filter(i=>!i.done).map(i=>i.text);
+  }else if(yd.purge){                        // yesterday predates the item list
+    const picked=(yd.picks||[]).filter(x=>typeof x==='string');
+    left=yd.purge.split('\n').map(x=>x.trim()).filter(x=>x&&picked.indexOf(x)<0);
+  }
   if(!left.length)return;
-  DAY.purge=left.join('\n');
-  const el=$('purge');if(el)el.value=DAY.purge;   // saveDay() reads the field back, so fill it first
+  DAY.items=left.map(t=>({id:uid(),text:t,done:false,carried:true}));
   saveDay();
 }
-
 /* ============================= THE MINI (5x5 crossword) ============================= */
 let CW=null;
 function cwPuzzle(){return PUZZLES[dayOfYear()%PUZZLES.length]}
@@ -1389,7 +1498,8 @@ function renderRecap(){
     '</div><div class="recap-t">'+esc(t)+'</div></div>')};
   add("WIN — What's Important Now",DAY.win);
   add('Top 3',[DAY.t1,DAY.t2,DAY.t3].filter(Boolean).map((x,i)=>(i+1)+'. '+x).join('\n'));
-  add('Purged',DAY.purge);
+  const rest=liveItems().filter(i=>ppPicks().indexOf(i.id)<0);
+  add('Also on the list',rest.map(i=>'· '+i.text).join('\n'));
   $('recapBox').innerHTML=(open.length?'<div class="open-warn">Still open — '+open.join(', ')+
     ' — tap the bar up top to jump back.</div>':'')+
     (rows.length?rows.join(''):'<div class="p">Nothing entered yet — go back and fill in your plan.</div>');
@@ -1520,8 +1630,18 @@ function applyImport(text){
 }
 
 /* ============================= PWA ============================= */
-const APP_VERSION='v1.1 · 2026-08-24';
-let deferredPrompt=null;
+const APP_VERSION='v1.2 · 2026-08-24';
+let deferredPrompt=null,swReg=null;
+/* a stuck install should never need devtools to escape */
+function checkUpdates(){
+  const m=$('backupMsg');
+  if(!swReg){if(m)m.textContent='Updates only apply to the installed app.';return}
+  if(swReg.waiting){showUpdate();if(m)m.textContent='An update is ready — see the bar at the bottom.';return}
+  if(m)m.textContent='Checking…';
+  swReg.update().then(()=>{
+    setTimeout(()=>{if(m)m.textContent=swReg.waiting?'Update ready — see the bar at the bottom.':'You’re on the latest version.'},1200);
+  }).catch(()=>{if(m)m.textContent='Could not check just now.'});
+}
 window.addEventListener('beforeinstallprompt',e=>{
   e.preventDefault();deferredPrompt=e;
   const b=$('installBtn');if(b)b.style.display='';
@@ -1534,7 +1654,11 @@ function doInstall(){
 if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){
   window.addEventListener('load',()=>{
     navigator.serviceWorker.register('sw.js').then(reg=>{
-      /* shipping again is only useful if the phone hears about it */
+      swReg=reg;
+      /* A worker that finished installing on an earlier visit is already
+         sitting in `waiting` — updatefound has fired and won't fire again.
+         Without this check the bar never shows and the old build sticks. */
+      if(reg.waiting&&navigator.serviceWorker.controller)showUpdate();
       reg.addEventListener('updatefound',()=>{
         const sw=reg.installing;if(!sw)return;
         sw.addEventListener('statechange',()=>{
@@ -1543,9 +1667,19 @@ if('serviceWorker' in navigator&&location.protocol.indexOf('http')===0){
       });
       setInterval(()=>reg.update().catch(()=>{}),60*60*1000);
     }).catch(()=>{});
+    /* and again when you come back to an app left open for days */
+    document.addEventListener('visibilitychange',()=>{
+      if(document.hidden||!swReg)return;
+      if(swReg.waiting&&navigator.serviceWorker.controller)showUpdate();
+      swReg.update().catch(()=>{});
+    });
+    /* The worker claims control on a first-ever visit too. Reloading for
+       that would bounce the page under a first-time user, so only reload
+       when we are genuinely swapping one controller for another. */
+    const hadController=!!navigator.serviceWorker.controller;
     let reloading=false;
     navigator.serviceWorker.addEventListener('controllerchange',()=>{
-      if(reloading)return;reloading=true;location.reload();
+      if(!hadController||reloading)return;reloading=true;location.reload();
     });
   });
 }
@@ -1562,8 +1696,13 @@ function showUpdate(){
 /* ============================= BOOT ============================= */
 FIELDS.forEach(k=>{const el=$(k);if(el)el.addEventListener('input',()=>{DAY[k]=el.value;saveDay()})});
 loadDayFields();
-carryOver();        // yesterday's unpicked items seed today's dump
+migrateItems();
+carryOver();        // yesterday's unfinished items are waiting this morning
 paintFeel();
+(function(){
+  const el=$('itemInput');if(!el)return;
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addItem()}});
+})();
 applyEmptyState();
 syncDash();
 /* iOS won't make a sound until the user has touched something */
