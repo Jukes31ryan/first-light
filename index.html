@@ -263,6 +263,16 @@ font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.18em;text-tra
 color:var(--ink);cursor:pointer;width:100%}
 .begin:active{background:var(--ink);color:var(--btn-text)}
 
+/* ── what does this mean ── */
+.note{overflow:hidden;max-height:0;transition:max-height .45s var(--ease),opacity .3s ease;opacity:0}
+.note.on{max-height:900px;opacity:1}
+.note-in{padding:22px 0 4px;border-top:1px solid var(--rule);margin-top:20px}
+.note-m{font-size:16px;line-height:1.7;color:var(--ink2);letter-spacing:-.004em}
+.note-q{margin-top:18px;padding-left:14px;border-left:2px solid var(--accent);
+font-size:16px;line-height:1.55;color:var(--ink)}
+.note-ql{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+color:var(--accent);margin-bottom:6px;font-family:'Inter',sans-serif}
+
 /* ── the task list ── */
 .add-row{display:flex;gap:0;align-items:stretch;margin-top:26px;border-bottom:1px solid var(--rule2)}
 .add-row .input{border:none;flex:1;padding-left:0}
@@ -486,8 +496,15 @@ color:var(--ink3);cursor:pointer}
 <div class="quote disp" id="sparkQ"></div>
 <div class="quote-a" id="sparkA"></div>
 </div>
-<div class="btn-row"><button class="btn-sec" onclick="newSpark()">Another &#8635;</button></div>
-<div class="tip"><div class="tip-l">Sit with it</div><div class="tip-t">What would today look like if this were true?</div></div>
+<div class="btn-row">
+<button class="btn-sec" onclick="newSpark()">Another &#8635;</button>
+<button class="btn-sec" id="sparkWhyBtn" onclick="toggleNote('spark')">What does this mean?</button>
+</div>
+<div class="tip" id="sparkTip" style="display:none"><div class="tip-l">Sit with it</div><div class="tip-t">What would today look like if this were true?</div></div>
+<div class="note" id="sparkNote"><div class="note-in">
+<div class="note-m disp" id="sparkNoteM"></div>
+<div class="note-q disp"><div class="note-ql">Sit with it</div><span id="sparkNoteQ"></span></div>
+</div></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(1,'skip');go(2)">Skip</button><button class="btn-go" onclick="mark(1,'done');go(2)">Continue</button></div></div>
 </div>
@@ -514,7 +531,14 @@ color:var(--ink3);cursor:pointer}
 <div class="p" id="storyRead" style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)"></div>
 <div id="storyText" class="disp" style="font-size:17.5px;line-height:1.72;letter-spacing:-.004em;color:var(--ink);white-space:pre-line;margin-top:26px"></div>
 <div class="rule"></div><div class="tip-l">The point</div><div class="tip-t disp" id="storyMoral" style="font-size:17px;line-height:1.55;color:var(--ink)"></div>
-<div class="btn-row"><button class="btn-sec" onclick="newStory()">Another story &#8635;</button></div>
+<div class="btn-row">
+<button class="btn-sec" onclick="newStory()">Another story &#8635;</button>
+<button class="btn-sec" id="storyWhyBtn" onclick="toggleNote('story')">What does this mean?</button>
+</div>
+<div class="note" id="storyNote"><div class="note-in">
+<div class="note-m disp" id="storyNoteM"></div>
+<div class="note-q disp"><div class="note-ql">Sit with it</div><span id="storyNoteQ"></span></div>
+</div></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(3,'skip');go(4)">Skip</button><button class="btn-go" onclick="mark(3,'done');go(4)">Continue</button></div></div>
 </div>
@@ -826,6 +850,98 @@ const DEF_QUOTES=[
 "Almost everything will work again if you unplug it for a few minutes — including you. | Anne Lamott",
 "What you do today can improve all your tomorrows. | Ralph Marston"
 ];
+
+const QUOTE_NOTES={
+"Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.":{m:"The battle is decided before anyone draws a sword \u2014 by preparation, position, and picking fights you can actually win. The loser improvises under pressure and calls it courage. Sun Tzu wrote for generals in the Warring States period, where one bad campaign ended a dynasty, so \u201cwin first\u201d was literal accounting: count the ground, the supplies, the odds, and don't march if the numbers say no.",q:"Which of today's hard things have you already won on paper \u2014 and which are you planning to improvise?"},
+"In the midst of chaos, there is also opportunity.":{m:"Disorder isn't only a threat; it's the moment when positions come unfixed and things can actually move. When everything is settled, the advantage is locked up by whoever already holds it. Sun Tzu's read is unsentimental \u2014 chaos is a condition to be used, not merely survived.",q:"Where is something unsettled right now that you could actually move?"},
+"Opportunities multiply as they are seized.":{m:"Acting on one opening creates the next; chances compound rather than queueing up to wait for you. The corollary is harsher \u2014 an opportunity you skip doesn't just expire, it never produces the ones that would have followed it.",q:"What opening in front of you today would create another one by being taken?"},
+"He will win who knows when to fight and when not to fight.":{m:"Judgment about which battles to enter matters more than fighting well. Most losses come from engaging at the wrong moment, not from poor execution. Sun Tzu rates restraint as a weapon, not as caution.",q:"What are you about to engage with today that you'd be better off leaving alone?"},
+"The supreme art of war is to subdue the enemy without fighting.":{m:"The best outcome costs nothing, because the problem dissolves \u2014 you arranged things so the fight became unnecessary. Sun Tzu treats the fight itself as evidence of an earlier failure of positioning.",q:"Which conflict on your plate could be dissolved rather than won?"},
+"Do not act as your opponent expects. Move where he is not.":{m:"Predictability is the vulnerability. Advantage lives where nobody has prepared a defence, which usually means the unglamorous, unattended thing rather than the obvious frontal push.",q:"Where is the unattended ground in the problem you're stuck on?"},
+"Think lightly of yourself and deeply of the world.":{m:"Hold your own importance loosely and give your full attention outward. Not self-hatred \u2014 self-forgetting, which is what lets you see clearly. Musashi wrote this near the end of his life, living in a cave, after some sixty duels he never lost. A man with every reason for ego concluded it was dead weight.",q:"Where is your attention on yourself today when it should be on the work?"},
+"Do nothing which is of no use.":{m:"The most brutally simple of Musashi's rules. Every action either serves the aim or dilutes it. This isn't about being busy \u2014 it's about removing motions that feel like effort and produce nothing.",q:"What will you do today purely out of habit that produces nothing?"},
+"Perceive that which cannot be seen with the eye.":{m:"Read the situation underneath the visible one \u2014 intent, rhythm, what someone isn't saying. In a duel the visible sword is the least useful information. Musashi trained perception as a skill rather than treating it as a gift.",q:"In the conversation you're dreading today, what's actually going on underneath it?"},
+"You must understand that there is more than one path to the top of the mountain.":{m:"The goal is fixed; the route isn't. People fail by fusing the two \u2014 deciding an aim is impossible when really one approach failed. Musashi worked across painting, calligraphy and sculpture and treated them all as the same study.",q:"Which blocked route have you mistaken for a blocked goal?"},
+"Today is victory over yourself of yesterday; tomorrow is your victory over lesser men.":{m:"The only opponent that counts is who you were. Comparison with other people is noise \u2014 either flattering or crushing, and useless either way. Musashi's ladder puts self-improvement first and superiority over others a distant second.",q:"What did yesterday's version of you do that today's doesn't have to?"},
+"Get beyond love and grief: exist for the good of man.":{m:"Not a rejection of feeling, but of being governed by it. Musashi argues for a life organised around usefulness rather than around the swings of your own emotional weather \u2014 steadiness as a service to other people.",q:"What would you do today if your mood weren't a factor in the decision?"},
+"You have power over your mind \u2014 not outside events. Realize this, and you will find strength.":{m:"The load-bearing idea of Stoicism: split the world into what you control \u2014 your judgment, your response \u2014 and what you don't, then spend your energy only on the first. Marcus wrote this to himself at night, in a tent on the Danube frontier, while running an empire and losing children to plague. It was maintenance, not theory.",q:"What are you carrying today that was never actually yours to carry?"},
+"The impediment to action advances action. What stands in the way becomes the way.":{m:"The obstacle isn't in the way of the work; handled properly it becomes the work. A blocked road forces a better route; a difficult person teaches a patience you couldn't get otherwise. Marcus is describing a conversion, not a consolation.",q:"What's blocking you today, and what would it teach if you stopped resenting it?"},
+"Waste no more time arguing what a good man should be. Be one.":{m:"The debate is a sophisticated form of avoidance \u2014 you can spend a life refining a definition of virtue and never practise any of it. Marcus wrote it as a rebuke to himself, a philosopher-king with every excuse to theorise instead.",q:"What have you been deciding about instead of doing?"},
+"When you arise in the morning, think of what a privilege it is to be alive \u2014 to think, to enjoy, to love.":{m:"The exact instruction for this hour. The passage continues: to think, to enjoy, to love. It opens with Marcus not wanting to get out of bed \u2014 this is the argument he used on himself, which is why it isn't saccharine.",q:"What's the first thing you'll notice today, if you decide to notice something?"},
+"Confine yourself to the present.":{m:"Anxiety needs a future to live in and regret needs a past; the present is too narrow for either to fit. Marcus isn't recommending shallowness \u2014 he's pointing out that this hour is the only place where action is possible.",q:"What are you rehearsing that hasn't happened yet?"},
+"It is not death that a man should fear, but never beginning to live.":{m:"The real loss isn't the ending, it's arriving at it having postponed everything. Marcus is arguing that a deferred life is already partly spent \u2014 the fear is aimed at the wrong target.",q:"What have you been postponing until conditions improve?"},
+"We suffer more often in imagination than in reality.":{m:"Most of what we dread never happens, or lands smaller than the rehearsal. The rehearsal costs real hours and real sleep regardless. Seneca \u2014 enormously wealthy, and eventually ordered by Nero to kill himself \u2014 knew the difference between imagined and actual catastrophe.",q:"What are you dreading, and what's the honest probability of it?"},
+"It is not that we have a short time to live, but that we waste much of it.":{m:"From On the Shortness of Life. Seneca's argument is that life is long enough for anything, provided it isn't leaked away on other people's priorities and your own distractions. A complaint about time is usually a complaint about attention.",q:"Where does your time actually go \u2014 and did you choose it?"},
+"Every new beginning comes from some other beginning's end.":{m:"Beginnings aren't free. They're paid for by endings, which is why they feel like loss as much as opportunity. Nothing starts in a vacuum, and pretending otherwise is why so many new starts stall.",q:"What would have to end for the thing you want to begin?"},
+"Luck is what happens when preparation meets opportunity.":{m:"Chance is real, but it only converts for someone who is ready when it turns up. Preparation is the controllable half \u2014 you can't schedule the opening, only your readiness for it.",q:"What are you preparing for that hasn't shown up yet?"},
+"He who is brave is free.":{m:"Fear is the mechanism of most captivity \u2014 the job you won't leave, the conversation you won't have, the thing you won't say. Courage isn't the absence of the fear; it's what buys back the freedom the fear took.",q:"What is fear currently deciding on your behalf?"},
+"It's not what happens to you, but how you react to it that matters.":{m:"The event and your response are separable, and the gap between them is where a life is actually made. Epictetus was born a slave and left lame by an injury \u2014 when he says circumstances don't determine you, it isn't from a comfortable chair.",q:"Where today will the gap between what happens and how you answer it be widest?"},
+"First say to yourself what you would be; and then do what you have to do.":{m:"Identity comes before method. Decide what you're becoming and the required actions stop being negotiable \u2014 they're simply what that person does. This is backwards from how most people work, which is to act first and infer who they are afterwards.",q:"Who are you being today, and does the plan match?"},
+"No man is free who is not master of himself.":{m:"External freedom counts for little if your appetites, your temper and your phone hold the reins. Epictetus, who had literally been owned, insisted the more consequential slavery was the internal one.",q:"What runs you that you'd rather run?"},
+"Wealth consists not in having great possessions, but in having few wants.":{m:"Enough is reachable two ways \u2014 get more, or want less \u2014 and only one of them is under your control. Epictetus notes the second is faster, cheaper, and available immediately.",q:"What would drop off your list if you wanted slightly less?"},
+"Make the best use of what is in your power, and take the rest as it happens.":{m:"The entire Stoic method in one instruction: full effort on your part, full acceptance of the outcome. Not resignation \u2014 the effort is real, it just doesn't come with a guarantee attached.",q:"What's fully in your power today, and are you actually spending yourself there?"},
+"Discipline equals freedom.":{m:"The paradox is the point. Constraints chosen in advance produce more freedom than an open day does, because the person with no system is at the mercy of every impulse and interruption. Willink is a former SEAL commander writing for people who'd rather negotiate with their alarm clock.",q:"Which constraint, if you actually kept it, would give you more freedom this week?"},
+"The obstacle is the way.":{m:"The compressed form of the line from Meditations \u2014 what stands in your way becomes the path. The blocked thing isn't the enemy of progress; handled properly, it is the progress.",q:"What obstacle today is actually the assignment?"},
+"What you seek is seeking you.":{m:"The pull you feel toward something isn't one-directional \u2014 the thing you're drawn to has a claim on you too. Rumi was a respected 13th-century scholar whose life split in two when he met the wandering mystic Shams of Tabriz; the poems come out of that rupture.",q:"What have you been drawn to for years and kept filing as a distraction?"},
+"Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.":{m:"The move from fixing the world to fixing yourself, which Rumi frames as the whole difference between cleverness and wisdom. Not withdrawal \u2014 a recognition that the self is the only piece you have direct access to.",q:"What are you trying to change in someone else that you'd get further changing in yourself?"},
+"The wound is the place where the Light enters you.":{m:"What broke you is also where you became permeable \u2014 to other people, to understanding, to change. Rumi isn't romanticising the injury; he's observing that the intact never let anything in.",q:"What did your worst year teach you that comfort never would have?"},
+"Let yourself be silently drawn by the strange pull of what you really love. It will not lead you astray.":{m:"Trust the quiet attraction over the loud argument. Rumi's claim is that the pull toward what you genuinely love is trustworthy navigation \u2014 the rest of the line is \u201cit will not lead you astray.\u201d",q:"What pulls at you quietly that you keep overruling with reasons?"},
+"Tell me, what is it you plan to do with your one wild and precious life?":{m:"The last line of The Summer Day, arriving after a poem spent watching a grasshopper eat sugar out of her hand. The question is deliberately unanswerable in the abstract and entirely answerable today.",q:"What will you do with this one \u2014 not this life, this day?"},
+"Instructions for living a life: Pay attention. Be astonished. Tell about it.":{m:"Oliver's whole method in seven words, and the order matters: attention first, astonishment as its result, telling as what makes it real for anyone else. She walked the same woods for decades and never ran out of material.",q:"What will you pay real attention to today, and who will you tell?"},
+"You do not have to be good. You only have to let the soft animal of your body love what it loves.":{m:"The opening of Wild Geese, written for anyone worn out by performing virtue. The relief in it is that belonging isn't earned by being good enough \u2014 \u201cyou only have to let the soft animal of your body love what it loves.\u201d",q:"Where are you being good instead of being honest?"},
+"I do not ask the wounded person how he feels \u2014 I myself become the wounded person.":{m:"Whitman's radical proposal about empathy: not sympathy at a distance but imaginative occupation of someone else's position. He wrote it before nursing wounded soldiers through the Civil War, then spent years proving he meant it.",q:"Whose position could you actually occupy today instead of judging?"},
+"Keep your face always toward the sunshine, and shadows will fall behind you.":{m:"A statement about orientation, not optimism. The shadows don't disappear \u2014 they fall behind you, because of where you're facing. Which is more or less what this app is for.",q:"What are you facing this morning?"},
+"Re-examine all you have been told. Dismiss what insults your soul.":{m:"Permission to audit inherited belief \u2014 from family, work, religion, whoever handed it over \u2014 and discard what doesn't survive inspection. Whitman sets the test as visceral rather than logical: what insults your soul.",q:"What belief are you carrying that you never actually chose?"},
+"That you are here \u2014 that life exists, and identity; that the powerful play goes on, and you may contribute a verse.":{m:"The play was running before you and continues after; your part is small, real, and yours alone to write. Whitman means it as encouragement rather than diminishment \u2014 a verse is still a verse.",q:"What's your verse this year, and are you writing it or waiting?"},
+"Be patient toward all that is unsolved in your heart, and try to love the questions themselves.":{m:"From a letter to a young poet who wanted answers. Rilke counsels living the questions now instead of forcing premature resolutions, trusting that you may \u201cgradually, without noticing it, live along some distant day into the answer.\u201d",q:"Which unresolved question are you trying to force shut?"},
+"Perhaps all the dragons in our lives are princesses who are only waiting to see us act, just once, with beauty and courage.":{m:"The frightening thing may be waiting to see whether you'll act with courage \u2014 the fear and the transformation are the same event. Rilke suggests that what terrifies us is often what most wants us to grow up.",q:"What are you avoiding that's shaped exactly like the thing you need to do?"},
+"Let everything happen to you: beauty and terror. Just keep going. No feeling is final.":{m:"Full permission to feel everything, paired with the reminder that no state is permanent. Rilke's instruction is to stop bracing, because the bracing is what makes it last.",q:"What are you bracing against that would pass faster if you let it through?"},
+"Two roads diverged in a wood, and I \u2014 I took the one less traveled by, and that has made all the difference.":{m:"Almost universally read as a hymn to nonconformity. Frost wrote it teasing a friend who agonised over which way to walk, and the poem admits the two roads were \u201creally about the same.\u201d The honest reading: the choice mattered because it was made and lived, not because one path was better.",q:"Which choice are you still relitigating instead of living?"},
+"The best way out is always through.":{m:"Avoidance extends the trouble; the shortest route is the direct one, even when it's the least pleasant. The line has the flatness of something learned the hard way.",q:"What are you going around that you should be going through?"},
+"The woods are lovely, dark and deep, but I have promises to keep, and miles to go before I sleep.":{m:"The pull of stopping \u2014 of rest, of the beautiful and dangerous drift \u2014 set against the obligations that keep you moving. Frost doesn't resolve it. He just notes the miles.",q:"Which promise are you keeping today, and is it still one you'd make?"},
+"If you can keep your head when all about you are losing theirs and blaming it on you\u2026 yours is the Earth and everything that's in it.":{m:"The opening condition of If\u2014, written as advice to his son. The whole poem is one long sentence of conditions with the payoff withheld until the final line: \u201cyours is the Earth and everything that's in it.\u201d",q:"Where will you be the calm one today?"},
+"If you can meet with Triumph and Disaster and treat those two impostors just the same.":{m:"Both are impostors because both overstate their case \u2014 the win is less permanent and the loss less final than either feels at the time. Kipling's instruction is to treat them identically, which is much harder for triumph than for disaster.",q:"Which impostor visited recently, and did you believe it?"},
+"If you can fill the unforgiving minute with sixty seconds' worth of distance run.":{m:"Time is unforgiving because it doesn't refund the unused portion. Kipling isn't asking for frantic productivity but for presence \u2014 the minute filled rather than leaked.",q:"Which hour of today will you actually be present for?"},
+"Come, my friends, 'tis not too late to seek a newer world.":{m:"From Ulysses, spoken by an old Odysseus, bored on Ithaca, rounding up his aging crew for one more voyage. Tennyson wrote it in grief after losing his closest friend; it's an argument against ending while still alive.",q:"What's the newer world you'd still go looking for?"},
+"To strive, to seek, to find, and not to yield.":{m:"The last line of Ulysses and one of the most quoted in English. The order is the interesting part \u2014 striving and seeking come before finding, and not yielding comes after, because finding isn't the end of it.",q:"What are you not yielding on?"},
+"You may not control all the events that happen to you, but you can decide not to be reduced by them.":{m:"Events happen to you; the reduction is optional, and refusing it is yours to do. Angelou survived childhood trauma, years of chosen silence, and a career of doors held shut for her race and her sex, and made this her working position.",q:"What's been happening to you lately \u2014 and have you let it make you smaller?"},
+"Nothing will work unless you do.":{m:"The plainest line in the collection and the hardest to argue with. Systems, plans and intentions are all inert until somebody does the work.",q:"What plan are you waiting to feel ready for?"},
+"We may encounter many defeats but we must not be defeated.":{m:"The distinction is between an event and an identity. Defeats are things that happen; being defeated is something you agree to. Note that Angelou fully expects the defeats.",q:"What defeat are you treating as a verdict?"},
+"What lies behind us and what lies before us are tiny matters compared to what lies within us.":{m:"Past and future are both smaller than present capacity, and capacity is the only one of the three you can use. Emerson's Transcendentalism put enormous weight on the individual's own resources.",q:"What's within you that you keep discounting?"},
+"Nothing can bring you peace but yourself.":{m:"External arrangements \u2014 the promotion, the move, the argument finally settled \u2014 don't deliver peace, though they all promise to. The line lands hardest on anyone convinced the next thing will settle them.",q:"What are you expecting to bring you peace that can't?"},
+"Finish each day and be done with it. You have done what you could.":{m:"Emerson's instruction for the evening: close the day instead of dragging it into the night. The rest of the passage is the useful part \u2014 \u201csome blunders and absurdities no doubt crept in; forget them as soon as you can.\u201d",q:"What are you still carrying from yesterday that you're allowed to put down?"},
+"Start close in, don't take the second step or the third, start with the first thing close in, the step you don't want to take.":{m:"Whyte's antidote to overwhelm: not the grand plan, but the first small step you don't want to take. He's a poet who works with organisations precisely because grand plans are how capable people avoid starting.",q:"What's the step close in \u2014 the one you don't want to take?"},
+"Anything or anyone that does not bring you alive is too small for you.":{m:"A deliberately high bar. Whyte argues that work and relationships which deaden you aren't merely unpleasant, they're mismatched in scale: you are too big for them.",q:"What's currently too small for you?"},
+"The best time to plant a tree was 20 years ago. The second best time is now.":{m:"The years you didn't start are gone and unrecoverable; the only actionable moment is this one. The proverb's power is that it refuses the regret and the excuse in the same breath.",q:"What tree are you still not planting because you should have planted it years ago?"},
+"Wherever you go, there you are.":{m:"You can't outrun yourself with a change of scene \u2014 the new city, job or relationship arrives with you already in it. Kabat-Zinn brought mindfulness into Western medicine, and this is his summary of why attention has to travel with you.",q:"What are you hoping a change of scenery will fix?"},
+"The quieter you become, the more you can hear.":{m:"Perception is limited by internal noise more than external. Ram Dass \u2014 a Harvard psychologist who became a spiritual teacher \u2014 is pointing at the commentary running over the top of everything you try to listen to.",q:"What would you hear today if the commentary stopped?"},
+"Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor.":{m:"Feelings are weather, not climate, and the breath is the fixed point you can return to while they pass overhead. Thich Nhat Hanh taught this through the Vietnam War and decades of exile, so it isn't a soft claim.",q:"What's the weather in you this morning \u2014 and can you watch it instead of becoming it?"},
+"Smile, breathe, and go slowly.":{m:"Three instructions, all physical, all available in the next ten seconds. Thich Nhat Hanh consistently starts with the body rather than with belief: the smile changes the state, not the other way round.",q:"Which of the three would change this morning most?"},
+"Do what you can, with what you have, where you are.":{m:"A refusal of the three standard excuses \u2014 not enough ability, not enough resources, not the right position. Roosevelt's version of realism is to start from the actual situation rather than the deserved one.",q:"What could you start with exactly what you have right now?"},
+"How we spend our days is, of course, how we spend our lives.":{m:"There is no separate category called \u201cmy life\u201d existing apart from a sequence of ordinary days. The schedule is the biography. Quietly the most demanding line in the collection.",q:"If today repeated for a year, what life would that add up to?"},
+"Almost everything will work again if you unplug it for a few minutes \u2014 including you.":{m:"The comic version of a real principle: most malfunctions, mechanical and human, respond to a genuine interruption. Lamott writes about the value of stopping before you've earned it.",q:"What in you needs unplugging rather than fixing?"},
+"What you do today can improve all your tomorrows.":{m:"Today's actions compound forward \u2014 the ordinary Tuesday is doing more work than it appears to be. The claim is about accumulation rather than transformation, which makes it more useful.",q:"What small thing today would still be paying off in a year?"}
+};
+const STORY_NOTES={
+"The Empty Cup":{m:"The professor isn't stupid \u2014 he's accomplished, which is the problem. Expertise becomes a lid. The cup image is precise: fullness isn't a state of knowing enough, it's a state of having no room. Most mornings you arrive at the day already full of what you've decided it will be.",q:"What have you already concluded about today that you haven't actually checked?"},
+"Two Monks and the River":{m:"Note where the story locates the burden. The older monk did the harder thing physically and carried nothing; the younger did nothing and carried it for miles. Resentment is heavier than the act that caused it, and it's the only one of the two you're still choosing.",q:"What are you still carrying that the other person set down hours ago?"},
+"The Fisherman and the Consultant":{m:"The businessman isn't wrong about any single step \u2014 the plan is sound. He's wrong about the destination, and he never checks it, because the plan is so absorbing. That's the trap: competence at the climb quietly substitutes for asking where the ladder is leaning.",q:"What are you working toward that you already have some version of?"},
+"The Stonecutter":{m:"Every transformation is real and every one disappoints, because the dissatisfaction travels with him. The ending is the joke and the point at once \u2014 he becomes the thing he started as. Envy is a treadmill dressed as ambition.",q:"Whose position are you envying, and what would actually change if you had it?"},
+"Knowing Where to Tap":{m:"The invoice is the whole story. The market pays for the tap, but the value was the decades that told him where. Experienced people routinely undercharge \u2014 for money, for credit, for their own sense of worth \u2014 because the visible work looks small.",q:"What do you do quickly that took you years to learn to do quickly?"},
+"Salt in the Water":{m:"The master doesn't reduce the apprentice's pain or argue that it's unjustified. He changes the container. That's the honest version of perspective \u2014 not pretending the salt isn't there, but refusing to stay a glass.",q:"What's the salt today, and what would enlarge the container?"},
+"The Strawberry":{m:"The tigers don't leave. There's no rescue in this story and no lesson about escaping \u2014 the vine is still being gnawed at the end. The only move available is attention, and he spends it on the one good thing within reach.",q:"What's the strawberry today, and will you actually taste it?"},
+"Diogenes and the Emperor":{m:"Alexander could offer anything, which means he had leverage over everyone \u2014 except a man who wanted nothing. That's why Alexander's line at the end isn't a joke. He recognised the one person in the empire he couldn't buy.",q:"What do you want badly enough that it gives someone else leverage over you?"},
+"The Jar of Rocks":{m:"The demonstration only works in one order, and that's the entire teaching. It isn't about doing more; it's about sequence. Sand is not the enemy \u2014 sand poured first is. Your Top 3 exists to be the rocks.",q:"Did the rocks go in first this morning, or are you already pouring sand?"},
+"The Two Arrows":{m:"The first arrow is honest pain and needs no defending. The second is the story you tell about it \u2014 what it means about you, why it always happens to you. Worth noticing that the second is the one that keeps you awake.",q:"What second arrow are you loading right now?"},
+"The Trouble Tree":{m:"The carpenter doesn't suppress the bad day or pretend it away \u2014 he gives it a place and a time that isn't his kitchen. The detail that makes the story true is the last one: the troubles shrink overnight, unattended.",q:"Where does your bad day currently get put down \u2014 and who absorbs it if it doesn't?"},
+"The Window":{m:"He had nothing to give. No view, no health, no time. He invented the park daily and handed it over, and the other man lived on it for months. Generosity turns out not to require having anything.",q:"Whose day could you improve today purely by how you describe it to them?"},
+"The Last House":{m:"He cut the corners knowing exactly what he was doing, which is what makes it land. Nobody builds badly by accident on the last job \u2014 they do it because they've decided it doesn't count. Almost everything counts.",q:"What are you currently treating as though it doesn't count?"},
+"This Too Shall Pass":{m:"The ring works in both directions, and the humbling half is the one people forget. In the good stretch it stops you building a life on weather; in the bad one it's the only handhold. Same six words, opposite jobs.",q:"Which direction do you need it pointing this morning?"},
+"Sharpening the Axe":{m:"The young man's error isn't laziness, it's that his effort was visible and continuous, which felt like virtue. The older man's rest was indistinguishable from slacking right up until the count. Recovery only looks like waste from outside.",q:"What's your axe, and when did you last stop long enough to sharpen it?"},
+"The Farmer's Horse":{m:"Four times the village is certain, and four times they're early. The farmer isn't being wise or detached \u2014 he's being accurate. He genuinely doesn't know yet, and neither do they, and neither do you about this week.",q:"What did you judge too quickly this week that hasn't finished happening?"},
+"The Cracked Pot":{m:"The bearer knew about the crack the whole time and planted around it. He didn't fix the flaw or forgive it \u2014 he built a use for it. Two years of shame over something that was already accounted for.",q:"What do you keep apologising for that the people around you have long since planned around?"},
+"Two Rabbits":{m:"The story refuses you a twist on purpose. There's no clever resolution where the hunter gets both, because there isn't one. He runs as hard as the man who eats and goes home hungry anyway.",q:"Which rabbit are you actually chasing today \u2014 and what's the second one you haven't admitted to?"}
+};
 
 const JOKES=[
 "I told my doctor I broke my arm in two places. He told me to stop going to those places.",
@@ -1256,8 +1372,39 @@ function renderLook(){
 
 /* ============================= SPARK / LAUGH / STORY ============================= */
 function renderSpark(){sparkI=Math.floor(Math.random()*S.quotes.length);paintSpark()}
+
+/* Explanations are written into the file, so this opens instantly and works
+   with no signal. A quote you added yourself has none — hide the button
+   rather than show someone else's note against your words. */
+function noteFor(kind){
+  if(kind==='spark'){
+    const q=S.quotes[sparkI];if(!q)return null;
+    return QUOTE_NOTES[parsePair(q)[0]]||null;
+  }
+  const st=STORIES[storyI];
+  return st?(STORY_NOTES[st.t]||null):null;
+}
+function paintNote(kind){
+  const n=noteFor(kind),btn=$(kind+'WhyBtn'),box=$(kind+'Note');
+  if(!btn||!box)return;
+  box.classList.remove('on');
+  btn.textContent='What does this mean?';
+  btn.style.display=n?'':'none';
+  const tip=$(kind+'Tip');                   // generic prompt only when there's no written note
+  if(tip)tip.style.display=n?'none':'';
+  if(n){$(kind+'NoteM').textContent=n.m;$(kind+'NoteQ').textContent=n.q}
+}
+function toggleNote(kind){
+  const n=noteFor(kind);if(!n)return;
+  const box=$(kind+'Note'),btn=$(kind+'WhyBtn');
+  const open=box.classList.toggle('on');
+  btn.textContent=open?'Close':'What does this mean?';
+  haptic(open?10:6);
+  if(open)setTimeout(()=>box.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'nearest'}),180);
+}
 function paintSpark(){const [q,a]=parsePair(S.quotes[sparkI]);
-  if($('sparkQ')){$('sparkQ').textContent='\u201C'+(q||S.quotes[sparkI])+'\u201D';$('sparkA').textContent=a||''}}
+  if($('sparkQ')){$('sparkQ').textContent='\u201C'+(q||S.quotes[sparkI])+'\u201D';$('sparkA').textContent=a||''}
+  paintNote('spark')}
 function newSpark(){if(S.quotes.length<2)return renderSpark();
   sparkI=(sparkI+1+Math.floor(Math.random()*(S.quotes.length-1)))%S.quotes.length;paintSpark()}
 function renderJoke(){jokeI=Math.floor(Math.random()*JOKES.length);$('jokeText').textContent=JOKES[jokeI]}
@@ -1265,6 +1412,7 @@ function newJoke(){jokeI=(jokeI+1+Math.floor(Math.random()*(JOKES.length-1)))%JO
 function paintStory(){const st=STORIES[storyI];
   $('storyTitle').textContent=st.t;$('storyRead').textContent=st.r;
   $('storyText').textContent=st.s;$('storyMoral').textContent=st.m;
+  paintNote('story');
   const el=$('s3');if(el)el.scrollTop=0}
 function renderStory(){storyI=Math.floor(Math.random()*STORIES.length);paintStory()}
 function newStory(){storyI=(storyI+1+Math.floor(Math.random()*(STORIES.length-1)))%STORIES.length;paintStory()}
@@ -1921,7 +2069,7 @@ function applyImport(text){
 }
 
 /* ============================= PWA ============================= */
-const APP_VERSION='v1.4 · 2026-08-24';
+const APP_VERSION='v1.5 · 2026-08-25';
 let deferredPrompt=null,swReg=null;
 /* a stuck install should never need devtools to escape */
 function checkUpdates(){

@@ -51,6 +51,7 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
   * 18 full-length fables, each with a takeaway
   * 30 one-liners
   * 18 hand-built mini crosswords, one per day
+* **"What does this mean?"** — every quote and every fable has a written explanation: what it means, where it came from, and a question to sit with. Written into the app, so it opens instantly and works with no signal.
 * **The month grid** — every morning you showed up, filled in. The streak as a shape, not just a number.
 * **Streak insurance** — one grace day a week, so forty days don't die to one bad Tuesday. It says so when it saves you.
 * **Look back** — an archive of past WINs, whether you hit them, and what you were grateful for.
