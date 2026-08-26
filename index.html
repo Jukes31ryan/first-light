@@ -254,6 +254,12 @@ flex:0 0 20px;padding-top:2px;font-weight:600}
 overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .idx-mark{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
 color:var(--ink3);flex:0 0 auto;padding-top:4px}
+.idx-go{flex:0 0 14px;width:14px;height:14px;margin-top:3px;stroke:var(--ink3);fill:none;
+stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
+.idx-row.next{padding-left:14px;margin-left:-16px;border-left:2px solid var(--accent)}
+.idx-row.next .idx-mark{color:var(--accent)}
+.idx-row.next .idx-go{stroke:var(--accent);opacity:1}
+.idx-row:active{background:var(--sheet)}
 .idx-row.done .idx-t{color:var(--ink2)}
 .idx-row.done .idx-s{opacity:.7}
 .idx-row.done .idx-mark{color:var(--done)}
@@ -481,13 +487,13 @@ color:var(--ink3);cursor:pointer}
 <div class="idx" id="idx"></div>
 </div>
 
-<button class="begin" onclick="go(1)">Begin the sequence</button>
+<button class="begin" id="beginBtn" onclick="go(FLOW.find(n=>statusOf(n)==='todo')||FLOW[0])">Begin the sequence</button>
 </div>
 </div>
 
 <!-- 1 SPARK -->
 <div class="scr" id="s1">
-<div class="nav"><button class="nav-btn" onclick="navBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Spark · 1 of 7</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn" onclick="flowBack(1)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav1"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="prog" id="p1"></div>
 <div class="main">
 <div class="h1 disp">The Spark</div>
@@ -506,12 +512,12 @@ color:var(--ink3);cursor:pointer}
 <div class="note-q disp"><div class="note-ql">Sit with it</div><span id="sparkNoteQ"></span></div>
 </div></div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(1,'skip');go(2)">Skip</button><button class="btn-go" onclick="mark(1,'done');go(2)">Continue</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(1,'skip');flowNext(1)">Skip</button><button class="btn-go" onclick="mark(1,'done');flowNext(1)">Continue</button></div></div>
 </div>
 
 <!-- 2 LAUGH -->
 <div class="scr" id="s2">
-<div class="nav"><button class="nav-btn" onclick="go(1)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Laugh · 2 of 7</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn" onclick="flowBack(2)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav2"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="prog" id="p2"></div>
 <div class="main">
 <div class="h1 disp">The Laugh</div>
@@ -519,12 +525,12 @@ color:var(--ink3);cursor:pointer}
 <div class="sheet"><div class="quote disp" id="jokeText" style="font-style:normal;font-weight:500;font-size:17px"></div></div>
 <div class="btn-row"><button class="btn-sec" onclick="newJoke()">Another &#8635;</button></div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(2,'skip');go(3)">Skip</button><button class="btn-go" onclick="mark(2,'done');go(3)">Continue</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(2,'skip');flowNext(2)">Skip</button><button class="btn-go" onclick="mark(2,'done');flowNext(2)">Continue</button></div></div>
 </div>
 
 <!-- 3 STORY -->
 <div class="scr" id="s3">
-<div class="nav"><button class="nav-btn" onclick="go(2)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Story · 3 of 7</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn" onclick="flowBack(3)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav3"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="prog" id="p3"></div>
 <div class="main">
 <div class="h1 disp" id="storyTitle"></div>
@@ -540,12 +546,12 @@ color:var(--ink3);cursor:pointer}
 <div class="note-q disp"><div class="note-ql">Sit with it</div><span id="storyNoteQ"></span></div>
 </div></div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(3,'skip');go(4)">Skip</button><button class="btn-go" onclick="mark(3,'done');go(4)">Continue</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(3,'skip');flowNext(3)">Skip</button><button class="btn-go" onclick="mark(3,'done');flowNext(3)">Continue</button></div></div>
 </div>
 
 <!-- 4 BREATHE -->
 <div class="scr" id="s4">
-<div class="nav"><button class="nav-btn" onclick="go(3)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Breathe · 4 of 7</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn" onclick="flowBack(4)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav4"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="prog" id="p4"></div>
 <div class="main">
 <div class="h1 disp">Breathe</div>
@@ -571,12 +577,12 @@ color:var(--ink3);cursor:pointer}
 </div>
 </div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(4,'skip');go(5)">Skip</button><button class="btn-go" onclick="mark(4,'done');go(5)">Continue</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(4,'skip');flowNext(4)">Skip</button><button class="btn-go" onclick="mark(4,'done');flowNext(4)">Continue</button></div></div>
 </div>
 
 <!-- 5 SOFTWARE -->
 <div class="scr" id="s5">
-<div class="nav"><button class="nav-btn" onclick="go(4)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Software · 5 of 7</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn" onclick="flowBack(5)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav5"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="prog" id="p5"></div>
 <div class="main">
 <div class="h1 disp">Load the Software</div>
@@ -594,12 +600,12 @@ color:var(--ink3);cursor:pointer}
 </div>
 <div class="p" style="margin-top:26px;font-size:12px;text-align:center">Edit your software any time in Settings.</div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(5,'skip');go(6)">Skip</button><button class="btn-go" id="softGo" onclick="softGoAction()">Software loaded</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(5,'skip');flowNext(5)">Skip</button><button class="btn-go" id="softGo" onclick="softGoAction()">Software loaded</button></div></div>
 </div>
 
 <!-- 6 TODAY — THE THREE P'S -->
 <div class="scr" id="s6">
-<div class="nav"><button class="nav-btn" onclick="go(5)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Today &middot; 6 of 7</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn" onclick="flowBack(6)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav6"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="prog" id="p6"></div>
 <div class="main">
 
@@ -635,12 +641,12 @@ color:var(--ink3);cursor:pointer}
 </div>
 
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(6,'skip');go(7)">Skip</button><button class="btn-go" id="ppBtn" onclick="ppNext()">Next</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(6,'skip');flowNext(6)">Skip</button><button class="btn-go" id="ppBtn" onclick="ppNext()">Next</button></div></div>
 </div>
 
 <!-- 7 MINI CROSSWORD -->
 <div class="scr" id="s7">
-<div class="nav"><button class="nav-btn" onclick="go(6)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Mini · 7 of 7</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn" onclick="flowBack(7)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav7"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="prog" id="p7"></div>
 <div class="main">
 <div class="h1 disp">The Mini</div>
@@ -662,7 +668,7 @@ color:var(--ink3);cursor:pointer}
 </div>
 </div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(7,'skip');go(8)">Skip</button><button class="btn-go" onclick="mark(7,'done');go(8)">Finish</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(7,'skip');flowNext(7)">Skip</button><button class="btn-go" onclick="mark(7,'done');flowNext(7)">Finish</button></div></div>
 </div>
 
 <!-- 8 LAUNCH -->
@@ -1211,9 +1217,21 @@ function mark(n,st){
 }
 function stClass(j,cur){const st=statusOf(j);if(j===cur)return' now';if(st==='done')return' done';if(st==='skip')return' skip';return''}
 function prog(step){for(let i=1;i<=7;i++){const el=$('p'+i);if(!el)continue;el.innerHTML='';
-  for(let j=1;j<=7;j++){const d=document.createElement('div');d.className='prog-bar'+stClass(j,step);
-  d.title=STEP_NAMES[j-1];d.onclick=()=>go(j);el.appendChild(d)}}}
+  FLOW.forEach(j=>{const d=document.createElement('div');d.className='prog-bar'+stClass(j,step);
+  d.title=STEP_NAMES[j-1];d.onclick=()=>go(j);el.appendChild(d)})}}
 const STEP_NAMES=['Spark','Laugh','Story','Breathe','Software','Today','Mini'];
+/* The running order. Step numbers are permanent identifiers — they key
+   DAY.status on every day ever saved — so the order lives here instead of
+   renumbering the screens and silently rewriting history. */
+const FLOW=[1,3,7,5,4,6,2];        // Spark, Story, Mini, Software, Breathe, Today, Laugh
+const flowPos=n=>FLOW.indexOf(n);  // 0-based position of a step
+function flowNext(n){const i=flowPos(n);return go(i<0||i>=FLOW.length-1?8:FLOW[i+1])}
+function flowBack(n){const i=flowPos(n);return go(i<=0?0:FLOW[i-1])}
+function paintNav(n){
+  const el=$('nav'+n);if(!el)return;
+  const i=flowPos(n);
+  el.textContent=STEP_NAMES[n-1]+' · '+(i+1)+' of '+FLOW.length;
+}
 function go(n){
   saveDay();
   const dir=(n===0||n<curScr)?-1:1;curScr=n;
@@ -1221,7 +1239,7 @@ function go(n){
   if(n===0){syncDash();show('s0',dir);return}
   if(n===10){renderEvening();show('s10',dir);return}
   if(n===11){renderLook();show('s11',dir);return}
-  if(n>=1&&n<=7)prog(n);
+  if(n>=1&&n<=7){prog(n);paintNav(n)}
   show('s'+n,dir);
   if(n===1)renderSpark();
   if(n===2)renderJoke();
@@ -1243,6 +1261,7 @@ const CARDS=[
 ];
 let sparkI=null,jokeI=null,storyI=null;
 const MARK={done:'Done',skip:'Skipped',todo:''};
+const CHEV='<svg class="idx-go" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
 function syncDash(){
   const now=new Date();
@@ -1282,18 +1301,22 @@ function syncDash(){
   const done=[1,2,3,4,5,6,7].filter(n=>statusOf(n)==='done').length;
   $('seqCount').textContent=done+'/7';
   const rule=$('seqRule');rule.innerHTML='';
-  for(let n=1;n<=7;n++){
+  FLOW.forEach((n,i)=>{
     const seg=document.createElement('i');
     seg.style.setProperty('--seg','var(--s'+n+')');
-    if(statusOf(n)==='done')setTimeout(()=>seg.classList.add('on'),60+n*45);
+    if(statusOf(n)==='done')setTimeout(()=>seg.classList.add('on'),60+i*45);
     rule.appendChild(seg);
-  }
+  });
   const idx=$('idx');idx.innerHTML='';
-  const rows=[{n:1,t:'The Spark',s:'One idea to carry'}].concat(CARDS).concat([{n:6,t:'Today',s:'Purge, prioritise, name the win'}]);
-  rows.sort((a,b)=>a.n-b.n).forEach(c=>{
+  const all=[{n:1,t:'The Spark',s:'One idea to carry'}].concat(CARDS)
+    .concat([{n:6,t:'Today',s:'Purge, prioritise, name the win'}]);
+  const rows=FLOW.map(n=>all.find(c=>c.n===n)).filter(Boolean);
+  const nextUp=FLOW.find(n=>statusOf(n)==='todo');      // resume at the first untouched step,
+                                                        // not one you deliberately skipped
+  rows.forEach(c=>{
     const st=statusOf(c.n);
     const r=document.createElement('div');
-    r.className='idx-row '+st;
+    r.className='idx-row '+st+(c.n===nextUp?' next':'');
     r.style.setProperty('--seg','var(--s'+c.n+')');
     r.onclick=()=>go(c.n);
     let sub=c.s;
@@ -1301,9 +1324,9 @@ function syncDash(){
     if(c.n===7&&DAY.cwSolved)sub='Solved';
     if(c.n===6&&(DAY.win||'').trim())sub=DAY.win;
     if(justDone===c.n)r.classList.add('pop');
-    r.innerHTML='<div class="idx-n">'+String(c.n).padStart(2,'0')+'</div>'+
+    r.innerHTML='<div class="idx-n">'+String(flowPos(c.n)+1).padStart(2,'0')+'</div>'+
       '<div class="idx-b"><div class="idx-t disp">'+c.t+'</div><div class="idx-s">'+esc(sub)+'</div></div>'+
-      '<div class="idx-mark">'+MARK[st]+'</div>';
+      '<div class="idx-mark">'+(c.n===nextUp&&st==='todo'?'Start':MARK[st])+'</div>'+CHEV;
     idx.appendChild(r);
   });
 
@@ -1316,7 +1339,7 @@ function syncDash(){
   e.innerHTML='<div class="idx-n">&#8212;</div>'+
     '<div class="idx-b"><div class="idx-t disp">The Evening</div><div class="idx-s">'+
     (eveDone?'Closed out':(due?'Fifteen seconds. Close the loop.':'Waits for sundown'))+'</div></div>'+
-    '<div class="idx-mark">'+(eveDone?'Done':'')+'</div>';
+    '<div class="idx-mark">'+(eveDone?'Done':'')+'</div>'+CHEV;
   idx.appendChild(e);
   justDone=null;
 }
@@ -1494,7 +1517,7 @@ function paintSoft(){
     d.className='soft-dot'+(i===softI?' now':(i<=softMax?' seen':''));dots.appendChild(d)});
   $('softGo').textContent=last?'Software loaded':'Next reminder &#8594;';
 }
-function softNext(){if(softI<S.affirms.length-1){softI++;paintSoft()}else{mark(5,'done');go(6)}}
+function softNext(){if(softI<S.affirms.length-1){softI++;paintSoft()}else{mark(5,'done');flowNext(5)}}
 function softGoAction(){softNext()}
 function softPrev(){if(softI>0){softI--;paintSoft()}}
 
@@ -1643,10 +1666,10 @@ function ppWin(id){
 }
 function ppNext(){
   if(ppStage===1){reconcilePicks();
-    if(!liveItems().length){mark(6,'skip');return go(7)}
+    if(!liveItems().length){mark(6,'skip');return flowNext(6)}
     return ppGo(2)}
   if(ppStage===2){if(!ppPicks().length)return ppNudge('Tap at least one.');return ppGo(3)}
-  mark(6,'done');go(7);
+  mark(6,'done');flowNext(6);
 }
 function reconcilePicks(){
   const p=ppPicks().filter(id=>{const it=itemById(id);return it&&!it.done});
