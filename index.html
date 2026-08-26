@@ -136,7 +136,8 @@ z-index:1;-webkit-overflow-scrolling:touch}
 .nav{display:flex;align-items:center;justify-content:space-between;gap:14px;
 padding:calc(18px + env(safe-area-inset-top)) 24px 16px;position:sticky;top:0;z-index:50;
 background:var(--chrome);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-.nav-btn{width:34px;height:34px;border-radius:2px;background:none;border:none;color:var(--ink2);
+/* 44px box, 17px icon — the glyph stays the size it was, the target doesn't. */
+.nav-btn{width:44px;height:44px;border-radius:2px;background:none;border:none;color:var(--ink2);
 font-family:inherit;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
 .nav-btn:active{opacity:.5}
 .nav-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.5;
@@ -169,7 +170,7 @@ color:var(--accent);margin-top:20px}
 
 /* ── controls ── */
 .chips{display:flex;gap:0;margin-top:20px;border:1px solid var(--rule);border-radius:3px;overflow:hidden;width:fit-content}
-.chip{padding:10px 20px;background:none;border:none;border-right:1px solid var(--rule);
+.chip{padding:16px 20px;background:none;border:none;border-right:1px solid var(--rule);
 font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;
 color:var(--ink3);cursor:pointer}
 .chip:last-child{border-right:none}
@@ -184,6 +185,12 @@ textarea.input{border:1px solid var(--rule);border-radius:3px;padding:14px;backg
 font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--ink2);
 cursor:pointer;padding-bottom:3px}
 .btn-sec:active{opacity:.5}
+/* These are underlined text links — 12px tall by design, and padding would push
+   the underline off the text. Give them a 44px hit area instead, so the touch
+   target clears the accessibility floor without the look changing at all. */
+.btn-sec,.hero-new,.lookback{position:relative}
+.btn-sec::before,.hero-new::before,.lookback::before{
+content:'';position:absolute;left:-8px;right:-8px;top:50%;transform:translateY(-50%);height:44px}
 .foot{position:sticky;bottom:0;padding:16px 24px calc(26px + env(safe-area-inset-bottom));
 background:var(--chrome);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
 border-top:1px solid var(--rule);margin-top:auto}
@@ -214,7 +221,7 @@ padding:calc(34px + env(safe-area-inset-top)) 24px calc(30px + env(safe-area-ins
 .mh-title{font-size:12px;font-weight:600;letter-spacing:.34em;text-transform:uppercase;color:var(--ink)}
 .mh-tag{font-size:9px;font-weight:500;letter-spacing:.22em;text-transform:uppercase;color:var(--cool);margin-top:5px;opacity:.85}
 .mh-meta{font-size:12px;color:var(--cool);margin-top:7px;letter-spacing:.01em}
-.mh-actions{display:flex;gap:4px;margin:-8px -8px 0 0}
+.mh-actions{display:flex;gap:4px;margin:-13px -13px 0 0}
 .hero{margin:34px 0 0}
 .hero-q{font-size:27px;line-height:1.34;letter-spacing:-.016em;font-weight:400}
 .hero-foot{display:flex;align-items:baseline;justify-content:space-between;gap:18px;margin-top:20px}
@@ -245,6 +252,7 @@ border-left:2px solid var(--accent);cursor:pointer}
 .idx-row{display:flex;align-items:baseline;gap:16px;padding:17px 0;border-bottom:1px solid var(--rule);
 cursor:pointer;position:relative}
 .idx-row:active{opacity:.55}
+.idx-row:last-child{border-bottom:none}   /* the next .sect brings its own rule */
 .idx-n{font-size:11px;color:var(--seg,var(--accent));font-variant-numeric:tabular-nums;letter-spacing:.06em;
 flex:0 0 20px;padding-top:2px;font-weight:600}
 .idx-row.skip .idx-n{color:var(--ink3);font-weight:400}
@@ -409,7 +417,16 @@ text-transform:uppercase;outline:none;padding:0;caret-color:transparent}
 .cw-cell.good input{color:var(--done)}
 .cw-num{position:absolute;top:2px;left:3px;font-size:8px;font-weight:600;color:var(--ink3);pointer-events:none}
 .cw-clue{margin-top:26px;padding-top:18px;border-top:1px solid var(--rule);min-height:62px}
-.cw-clue-l{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:7px}
+.cw-clue-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:7px}
+.cw-clue-l{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--accent)}
+/* Flipping across/down was only ever a second tap on the cell, or the spacebar
+   — real, but invisible. This says so out loud. */
+.cw-flip{position:relative;flex:0 0 auto;padding:0;background:none;border:none;font-family:inherit;
+font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);
+cursor:pointer;border-bottom:1px solid var(--rule2)}
+.cw-flip::before{content:'';position:absolute;left:-10px;right:-10px;top:50%;
+transform:translateY(-50%);height:44px}
+.cw-flip:active{opacity:.5}
 .cw-clue-t{font-size:17px;line-height:1.4}
 .cw-list{margin-top:30px;display:grid;grid-template-columns:1fr 1fr;gap:26px}
 .cw-list h4{font-size:9px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);
@@ -427,7 +444,7 @@ margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--rule)}
 .eve-q{font-size:20px;line-height:1.35;margin-bottom:7px}
 .eve-sub{font-size:13px;color:var(--ink3);margin-bottom:18px;line-height:1.5}
 .seg{display:flex;border:1px solid var(--rule);border-radius:3px;overflow:hidden}
-.seg button{flex:1;padding:13px 8px;background:none;border:none;border-right:1px solid var(--rule);
+.seg button{flex:1;padding:16px 8px;background:none;border:none;border-right:1px solid var(--rule);
 font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.13em;text-transform:uppercase;
 color:var(--ink3);cursor:pointer}
 .seg button:last-child{border-right:none}
@@ -458,12 +475,15 @@ color:var(--ink3);cursor:pointer}
 <div class="mark" aria-hidden="true"><svg viewBox="0 0 200 26"><path d="M2 22h78"/><path d="M120 22h78"/><path d="M89 22a11 11 0 0 1 22 0"/><path d="M100 3v5"/><path d="M83 8l3 3.5"/><path d="M117 8l-3 3.5"/></svg></div>
 <div class="p" id="firstRun" style="display:none;margin-top:22px;font-size:13px;padding-left:14px;border-left:2px solid var(--accent)">Five minutes, top to bottom &mdash; or tap any one of them on its own. Skip whatever you like; it keeps your place.</div>
 
-<div class="hero" onclick="go(1)">
-<div class="hero-q disp" id="heroQ"></div>
-<div class="hero-foot">
-<div class="hero-a" id="heroA"></div>
-<button class="hero-new" onclick="event.stopPropagation();newSpark();syncDash()">Another &#8635;</button>
-</div>
+<!-- The call to action and the sequence come first, above the fold on every
+     phone. Everything below here is the day's state, which you only look at
+     once you know what the app is for. -->
+<button class="begin" id="beginBtn" onclick="beginAction()">Begin the sequence</button>
+
+<div class="sect">
+<div class="sect-l"><span>The sequence</span><span id="seqCount"></span></div>
+<div class="seq-rule" id="seqRule"></div>
+<div class="idx" id="idx"></div>
 </div>
 
 <div class="sect" id="focusSect" onclick="go(6)">
@@ -475,19 +495,19 @@ color:var(--ink3);cursor:pointer}
 <div class="win-list" id="winList"></div>
 </div>
 
+<div class="sect hero" onclick="go(1)">
+<div class="hero-q disp" id="heroQ"></div>
+<div class="hero-foot">
+<div class="hero-a" id="heroA"></div>
+<button class="hero-new" onclick="event.stopPropagation();newSpark();syncDash()">Another &#8635;</button>
+</div>
+</div>
+
 <div class="sect">
 <div class="sect-l"><span id="monthName"></span><span id="monthCount"></span></div>
 <div class="month" id="month"></div>
 <button class="lookback" onclick="go(11)">Look back &#8594;</button>
 </div>
-
-<div class="sect">
-<div class="sect-l"><span>The sequence</span><span id="seqCount"></span></div>
-<div class="seq-rule" id="seqRule"></div>
-<div class="idx" id="idx"></div>
-</div>
-
-<button class="begin" id="beginBtn" onclick="go(FLOW.find(n=>statusOf(n)==='todo')||FLOW[0])">Begin the sequence</button>
 </div>
 </div>
 
@@ -654,17 +674,23 @@ color:var(--ink3);cursor:pointer}
 <div class="cw-meta"><span id="cwSize"></span><span class="cw-clock" id="cwTime">0:00</span></div>
 <div class="sheet" style="padding:26px 20px">
 <div class="cw-grid" id="cwGrid"></div>
-<div class="cw-clue"><div class="cw-clue-l" id="cwClueL">Across</div><div class="cw-clue-t disp" id="cwClueT"></div></div>
+<div class="cw-clue">
+<div class="cw-clue-head">
+<div class="cw-clue-l" id="cwClueL">Across</div>
+<button class="cw-flip" id="cwFlipBtn" onclick="cwFlip()" aria-label="Switch between the across and down clue">Down &#8645;</button>
+</div>
+<div class="cw-clue-t disp" id="cwClueT"></div>
+</div>
 <div class="cw-msg" id="cwMsg"></div>
+<div class="cw-list" style="width:100%">
+<div><h4>Across</h4><div id="cwAcross"></div></div>
+<div><h4>Down</h4><div id="cwDown"></div></div>
+</div>
 <div class="btn-row">
 <button class="btn-sec" onclick="cwCheck()">Check</button>
 <button class="btn-sec" onclick="cwRevealWord()">Reveal word</button>
 <button class="btn-sec" onclick="cwRevealAll()">Solve it</button>
 <button class="btn-sec" onclick="cwClear()">Clear</button>
-</div>
-<div class="cw-list" style="width:100%">
-<div><h4>Across</h4><div id="cwAcross"></div></div>
-<div><h4>Down</h4><div id="cwDown"></div></div>
 </div>
 </div>
 </div>
@@ -1434,6 +1460,27 @@ function show(id,dir){
   el.classList.add('on');el.scrollTop=0;
 }
 function statusOf(n){return (DAY.status||{})[n]||'todo'}
+/* Where the dashboard's big button goes: the first untouched step, or the
+   Launch recap once there are none left. syncDash() labels it from the same
+   rule. It used to fall back to FLOW[0], which sent you back to the Spark
+   after you'd finished all seven. */
+function beginTarget(){const n=FLOW.find(x=>statusOf(x)==='todo');return n===undefined?8:n}
+function beginAction(){go(beginTarget())}
+
+/* The sunrise band ends just under the call to action. Measured from the band's
+   own top edge rather than via offsetTop, which depends on which ancestor
+   happens to be positioned. Re-run on font load and on resize: the embedded
+   faces parse asynchronously, so the first measurement is taken against
+   fallback metrics and lands a few pixels short. */
+function sizeBand(){
+  const begin=$('beginBtn'),bandEl=$('band');
+  if(!begin||!bandEl||!begin.offsetParent)return;
+  const top=bandEl.getBoundingClientRect().top;
+  bandEl.style.setProperty('--band-height',
+    Math.round(begin.getBoundingClientRect().bottom-top+30)+'px');
+}
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(sizeBand).catch(()=>{});
+addEventListener('resize',sizeBand);
 function mark(n,st){
   const was=(DAY.status||{})[n];
   DAY.status=DAY.status||{};DAY.status[n]=st;saveDay();
@@ -1517,8 +1564,10 @@ function syncDash(){
   $('focusMark').style.color='var(--done)';
   $('winList').innerHTML=t3.map((x,i)=>'<div class="win-item"><i>'+(i+1)+'</i><span>'+esc(x)+'</span></div>').join('');
 
-  const foot=document.querySelector('.hero-foot');
-  if(foot)$('band').style.setProperty('--band-height',(foot.offsetTop+foot.offsetHeight+34)+'px');
+  /* The sunrise band ends just under the call to action. It used to be anchored
+     to the hero quote, which now sits far down the page — following it there
+     would drag the gradient a thousand pixels down. */
+  sizeBand();
   renderMonth();
 
   // the sequence, as a contents list
@@ -1537,6 +1586,14 @@ function syncDash(){
   const rows=FLOW.map(n=>all.find(c=>c.n===n)).filter(Boolean);
   const nextUp=FLOW.find(n=>statusOf(n)==='todo');      // resume at the first untouched step,
                                                         // not one you deliberately skipped
+  /* The button names where it goes. beginTarget() is what it actually does, so
+     the label and the destination can't disagree. */
+  const started=FLOW.some(n=>statusOf(n)!=='todo');
+  const nextRow=rows.find(c=>c.n===nextUp);
+  $('beginBtn').textContent=
+    nextUp===undefined ? 'Review the day' :
+    started            ? 'Continue — '+(nextRow?nextRow.t:'the sequence') :
+                         'Begin the sequence';
   rows.forEach(c=>{
     const st=statusOf(c.n);
     const r=document.createElement('div');
@@ -1545,6 +1602,7 @@ function syncDash(){
     r.onclick=()=>go(c.n);
     let sub=c.s;
     if(c.n===3&&storyI!==null&&st==='done')sub=STORIES[storyI].t;
+    if(c.n===7)sub=cwIsWeekend()?'Seven by seven':'Five by five';   // the weekend puzzle is bigger
     if(c.n===7&&DAY.cwSolved)sub='Solved';
     if(c.n===6&&(DAY.win||'').trim())sub=DAY.win;
     if(justDone===c.n)r.classList.add('pop');
@@ -2020,9 +2078,19 @@ function cwSelect(r,c,dir,focus){
   if(e)e.cells.forEach(([rr,cc])=>{const el=$('cw-'+rr+'-'+cc);if(el)el.classList.add('hl')});
   const cur=$('cw-'+r+'-'+c);if(cur)cur.classList.add('sel');
   if(e){$('cwClueL').textContent=(dir==='a'?'Across':'Down')+' · '+e.n;$('cwClueT').textContent=e.clue}
+  /* The toggle is labelled with the direction it switches TO, and hides itself
+     when this cell only belongs to one word — there'd be nothing to switch to. */
+  const flip=$('cwFlipBtn');
+  if(flip){
+    const other=cwEntryAt(r,c,dir==='a'?'d':'a');
+    flip.style.visibility=other?'visible':'hidden';
+    flip.textContent=(dir==='a'?'Down':'Across')+' ⇅';
+  }
   if(focus&&cur)cur.querySelector('input').focus();
   cwPaintList();
 }
+/* Same call the second-tap and spacebar paths already use. */
+function cwFlip(){if(!CW||!CW.sel)return;const [r,c]=CW.sel;cwSelect(r,c,CW.dir==='a'?'d':'a',true)}
 function cwMove(r,c,dir){
   if(r<0||r>=CW.N||c<0||c>=CW.N||CW.g[r][c]==='#')return;
   cwSelect(r,c,dir,true);
