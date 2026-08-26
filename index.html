@@ -1739,7 +1739,9 @@ function paintSoft(){
   const dots=$('softDots');dots.innerHTML='';
   list.forEach((_,i)=>{const d=document.createElement('div');
     d.className='soft-dot'+(i===softI?' now':(i<=softMax?' seen':''));dots.appendChild(d)});
-  $('softGo').textContent=last?'Software loaded':'Next reminder &#8594;';
+  /* textContent, so the arrow goes in as a character — an HTML entity here
+     would be shown literally rather than decoded. */
+  $('softGo').textContent=last?'Software loaded':'Next reminder →';
 }
 function softNext(){if(softI<S.affirms.length-1){softI++;paintSoft()}else{mark(5,'done');flowNext(5)}}
 function softGoAction(){softNext()}
