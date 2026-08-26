@@ -19,19 +19,29 @@ It takes about five minutes. Open it, tap through, get on with your life.
 
 Add it to your home screen and it runs full-screen and fully offline.
 
+### Sending it to someone
+
+Just send them the link. **Everybody gets their own copy automatically** — there is nothing to sign up for and nothing to set up.
+
+The app keeps everything in `localStorage`, which browsers scope to one device and one browser. So when your dad opens that URL on his phone, he gets an empty app: his own streak starting at day one, his own Top 3, his own WIN, his own principles in Settings. He never sees your answers and you never see his. The same link on your laptop is likewise a separate copy from the one on your phone.
+
+The trade-off is the same fact from the other side: your data lives on that one device, so use **Export** in Settings before you wipe a phone or clear your browser, and **Import** on the new one.
+
 ---
 
 ## ☀️ The Morning Sequence
 
+Brain first, planning once it's running, and out the door laughing.
+
 | # | Step | What happens |
 |---|------|--------------|
 | 1 | **Spark** | A quote to carry into the day. Fresh every time you open it |
-| 2 | **Laugh** | A one-liner, because life isn't that serious |
-| 3 | **Story** | A full-length fable that ends on an earned takeaway |
-| 4 | **Breathe** | A 2/5/10-minute timer with a breathing circle and a soft chime |
-| 5 | **Software** | Your own daily reminders, one card at a time, so they get read instead of skimmed |
+| 2 | **Story** | A full-length fable that ends on an earned takeaway |
+| 3 | **The Mini** | A crossword to switch the brain on — new puzzle daily, 7x7 at the weekend |
+| 4 | **Software** | Your own daily reminders, one card at a time, so they get read instead of skimmed |
+| 5 | **Breathe** | A 2/5/10-minute timer with a breathing circle and a soft chime |
 | 6 | **Today** | Purge the clutter, set your Top 3, name the one **WIN** |
-| 7 | **The Mini** | A 5x5 crossword to wake the brain up — new puzzle daily |
+| 7 | **Laugh** | A one-liner on the way out, because life isn't that serious |
 
 Then **Launch** recaps the day and ticks the streak.
 
@@ -47,10 +57,10 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
 
 * **Dashboard of tiles** — glanceable and color-coded. Your WIN and Top 3 stay on screen all day.
 * **A lot of content, no repetition:**
-  * 69 quotes — strategists (Sun Tzu, Musashi, Marcus Aurelius, Seneca, Epictetus) and poets (Rumi, Whitman, Oliver, Rilke, Frost, Tennyson, Angelou, Kipling, Emerson, Whyte)
-  * 18 full-length fables, each with a takeaway
+  * 100 quotes — strategists (Sun Tzu, Musashi, Marcus Aurelius, Seneca, Epictetus), philosophers (Socrates, Lao Tzu, Confucius, Nietzsche, Camus, Jung, Frankl) and poets (Rumi, Whitman, Oliver, Rilke, Frost, Tennyson, Angelou, Kipling, Emerson, Whyte)
+  * 50 full-length fables, each with a takeaway — Zen, Sufi, Aesop, Stoic and folk
   * 30 one-liners
-  * 18 hand-built mini crosswords, one per day
+  * 24 hand-built mini crosswords, one per day
 * **"What does this mean?"** — every quote and every fable has a written explanation: what it means, where it came from, and a question to sit with. Written into the app, so it opens instantly and works with no signal.
 * **The month grid** — every morning you showed up, filled in. The streak as a shape, not just a number.
 * **Streak insurance** — one grace day a week, so forty days don't die to one bad Tuesday. It says so when it saves you.
