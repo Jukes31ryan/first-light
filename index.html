@@ -367,6 +367,44 @@ display:flex;justify-content:space-between;align-items:baseline;gap:12px}
 .look-sub{font-size:13px;color:var(--ink2);line-height:1.55;margin-top:8px}
 .look-sub b{font-weight:600;color:var(--ink3);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
 display:block;margin-bottom:3px}
+.look-day{cursor:pointer;position:relative}
+.look-day:active{opacity:.55}
+.look-more{font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+color:var(--ink3);margin-top:12px}
+
+/* ── the journal: one day, read like a page ── */
+.jr-head{margin-top:6px}
+.jr-date{font-size:29px;line-height:1.2;letter-spacing:-.018em}
+.jr-meta{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+color:var(--cool);margin-top:9px}
+.jr-sect{margin-top:34px;padding-top:24px;border-top:1px solid var(--rule)}
+.jr-l{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--cool);
+display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:14px}
+.jr-win{font-size:25px;line-height:1.28;letter-spacing:-.016em;padding-left:16px;
+border-left:2px solid var(--accent)}
+/* Your own words get the serif and real size — they're the point of the page. */
+.jr-write{font-size:18px;line-height:1.55;letter-spacing:-.006em;white-space:pre-wrap}
+.jr-write+.jr-wl{margin-top:22px}
+.jr-wl{font-size:10px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;
+color:var(--ink3);margin-bottom:7px}
+.jr-row{display:flex;gap:12px;align-items:baseline;font-size:14px;color:var(--ink2);
+line-height:1.5;padding:7px 0}
+.jr-row i{font-style:normal;flex:0 0 18px;font-size:11px;color:var(--ink3);
+font-variant-numeric:tabular-nums}
+/* Strike the task, not the tick beside it. */
+.jr-row.off{color:var(--ink3)}
+.jr-row.off>span{text-decoration:line-through;text-decoration-thickness:1px}
+.jr-tag{flex:0 0 auto;font-size:9px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+color:var(--ink3)}
+.jr-steps{display:flex;flex-wrap:wrap;gap:7px}
+.jr-chip{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+padding:7px 11px;border:1px solid var(--rule2);border-radius:2px;color:var(--ink3)}
+.jr-chip.done{color:var(--done);border-color:var(--done)}
+.jr-chip.skip{color:var(--skip);border-color:var(--skip)}
+.jr-fact{font-size:14px;color:var(--ink2);line-height:1.55;margin-top:9px}
+.jr-fact b{font-weight:600;color:var(--ink3);font-size:10px;letter-spacing:.14em;
+text-transform:uppercase;display:block;margin-bottom:3px}
+.jr-empty{font-size:15px;color:var(--ink3);line-height:1.5;margin-top:26px}
 
 /* ── breathe ── */
 .med{display:flex;flex-direction:column;align-items:center;padding:16px 0}
@@ -707,6 +745,7 @@ color:var(--ink3);cursor:pointer}
 <div class="lbl">Freestyle note</div>
 <textarea class="input" id="note" rows="4" placeholder="Anything on your mind — dump it here"></textarea>
 <div class="p" id="yestNote" style="margin-top:14px;font-size:13px"></div>
+<div class="btn-row"><button class="btn-sec" onclick="openJournal(todayKey(),8)">Read today&#8217;s page &#8594;</button></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-go" onclick="finishDay()">Launch the day</button></div></div>
 </div>
@@ -760,9 +799,19 @@ color:var(--ink3);cursor:pointer}
 <div class="nav"><button class="nav-btn" onclick="go(0)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Look back</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
 <div class="main">
 <div class="h1 disp">Look back</div>
-<div class="p">Every morning you showed up, and what you said mattered that day.</div>
+<div class="p">Every morning you showed up. Tap any day to read the whole page.</div>
 <div id="lookList"></div>
 </div>
+</div>
+
+<!-- 12 THE JOURNAL — one day, in full -->
+<div class="scr" id="s12">
+<div class="nav"><button class="nav-btn" onclick="go(jrFrom)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">The journal</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="main"><div id="jrBody"></div></div>
+<div class="foot"><div class="foot-row" style="justify-content:space-between">
+<button class="btn-sec" id="jrPrev" onclick="jrStep(1)">&#8592; Earlier</button>
+<button class="btn-sec" id="jrNext" onclick="jrStep(-1)">Later &#8594;</button>
+</div></div>
 </div>
 
 <!-- 10 EVENING -->
@@ -1510,6 +1559,7 @@ function go(n){
   if(n===0){syncDash();show('s0',dir);return}
   if(n===10){renderEvening();show('s10',dir);return}
   if(n===11){renderLook();show('s11',dir);return}
+  if(n===12){renderJournal();show('s12',dir);return}
   if(n>=1&&n<=7){prog(n);paintNav(n)}
   show('s'+n,dir);
   if(n===1)renderSpark();
@@ -1670,9 +1720,120 @@ function renderLook(){
       (d.win?'<div class="look-win disp">'+esc(d.win)+'</div>':'<div class="look-win disp" style="color:var(--ink3)">No WIN set</div>')+
       (eve.grateful?'<div class="look-sub"><b>Grateful for</b>'+esc(eve.grateful)+'</div>':'')+
       (eve.win?'<div class="look-sub"><b>Win of the day</b>'+esc(eve.win)+'</div>':'')+
-      (d.note?'<div class="look-sub"><b>Note</b>'+esc(d.note)+'</div>':'');
+      (d.note?'<div class="look-sub"><b>Note</b>'+esc(d.note)+'</div>':'')+
+      '<div class="look-more">Read the day &#8594;</div>';
+    el.onclick=()=>openJournal(k);
     box.appendChild(el);
   });
+}
+
+/* ============================= THE JOURNAL =============================
+   One saved day rendered as a page. Everything comes out of flDay-<key>;
+   a section whose data is missing is left out entirely rather than shown
+   as a bare heading, because most old days predate half of these fields. */
+let jrKey=null;
+/* Today isn't in history() until you launch the day, but you can already open
+   its page from the recap — so include it as soon as a record exists. */
+/* Is there anything on this day worth turning a page to? saveDay() writes a
+   record on any navigation, so merely having one proves nothing. */
+function dayHasContent(d){
+  if(!d)return false;
+  const e=d.eve||{};
+  return !!((d.items&&d.items.length)||d.win||d.note||d.quote||d.story||d.joke||
+    d.cwSolved||d.med||(d.status&&Object.keys(d.status).length)||
+    e.grateful||e.win||e.hit);
+}
+function jrDays(){
+  const keys=Object.keys(history());
+  const t=todayKey();
+  if(keys.indexOf(t)<0&&dayHasContent(readJSON('flDay-'+t,null)))keys.push(t);
+  return keys.sort().reverse();
+}
+let jrFrom=11;
+function openJournal(k,from){jrKey=k;jrFrom=from||11;go(12)}
+function jrStep(d){                          // +1 goes earlier, -1 goes later
+  const keys=jrDays(),i=keys.indexOf(jrKey);
+  if(i<0)return;
+  const n=keys[i+d];
+  if(n){jrKey=n;renderJournal()}
+}
+function renderJournal(){
+  const box=$('jrBody');
+  const keys=jrDays();
+  if(!jrKey)jrKey=keys[0]||todayKey();
+  const k=jrKey,d=readJSON('flDay-'+k,{}),eve=d.eve||{};
+  const i=keys.indexOf(k);
+  $('jrPrev').disabled=!(i>=0&&keys[i+1]);   // earlier
+  $('jrNext').disabled=!(i>0);               // later
+  $('jrPrev').style.opacity=$('jrPrev').disabled?'.3':'';
+  $('jrNext').style.opacity=$('jrNext').disabled?'.3':'';
+
+  const out=[];
+  const dt=new Date(k+'T12:00:00');
+  out.push('<div class="jr-head"><div class="jr-date disp">'+
+    dt.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'})+'</div>'+
+    '<div class="jr-meta">'+dt.getFullYear()+'</div></div>');
+
+  // ── the WIN, and whether it landed ──
+  const hit=eve.hit;
+  const hitTxt=hit==='yes'?'<span style="color:var(--done)">Hit it</span>'
+    :hit==='almost'?'<span style="color:var(--skip)">Almost</span>'
+    :hit==='no'?'<span style="color:var(--ink3)">Missed</span>':'';
+  if(d.win)out.push(sect('What mattered',hitTxt,'<div class="jr-win disp">'+esc(d.win)+'</div>'));
+
+  // ── the Top 3 (resolved through items; t1..t3 for records that predate them) ──
+  const byId=id=>((d.items||[]).find(x=>x.id===id)||{}).text||'';
+  let top=(d.picks||[]).map(p=>typeof p==='string'&&!byId(p)?p:byId(p)).filter(Boolean);
+  if(!top.length)top=[d.t1,d.t2,d.t3].filter(Boolean);
+  if(top.length)out.push(sect('The top three','',
+    top.map((t,n)=>'<div class="jr-row"><i>'+(n+1)+'</i><span>'+esc(t)+'</span></div>').join('')));
+
+  // ── everything that was on the list ──
+  if((d.items||[]).length){
+    const done=d.items.filter(x=>x.done).length;
+    out.push(sect('On the list',done+' of '+d.items.length+' done',
+      d.items.map(it=>'<div class="jr-row'+(it.done?' off':'')+'">'+
+        '<i>'+(it.done?'&#10003;':'&middot;')+'</i><span style="flex:1">'+esc(it.text)+'</span>'+
+        (it.carried?'<span class="jr-tag">'+esc(jrAge(it.from,k))+'</span>':'')+
+        '</div>').join('')));
+  }
+
+  // ── your own writing: the heart of the page ──
+  const w=[];
+  if(d.note)w.push('<div class="jr-wl">Note to self</div><div class="jr-write disp">'+esc(d.note)+'</div>');
+  if(eve.grateful)w.push('<div class="jr-wl">Grateful for</div><div class="jr-write disp">'+esc(eve.grateful)+'</div>');
+  if(eve.win)w.push('<div class="jr-wl">Win of the day</div><div class="jr-write disp">'+esc(eve.win)+'</div>');
+  if(w.length)out.push(sect('In your words','',w.join('')));
+
+  // ── how the morning went ──
+  const facts=[];
+  const st=d.status||{};
+  if(Object.keys(st).length)facts.push('<div class="jr-steps">'+
+    FLOW.map(n=>'<span class="jr-chip '+(st[n]||'')+'">'+STEP_NAMES[n-1]+'</span>').join('')+'</div>');
+  if(d.quote){const [q,a]=parsePair(d.quote);
+    facts.push('<div class="jr-fact"><b>The spark</b>“'+esc(q||d.quote)+'”'+(a?' — '+esc(a):'')+'</div>')}
+  if(d.story)facts.push('<div class="jr-fact"><b>The story</b>'+esc(d.story)+'</div>');
+  if(d.joke)facts.push('<div class="jr-fact"><b>The laugh</b>'+esc(d.joke)+'</div>');
+  if(d.cwSolved)facts.push('<div class="jr-fact"><b>The mini</b>Solved'+(d.cwTime?' in '+fmt(d.cwTime):'')+'</div>');
+  if(d.med)facts.push('<div class="jr-fact"><b>Breathe</b>You sat with it.</div>');
+  if(facts.length)out.push(sect('The morning','',facts.join('')));
+
+  if(out.length===1)out.push('<div class="jr-empty">Nothing was recorded for this day.</div>');
+  box.innerHTML=out.join('');
+
+  function sect(label,right,body){
+    return '<div class="jr-sect"><div class="jr-l"><span>'+label+'</span><span>'+right+'</span></div>'+body+'</div>';
+  }
+}
+/* Age of a carried item relative to the day being read, not to today. */
+function jrAge(from,onKey){
+  if(!from)return 'Carried';
+  const a=new Date(from+'T12:00:00'),b=new Date(onKey+'T12:00:00');
+  const days=Math.round((b-a)/86400000);
+  if(days===1)return 'Yesterday';
+  if(days>1&&days<7)return a.toLocaleDateString(undefined,{weekday:'long'});
+  if(days>=7)return days+' days earlier';
+  return 'Carried';
 }
 
 /* ============================= SPARK / LAUGH / STORY ============================= */
@@ -1707,16 +1868,23 @@ function toggleNote(kind){
   haptic(open?10:6);
   if(open)setTimeout(()=>box.scrollIntoView({behavior:REDUCED?'auto':'smooth',block:'nearest'}),180);
 }
+/* The journal names the quote and fable a past day gave you, so record them as
+   they're shown. Store the text, not the index: editing your quotes in Settings
+   reorders the pool and an index would come to point at something else. */
 function paintSpark(){const [q,a]=parsePair(S.quotes[sparkI]);
   if($('sparkQ')){$('sparkQ').textContent='\u201C'+(q||S.quotes[sparkI])+'\u201D';$('sparkA').textContent=a||''}
+  if(DAY.quote!==S.quotes[sparkI]){DAY.quote=S.quotes[sparkI];saveDay()}
   paintNote('spark')}
 function newSpark(){if(S.quotes.length<2)return renderSpark();
   sparkI=(sparkI+1+Math.floor(Math.random()*(S.quotes.length-1)))%S.quotes.length;paintSpark()}
-function renderJoke(){jokeI=Math.floor(Math.random()*JOKES.length);$('jokeText').textContent=JOKES[jokeI]}
-function newJoke(){jokeI=(jokeI+1+Math.floor(Math.random()*(JOKES.length-1)))%JOKES.length;$('jokeText').textContent=JOKES[jokeI]}
+function paintJoke(){$('jokeText').textContent=JOKES[jokeI];
+  if(DAY.joke!==JOKES[jokeI]){DAY.joke=JOKES[jokeI];saveDay()}}
+function renderJoke(){jokeI=Math.floor(Math.random()*JOKES.length);paintJoke()}
+function newJoke(){jokeI=(jokeI+1+Math.floor(Math.random()*(JOKES.length-1)))%JOKES.length;paintJoke()}
 function paintStory(){const st=STORIES[storyI];
   $('storyTitle').textContent=st.t;$('storyRead').textContent=st.r;
   $('storyText').textContent=st.s;$('storyMoral').textContent=st.m;
+  if(DAY.story!==st.t){DAY.story=st.t;saveDay()}
   paintNote('story');
   const el=$('s3');if(el)el.scrollTop=0}
 function renderStory(){storyI=Math.floor(Math.random()*STORIES.length);paintStory()}
@@ -1863,17 +2031,21 @@ function toggleItemDone(id){
 function renderItems(){
   const box=$('itemList');box.innerHTML='';
   const items=ppItems();
-  const carried=items.filter(i=>i.carried).length;
+  const carriedItems=items.filter(i=>i.carried);
+  const carried=carriedItems.length;
   if(carried){
+    // They all come from the same day, so name it rather than saying "yesterday".
+    const when=carriedAge(carriedItems[0].from).toLowerCase();
     const n=document.createElement('div');n.className='carried-note';
-    n.textContent=carried+(carried===1?' item carried over from yesterday. Cross off what you finished, ':' items carried over from yesterday. Cross off what you finished, ')+'or × what no longer matters.';
+    n.textContent=carried+(carried===1?' item':' items')+' carried over from '+when+
+      '. Cross off what you finished, or × what no longer matters.';
     box.appendChild(n);
   }
   items.forEach(it=>{
     const r=document.createElement('div');r.className='item'+(it.done?' done':'');
     r.innerHTML='<button class="item-check" aria-label="Mark done"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></button>'+
       '<div class="item-t">'+esc(it.text)+'</div>'+
-      (it.carried?'<span class="item-tag">Yesterday</span>':'')+
+      (it.carried?'<span class="item-tag">'+esc(carriedAge(it.from))+'</span>':'')+
       '<button class="item-x" aria-label="Remove">&times;</button>';
     r.querySelector('.item-check').onclick=()=>toggleItemDone(it.id);
     r.querySelector('.item-x').onclick=()=>removeItem(it.id);
@@ -1965,18 +2137,44 @@ function reconcilePicks(){
 function carryOver(){
   if(DAY.items&&DAY.items.length)return;
   if(DAY.purge)return;                       // a legacy day still to migrate
-  const y=new Date();y.setDate(y.getDate()-1);
-  const yd=readJSON('flDay-'+dateKey(y),{});
-  let left=[];
-  if(yd.items&&yd.items.length){
-    left=yd.items.filter(i=>!i.done).map(i=>i.text);
-  }else if(yd.purge){                        // yesterday predates the item list
-    const picked=(yd.picks||[]).filter(x=>typeof x==='string');
-    left=yd.purge.split('\n').map(x=>x.trim()).filter(x=>x&&picked.indexOf(x)<0);
+  /* Walk back from the most recent saved day, not from yesterday. Looking only
+     at yesterday meant one skipped Saturday stranded the whole list forever:
+     the record for yesterday didn't exist, nothing carried, and tomorrow the
+     same function looked at the wrong day again. */
+  const today=todayKey(),keys=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(!k||k.indexOf('flDay-')!==0||k.length!==16)continue;
+    const d=k.slice(6);
+    if(d<today)keys.push(d);
   }
-  if(!left.length)return;
-  DAY.items=left.map(t=>({id:uid(),text:cleanItem(t),done:false,carried:true}));
-  saveDay();
+  keys.sort().reverse();
+  for(const from of keys){
+    const yd=readJSON('flDay-'+from,{});
+    let left=[];
+    if(yd.items&&yd.items.length){
+      left=yd.items.filter(i=>!i.done).map(i=>i.text);
+    }else if(yd.purge){                      // that day predates the item list
+      const picked=(yd.picks||[]).filter(x=>typeof x==='string');
+      left=yd.purge.split('\n').map(x=>x.trim()).filter(x=>x&&picked.indexOf(x)<0);
+    }
+    if(!left.length)continue;                // a day where you finished everything
+    // `from` travels with the item so the tag can say how old it actually is.
+    DAY.items=left.map(t=>({id:uid(),text:cleanItem(t),done:false,carried:true,from:from}));
+    saveDay();
+    return;
+  }
+}
+/* How long ago a carried item is from, said honestly: "Yesterday" only when it
+   is, the weekday inside a week, and a plain count beyond that. */
+function carriedAge(from){
+  if(!from)return 'Carried';
+  const a=new Date(from+'T12:00:00'),b=new Date(todayKey()+'T12:00:00');
+  const days=Math.round((b-a)/86400000);
+  if(days<=0)return 'Today';
+  if(days===1)return 'Yesterday';
+  if(days<7)return a.toLocaleDateString(undefined,{weekday:'long'});
+  return days+' days ago';
 }
 /* ============================= THE MINI ==============================
    5x5 on weekdays, 7x7 at the weekend. Grid size is read from the puzzle,

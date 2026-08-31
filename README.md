@@ -64,8 +64,8 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
 * **"What does this mean?"** — every quote and every fable has a written explanation: what it means, where it came from, and a question to sit with. Written into the app, so it opens instantly and works with no signal.
 * **The month grid** — every morning you showed up, filled in. The streak as a shape, not just a number.
 * **Streak insurance** — one grace day a week, so forty days don't die to one bad Tuesday. It says so when it saves you.
-* **Look back** — an archive of past WINs, whether you hit them, and what you were grateful for.
-* **The three P's** — Purge (type it once), Prioritise (tap three), Put into action (tap one). Nothing is written twice, and unpicked items carry into tomorrow.
+* **Look back** — an index of every day you showed up. Tap one to open **the journal**: that day as a full page — what mattered and whether you hit it, your top three, everything that was on the list, your own writing, and what the morning gave you.
+* **The three P's** — Purge (type it once), Prioritise (tap three), Put into action (tap one). Nothing is written twice, and unfinished items carry forward from whenever you last opened the app — not just from yesterday — tagged with how old they are.
 * **Built to touch** — springs on press, haptics, a real breathing circle, and a sunrise burst when you finish. All of it toggleable, and it respects reduced-motion.
 * **Zero network requests** — fonts embedded, everything local. It works the same in a tunnel as at your kitchen table.
 * **Two looks** — **Dawn**, oat paper and ink for daylight, and **Dusk** for the hours before sunrise. Set in Fraunces over Inter.
