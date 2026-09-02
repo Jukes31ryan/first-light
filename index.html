@@ -580,7 +580,7 @@ color:var(--ink3);cursor:pointer}
 <div class="main">
 <div class="h1 disp">The Laugh</div>
 <div class="p">Life isn't that serious. Proof:</div>
-<div class="sheet"><div class="quote disp" id="jokeText" style="font-style:normal;font-weight:500;font-size:17px"></div></div>
+<div class="sheet"><div class="quote disp" id="jokeText" style="font-style:normal;font-weight:500;font-size:17px"></div><div class="quote-a" id="jokeWho"></div></div>
 <div class="btn-row"><button class="btn-sec" onclick="newJoke()">Another &#8635;</button></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(2,'skip');flowNext(2)">Skip</button><button class="btn-go" onclick="mark(2,'done');flowNext(2)">Continue</button></div></div>
@@ -963,9 +963,93 @@ const DEF_QUOTES=[
 "Between stimulus and response there is a space. In that space is our power to choose our response. | Viktor Frankl",
 "A ship in harbour is safe, but that is not what ships are built for. | John A. Shedd",
 "Tell me and I forget. Teach me and I remember. Involve me and I learn. | Benjamin Franklin",
+
+/* --- Americans, Greeks, scientists and writers --- */
+"Ask not what your country can do for you \u2014 ask what you can do for your country. | John F. Kennedy",
+"We choose to go to the Moon in this decade and do the other things, not because they are easy, but because they are hard. | John F. Kennedy",
+"Things do not happen. Things are made to happen. | John F. Kennedy",
+"Whatever you are, be a good one. | Abraham Lincoln",
+"I am a slow walker, but I never walk back. | Abraham Lincoln",
+"The best way to predict the future is to create it. | Abraham Lincoln",
+"If there is no struggle, there is no progress. | Frederick Douglass",
+"It is easier to build strong children than to repair broken men. | Frederick Douglass",
+"Go confidently in the direction of your dreams. Live the life you have imagined. | Henry David Thoreau",
+"It is not enough to be busy. The question is: what are we busy about? | Henry David Thoreau",
+"No one can make you feel inferior without your consent. | Eleanor Roosevelt",
+"You must do the thing you think you cannot do. | Eleanor Roosevelt",
+"The time is always right to do what is right. | Martin Luther King Jr.",
+"Faith is taking the first step even when you don't see the whole staircase. | Martin Luther King Jr.",
+"Don't count the days. Make the days count. | Muhammad Ali",
+"It isn't the mountains ahead to climb that wear you out; it's the pebble in your shoe. | Muhammad Ali",
+"Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason which today arm you against the present. | Mark Twain",
+"The two most important days in your life are the day you are born and the day you find out why. | Mark Twain",
+"A goal is not always meant to be reached; it often serves simply as something to aim at. | Bruce Lee",
+"The beginning is the most important part of the work. | Plato, The Republic",
+"Courage is knowing what not to fear. | Plato",
+"The first and greatest victory is to conquer yourself. | Plato",
+"We are what we repeatedly do. Excellence, then, is not an act but a habit. | Aristotle",
+"It is the mark of an educated mind to be able to entertain a thought without accepting it. | Aristotle",
+"Patience is bitter, but its fruit is sweet. | Aristotle",
+"There is only one good, knowledge, and one evil, ignorance. | Socrates",
+"I cannot teach anybody anything. I can only make them think. | Socrates",
+"No man ever steps in the same river twice, for it is not the same river and he is not the same man. | Heraclitus",
+"Character is destiny. | Heraclitus",
+"Life is like riding a bicycle. To keep your balance, you must keep moving. | Albert Einstein",
+"It's not that I'm so smart, it's just that I stay with problems longer. | Albert Einstein",
+"A person who never made a mistake never tried anything new. | Albert Einstein",
+"The first principle is that you must not fool yourself \u2014 and you are the easiest person to fool. | Richard Feynman",
+"I would rather have questions that can't be answered than answers that can't be questioned. | Richard Feynman",
+"Somewhere, something incredible is waiting to be known. | Carl Sagan",
+"Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less. | Marie Curie",
+"You want to write a sentence as clean as a bone. That is the goal. | James Baldwin",
+"You are your best thing. | Toni Morrison",
+"We are what we pretend to be, so we must be careful about what we pretend to be. | Kurt Vonnegut",
+"The world breaks everyone, and afterward many are strong at the broken places. | Ernest Hemingway",
+"Now that you don't have to be perfect, you can be good. | John Steinbeck",
 ];
 
 const QUOTE_NOTES={
+"Ask not what your country can do for you \u2014 ask what you can do for your country.":{m:"From the 1961 inaugural, delivered in twenty-degree cold to a country used to being sold things. The construction is a mirror, and the second half only lands because the first half names the instinct honestly \u2014 everyone does arrive asking. Kennedy doesn't scold the question; he flips it.",q:"Where have you been asking what this gives you, when the better question runs the other way?"},
+"We choose to go to the Moon in this decade and do the other things, not because they are easy, but because they are hard.":{m:"Rice University, 1962 \u2014 no rocket existed that could do it. He's making difficulty the *reason* rather than the obstacle, which is a strange and useful inversion: a goal you're certain of teaches you nothing on the way.",q:"What would you attempt this year precisely because it's hard?"},
+"Things do not happen. Things are made to happen.":{m:"Six words against the passive voice of a life. Events feel like weather until you've been the one making them, and then the difference is obvious and permanent.",q:"What are you waiting to happen that you could make happen?"},
+"Whatever you are, be a good one.":{m:"Lincoln had been a rail-splitter, a shopkeeper who failed, a postmaster and a lawyer before any of the rest. The line refuses the whole question of status and replaces it with craft \u2014 the job doesn't confer the dignity, the standard you hold does.",q:"Whatever you'll be today, what would the good version of it look like?"},
+"I am a slow walker, but I never walk back.":{m:"An honest admission followed by a harder claim. He isn't promising speed, which he can't control; he's promising direction, which he can. Most people invert this and promise speed.",q:"Are you moving slowly, or are you actually moving backwards?"},
+"The best way to predict the future is to create it.":{m:"Forecasting is a spectator's game. The line reframes the future as something built rather than awaited \u2014 which is either liberating or uncomfortable depending on how much of yours you've been waiting on.",q:"What part of your future are you still forecasting instead of building?"},
+"If there is no struggle, there is no progress.":{m:"Douglass taught himself to read while enslaved, escaped at twenty, and spent fifty years arguing. He isn't romanticising difficulty \u2014 he's stating a mechanism he watched work, and warning people who wanted the outcome without the cost.",q:"What are you hoping will improve without any struggle attached?"},
+"It is easier to build strong children than to repair broken men.":{m:"An argument about where effort is cheapest. Prevention is unglamorous and invisible \u2014 nobody thanks you for the crisis that never arrived \u2014 which is exactly why it gets skipped.",q:"Where are you postponing something small that will cost you enormously later?"},
+"Go confidently in the direction of your dreams. Live the life you have imagined.":{m:"From the conclusion of Walden, after two years in a one-room cabin he built himself. The load-bearing word is *confidently* \u2014 he'd tested the idea with his own life before recommending it, which most people offering this advice have not.",q:"Which direction have you been going tentatively, hedging in case it doesn't work?"},
+"It is not enough to be busy. The question is: what are we busy about?":{m:"Busyness is the most respectable way to avoid a life. Thoreau saw a whole town working hard at things nobody had chosen, and noticed that effort is not evidence of direction.",q:"You'll be busy today. Busy about what, exactly?"},
+"No one can make you feel inferior without your consent.":{m:"The word carrying the weight is consent \u2014 she's describing a transaction with two parties, not an assault with one. Someone can say the thing; the second half, where you agree with them, is separate and yours. She rebuilt a public life after private humiliation, so this was tested equipment.",q:"Whose opinion have you been consenting to lately?"},
+"You must do the thing you think you cannot do.":{m:"Note the precision: not the thing that's hard, the thing you've *decided* is beyond you. That belief is the target, and the only thing that dislodges it is evidence you generate yourself.",q:"What have you filed under can't that's really untested?"},
+"The time is always right to do what is right.":{m:"Written against the moderates who agreed with the goal and quarrelled with the timing. Waiting for a convenient moment to do the correct thing is how the correct thing never gets done.",q:"What's right that you've been waiting for a better moment to do?"},
+"Faith is taking the first step even when you don't see the whole staircase.":{m:"Not a claim about certainty \u2014 a claim about how much certainty is required to move. The whole staircase is never visible; demanding to see it is a sophisticated way of staying put.",q:"How much of the staircase are you demanding to see before you'll take one step?"},
+"Don't count the days. Make the days count.":{m:"Ali lost three prime years to a boxing ban and came back to win the title twice more. Counting is passive and makes time the enemy; making them count is the only available answer to a clock you can't stop.",q:"Is today something you'll get through, or something you'll use?"},
+"It isn't the mountains ahead to climb that wear you out; it's the pebble in your shoe.":{m:"Big challenges get respect, preparation and adrenaline. Small persistent irritations get tolerated for years, and they're what actually grind people down \u2014 precisely because each one seems too minor to stop and fix.",q:"What's the pebble you've been walking on for months?"},
+"Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason which today arm you against the present.":{m:"The anxiety is about facing tomorrow *without* tomorrow's resources \u2014 but you'll arrive with everything you have now, plus whatever the intervening time teaches you. You are never as unequipped as the worry assumes.",q:"What future problem are you rehearsing with today's resources and today's fear?"},
+"The two most important days in your life are the day you are born and the day you find out why.":{m:"The second one is not guaranteed, which is the quiet threat in the sentence. It can arrive at nineteen or sixty, and it arrives from doing things, not from thinking about them.",q:"Have you had the second day yet \u2014 and if not, what would move it closer?"},
+"A goal is not always meant to be reached; it often serves simply as something to aim at.":{m:"Reframes a missed target as a functioning one. The aim organised your effort, corrected your direction and told you what to practise \u2014 all of which happened whether or not you arrived.",q:"Which goal has been useful to you even though you haven't reached it?"},
+"The beginning is the most important part of the work.":{m:"Plato is talking about how things are founded \u2014 the first assumptions set what everything afterwards can become. It applies to a day exactly as it applies to a state: the first hour writes the rules the rest obeys.",q:"What did the beginning of today already decide about the rest of it?"},
+"Courage is knowing what not to fear.":{m:"A definition by subtraction. Courage isn't the absence of fear or a surplus of nerve \u2014 it's accurate assessment. Most of what frightens people isn't dangerous, and mistaking one for the other wastes the nerve you'll actually need.",q:"What are you afraid of today that isn't actually dangerous?"},
+"The first and greatest victory is to conquer yourself.":{m:"Plato ranks it first because every other victory depends on it \u2014 you cannot govern a city, or a company, or a family, from inside an ungoverned mind. It's also the only fight with no spectators and no medal.",q:"What in you needs governing before anything outside you will hold?"},
+"We are what we repeatedly do. Excellence, then, is not an act but a habit.":{m:"Aristotle relocates virtue from moments into patterns. It is generous \u2014 one failure doesn't define you \u2014 and demanding, because one triumph doesn't either. Only the repetition counts.",q:"What are you repeatedly doing, and what is it therefore making you?"},
+"It is the mark of an educated mind to be able to entertain a thought without accepting it.":{m:"The skill is holding an idea long enough to examine it while your identity stays out of the way. Rare then, rarer now \u2014 most people either adopt an idea or attack it within seconds of meeting it.",q:"Whose argument could you hold properly today before deciding what you think?"},
+"Patience is bitter, but its fruit is sweet.":{m:"He concedes the bitterness rather than talking you out of it, which is why the line survives. Patience genuinely is unpleasant while it's happening; the claim is only about what it pays, not how it feels.",q:"What are you in the bitter part of right now?"},
+"There is only one good, knowledge, and one evil, ignorance.":{m:"Socrates thought nobody knowingly chooses worse for themselves \u2014 that wrongdoing is a failure of understanding rather than of will. Severe and oddly forgiving at once: it makes cruelty a form of blindness.",q:"What are you calling someone's malice that might be their ignorance?"},
+"I cannot teach anybody anything. I can only make them think.":{m:"His whole method in one sentence \u2014 he asked questions and refused to supply answers, which annoyed Athens enough to kill him. Transmission isn't teaching; nothing arrives unless the other person does the work.",q:"Where are you trying to hand someone a conclusion instead of a question?"},
+"No man ever steps in the same river twice, for it is not the same river and he is not the same man.":{m:"Both halves move. The situation you're dreading and the self who will meet it have each changed since you last measured them, which makes most rehearsal of the past a study of something that no longer exists.",q:"What are you judging by a version of yourself that no longer exists?"},
+"Character is destiny.":{m:"Not fate delivered from outside \u2014 the accumulation of who you are meeting the world over and over. Which means destiny is partly editable, on a slow schedule, by exactly the small choices that feel too small to matter.",q:"What in your character is quietly writing your next few years?"},
+"Life is like riding a bicycle. To keep your balance, you must keep moving.":{m:"From a letter to his son in 1930. The physics is honest \u2014 a bicycle is unstable at rest and stable in motion \u2014 and so is the analogy: some kinds of steadiness are only available while you're going somewhere.",q:"Where are you trying to find your balance while standing still?"},
+"It's not that I'm so smart, it's just that I stay with problems longer.":{m:"From the most famous mind of the century, and worth taking literally rather than as modesty. Most problems aren't solved by superior intelligence but by refusing to leave \u2014 and leaving early feels perfectly reasonable at the time.",q:"Which problem did you leave too early?"},
+"A person who never made a mistake never tried anything new.":{m:"The clean logical contrapositive: a spotless record is evidence of caution, not competence. Anyone with no failures to point at has been operating well inside what they already knew.",q:"What's your most recent real mistake \u2014 and if there isn't one, what does that say?"},
+"The first principle is that you must not fool yourself \u2014 and you are the easiest person to fool.":{m:"The closing line of his 1974 Caltech address on scientific integrity. The second clause is what makes it useful: self-deception isn't a character flaw you might have, it's the default condition, and it requires active defence.",q:"What have you decided is true because you'd prefer it to be?"},
+"I would rather have questions that can't be answered than answers that can't be questioned.":{m:"A preference for live uncertainty over dead certainty. An unanswerable question keeps you working; an unquestionable answer stops you, and eventually stops being true without telling you.",q:"Which of your certainties haven't you allowed to be questioned in years?"},
+"Somewhere, something incredible is waiting to be known.":{m:"Sagan spent his life on the argument that wonder is a discipline rather than a mood. The sentence is aimed at the moment when the world starts feeling fully catalogued \u2014 which is always a failure of attention, never of the world.",q:"When did the world last surprise you, and when did you last let it?"},
+"Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less.":{m:"Written by a woman who worked with materials that eventually killed her, so she is not underestimating danger. The claim is about the *ratio* \u2014 that understanding is the only thing that reliably converts fear into something workable.",q:"What are you afraid of mostly because you haven't looked at it closely?"},
+"You want to write a sentence as clean as a bone. That is the goal.":{m:"Baldwin is talking about prose and about everything else. Clean as a bone means nothing decorative left \u2014 no hedging, no padding, nothing there to protect you. It's a standard for how you say things and how you live.",q:"What have you been saying with padding around it to keep yourself safe?"},
+"You are your best thing.":{m:"From Beloved, said to a woman who has spent the whole novel measuring her worth by what she has produced and what she has lost. The line refuses the accounting entirely \u2014 you are not the sum of your outputs.",q:"What have you been treating as your best thing instead of yourself?"},
+"We are what we pretend to be, so we must be careful about what we pretend to be.":{m:"The warning is in the second half. Pretending is not harmless practice \u2014 the performance becomes the person, whichever direction it's pointed, and usually before you notice the transfer happened.",q:"What have you been pretending lately, and is it something you'd want to become?"},
+"The world breaks everyone, and afterward many are strong at the broken places.":{m:"From A Farewell to Arms, and the honesty is in *many* rather than all. Hemingway isn't promising that damage improves you \u2014 he saw plenty that it didn't. He's saying strength there is possible, not automatic.",q:"Where are you strong now because something broke you first?"},
+"Now that you don't have to be perfect, you can be good.":{m:"From East of Eden. Perfection and quality are competitors, not allies \u2014 the fear of the first is the most common reason people never ship the second. The sentence reads like a release, because it is one.",q:"What would you finally get done if it only had to be good?"},
 "The unexamined life is not worth living.":{m:"Said at his own trial, with a death sentence on the table and an offer of exile if he'd stop philosophising. He refused. The claim is severe: a life you never inspect isn't merely unwise, it fails to be fully a life. Note that he wasn't asking for guilt \u2014 examination is closer to navigation than to self-criticism.",q:"What part of your life have you stopped examining because you already know what you'd find?"},
 "Knowing yourself is the beginning of all wisdom.":{m:"Aristotle put self-knowledge first because every other judgment runs through it \u2014 you can't weigh a decision accurately while wrong about your own motives. He meant something practical: knowing which flattery works on you, which fear moves you, which story you tell when you're wrong.",q:"What do you already know about yourself that you keep declining to act on?"},
 "A journey of a thousand miles begins beneath one's feet.":{m:"Usually rendered as \u201cbegins with a single step,\u201d but the older reading is better: it begins where you're standing. Not with a step you'll take later \u2014 with the ground under you now. Lao Tzu is arguing against the fantasy of a better starting point.",q:"What would starting from exactly where you are actually look like?"},
@@ -1126,31 +1210,85 @@ const JOKES=[
 "I used to think I was indecisive. Now I'm not so sure.",
 "The first rule of morning club: coffee first. There is no second rule until coffee.",
 "I bought a book on procrastination years ago. Still going to read it. The anticipation is incredible.",
-"Age is merely the number of years the world has been enjoying you. Act accordingly.",
 "My bed and I are perfect for each other, but my alarm clock keeps trying to break us up.",
-"I'm on a seafood diet. I see food, and I make a thoughtful, balanced decision. Usually.",
-"Blessed are those who can laugh at themselves, for they shall never cease to be amused.",
 "I asked the trainer if he could teach me to do the splits. He said, 'How flexible are you?' I said, 'I can't make Tuesdays.'",
-"Common sense is like deodorant. The people who need it most never use it.",
 "I finally decided to take control of my life. My life immediately requested a manager.",
 "A clean desk is a sign of a cluttered desk drawer.",
-"Some days you're the pigeon. Some days you're the statue. Today, be the pigeon.",
 "Hard work never killed anybody, but why take the chance?",
 "I named my dog 'Five Miles' so I can tell people I walk Five Miles every day.",
 "Experience is what you get when you didn't get what you wanted.",
 "I don't trip over things. I do random gravity checks.",
 "Every morning I make my bed, and every night my bed unmakes me. It's a partnership.",
 "Opportunity knocks once. Temptation leans on the doorbell.",
-"I'm not lazy. I'm on energy-saving mode.",
-"They say money talks. Mine just waves goodbye.",
-"A diamond is a lump of coal that handled pressure exceptionally well. Be the coal with a plan.",
 "My memory is so good I can remember things that haven't even happened yet. My worries, mostly. Cancelling that subscription today.",
 "Inside me there's a morning person. He's asleep.",
-"Do not take life too seriously. You will never get out of it alive anyway.",
 "I told my wife she should embrace her mistakes. She hugged me.",
 "I have a great work-life balance. Both of them are chaos, equally.",
 "The early bird gets the worm, but the second mouse gets the cheese. Timing is a personal decision.",
-"I'm reading a book about anti-gravity. It's impossible to put down."
+"I used to do drugs. I still do, but I used to, too. | Mitch Hedberg",
+"I'm against picketing, but I don't know how to show it. | Mitch Hedberg",
+"I haven't slept for ten days, because that would be too long. | Mitch Hedberg",
+"My fake plants died because I did not pretend to water them. | Mitch Hedberg",
+"I think Bigfoot is blurry, that's the problem. It's not the photographer's fault. | Mitch Hedberg",
+"An escalator can never break: it can only become stairs. You would never see an Escalator Temporarily Out Of Order sign. | Mitch Hedberg",
+"I like rice. Rice is great when you're hungry and you want two thousand of something. | Mitch Hedberg",
+"I don't have a girlfriend. But I do know a woman who'd be mad at me for saying that. | Mitch Hedberg",
+"I intend to live forever. So far, so good. | Steven Wright",
+"Borrow money from pessimists \u2014 they don't expect it back. | Steven Wright",
+"I've been doing a lot of abstract painting lately. Extremely abstract. No brush, no paint, no canvas. I just think about it. | Steven Wright",
+"Right now I'm having amnesia and d\u00e9j\u00e0 vu at the same time. I think I've forgotten this before. | Steven Wright",
+"I bought some powdered water, but I didn't know what to add. | Steven Wright",
+"Everywhere is within walking distance if you have the time. | Steven Wright",
+"I put instant coffee in a microwave oven and almost went back in time. | Steven Wright",
+"If you're not part of the solution, you're part of the precipitate. | Steven Wright",
+"I think they should have a Kids' Choice Awards for adults. But instead of kids voting, adults vote, and instead of awards, we get money. | Demetri Martin",
+"Sort of is such a harmless thing to say. Sort of. It's just a filler. But then you put it in a sentence like, I love you, and it completely changes the meaning. | Demetri Martin",
+"The worst time to have a heart attack is during a game of charades. | Demetri Martin",
+"I like the word accordion, mostly because it has the word cord in it. And also the word ion. | Demetri Martin",
+"Employee of the month is a good example of how somebody can be both a winner and a loser at the same time. | Demetri Martin",
+"I told my dentist my teeth are going yellow. He told me to wear a brown tie. | Rodney Dangerfield",
+"My psychiatrist told me I was crazy and I said I want a second opinion. He said okay, you're ugly too. | Rodney Dangerfield",
+"I looked up my family tree and found out I was the sap. | Rodney Dangerfield",
+"I can resist everything except temptation. | Oscar Wilde",
+"Some cause happiness wherever they go; others whenever they go. | Oscar Wilde",
+"I am so clever that sometimes I don't understand a single word of what I am saying. | Oscar Wilde",
+"I never forget a face, but in your case I'll be glad to make an exception. | Groucho Marx",
+"I refuse to join any club that would have me as a member. | Groucho Marx",
+"Outside of a dog, a book is a man's best friend. Inside of a dog it's too dark to read. | Groucho Marx",
+"I'd like to have a kid, but I'm not sure I'm ready to spend ten years of my life constantly asking someone where their shoes are. | Damien Fahey",
+"The cure for boredom is curiosity. There is no cure for curiosity. | Dorothy Parker",
+"This is not a novel to be tossed aside lightly. It should be thrown with great force. | Dorothy Parker",
+"I have never let my schooling interfere with my education. | Mark Twain",
+"Giving up smoking is the easiest thing in the world. I know because I've done it thousands of times. | Mark Twain",
+"The reports of my death are greatly exaggerated. | Mark Twain",
+"Always forgive your enemies \u2014 nothing annoys them so much. | Oscar Wilde",
+"A committee is a group that keeps minutes and loses hours. | Milton Berle",
+"The trouble with having an open mind is that people keep coming along and sticking things into it. | Terry Pratchett",
+"Wisdom comes from experience. Experience is often a result of lack of wisdom. | Terry Pratchett",
+"I love deadlines. I love the whooshing noise they make as they go by. | Douglas Adams",
+"He was a dreamer, a thinker, a speculative philosopher \u2014 or, as his wife would have it, an idiot. | Douglas Adams",
+"Nothing travels faster than the speed of light, with the possible exception of bad news, which obeys its own special laws. | Douglas Adams",
+"Before you criticise a man, walk a mile in his shoes. That way, when you do criticise him, you're a mile away and you have his shoes. | Jack Handey",
+"If you think nobody cares if you're alive, try missing a couple of car payments. | Earl Wilson",
+"Age is an issue of mind over matter. If you don't mind, it doesn't matter. | Satchel Paige",
+"The only mystery in life is why the kamikaze pilots wore helmets. | Al McGuire",
+"I've started saying let me look into that, which buys me four days and costs nothing.",
+"The gym at 6am is full of people who also can't believe they're there.",
+"Nothing sharpens the mind like a meeting that could have been an email about a meeting.",
+"I keep a list of things I'll do when I have more time. It is the only thing that grows reliably.",
+"My most productive hour is the one right before something is due. I've tried to move it. It won't come.",
+"The plan survived contact with the morning for almost nine minutes.",
+"There are two kinds of people: those who finish what they start.",
+"I don't procrastinate. I run everything on a just-in-time supply chain with no buffer and enormous risk.",
+"Somewhere between the third snooze and the fourth, a man learns who he really is.",
+"I bought the good notebook so the ideas would be worthy of it. The notebook is still empty. The system works.",
+"My phone knows me better than I do, which is why I don't let it near my goals.",
+"Every problem is simple once someone else has solved it in front of you slowly.",
+"I've reached the age where I take a nap to prepare for going to bed.",
+"I told myself I'd start Monday. There is always a Monday. This is the flaw in the plan.",
+"The hardest part of any workout is the part where you find your other shoe.",
+"I have excellent judgment. It's the follow-through that's under review.",
+"Confidence is walking into a room believing you belong. Coffee is how I get there."
 ];
 
 const STORIES=[
@@ -1391,6 +1529,11 @@ const dateKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+
 const todayKey=()=>dateKey(new Date());
 function dayOfYear(){const d=new Date();return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)}
 function parsePair(s){const i=s.indexOf('|');return i<0?['',s.trim()]:[s.slice(0,i).trim(),s.slice(i+1).trim()]}
+/* parsePair puts an unpaired string in the SECOND slot, which is what the note
+   lookup wants (no author, no key, no button). For display you want the
+   opposite: the text always, and an author only if one was actually given. */
+function splitLine(s){const i=String(s).indexOf('|');
+  return i<0?[String(s).trim(),'']:[s.slice(0,i).trim(),s.slice(i+1).trim()]}
 function readJSON(k,fb){try{return JSON.parse(localStorage.getItem(k))||fb}catch(e){return fb}}
 
 const S=Object.assign({affirms:DEF_AFFIRMS.slice(),quotes:DEF_QUOTES.slice()},readJSON('flSettings',{}));
@@ -1599,9 +1742,9 @@ function syncDash(){
   }
 
   if(sparkI===null)sparkI=Math.floor(Math.random()*S.quotes.length);
-  const [sq,sa]=parsePair(S.quotes[sparkI]);
-  $('heroQ').textContent='\u201C'+(sq||S.quotes[sparkI])+'\u201D';
-  $('heroA').textContent=sa||'';
+  const [sq,sa]=splitLine(S.quotes[sparkI]);
+  $('heroQ').textContent='\u201C'+sq+'\u201D';
+  $('heroA').textContent=sa;
 
   // focus
   const t3=[DAY.t1,DAY.t2,DAY.t3].filter(Boolean);
@@ -1810,10 +1953,11 @@ function renderJournal(){
   const st=d.status||{};
   if(Object.keys(st).length)facts.push('<div class="jr-steps">'+
     FLOW.map(n=>'<span class="jr-chip '+(st[n]||'')+'">'+STEP_NAMES[n-1]+'</span>').join('')+'</div>');
-  if(d.quote){const [q,a]=parsePair(d.quote);
-    facts.push('<div class="jr-fact"><b>The spark</b>“'+esc(q||d.quote)+'”'+(a?' — '+esc(a):'')+'</div>')}
+  if(d.quote){const [q,a]=splitLine(d.quote);
+    facts.push('<div class="jr-fact"><b>The spark</b>“'+esc(q)+'”'+(a?' — '+esc(a):'')+'</div>')}
   if(d.story)facts.push('<div class="jr-fact"><b>The story</b>'+esc(d.story)+'</div>');
-  if(d.joke)facts.push('<div class="jr-fact"><b>The laugh</b>'+esc(d.joke)+'</div>');
+  if(d.joke){const [jl,jw]=splitLine(d.joke);
+    facts.push('<div class="jr-fact"><b>The laugh</b>'+esc(jl)+(jw?' \u2014 '+esc(jw):'')+'</div>')}
   if(d.cwSolved)facts.push('<div class="jr-fact"><b>The mini</b>Solved'+(d.cwTime?' in '+fmt(d.cwTime):'')+'</div>');
   if(d.med)facts.push('<div class="jr-fact"><b>Breathe</b>You sat with it.</div>');
   if(facts.length)out.push(sect('The morning','',facts.join('')));
@@ -1871,13 +2015,18 @@ function toggleNote(kind){
 /* The journal names the quote and fable a past day gave you, so record them as
    they're shown. Store the text, not the index: editing your quotes in Settings
    reorders the pool and an index would come to point at something else. */
-function paintSpark(){const [q,a]=parsePair(S.quotes[sparkI]);
-  if($('sparkQ')){$('sparkQ').textContent='\u201C'+(q||S.quotes[sparkI])+'\u201D';$('sparkA').textContent=a||''}
+function paintSpark(){const [q,a]=splitLine(S.quotes[sparkI]);
+  if($('sparkQ')){$('sparkQ').textContent='\u201C'+q+'\u201D';$('sparkA').textContent=a}
   if(DAY.quote!==S.quotes[sparkI]){DAY.quote=S.quotes[sparkI];saveDay()}
   paintNote('spark')}
 function newSpark(){if(S.quotes.length<2)return renderSpark();
   sparkI=(sparkI+1+Math.floor(Math.random()*(S.quotes.length-1)))%S.quotes.length;paintSpark()}
-function paintJoke(){$('jokeText').textContent=JOKES[jokeI];
+function paintJoke(){
+  /* Jokes carry an optional "| Name" the same way quotes do. Ours are
+     unattributed and render with nothing underneath. */
+  const [line,who]=splitLine(JOKES[jokeI]);
+  $('jokeText').textContent=line;
+  const w=$('jokeWho');if(w)w.textContent=who;
   if(DAY.joke!==JOKES[jokeI]){DAY.joke=JOKES[jokeI];saveDay()}}
 function renderJoke(){jokeI=Math.floor(Math.random()*JOKES.length);paintJoke()}
 function newJoke(){jokeI=(jokeI+1+Math.floor(Math.random()*(JOKES.length-1)))%JOKES.length;paintJoke()}
