@@ -406,6 +406,73 @@ padding:7px 11px;border:1px solid var(--rule2);border-radius:2px;color:var(--ink
 text-transform:uppercase;display:block;margin-bottom:3px}
 .jr-empty{font-size:15px;color:var(--ink3);line-height:1.5;margin-top:26px}
 
+/* ── onboarding ── */
+.ob-step{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;
+color:var(--cool);margin-bottom:8px}
+.ob-row{display:flex;align-items:flex-start;gap:14px;padding:15px 0;
+border-bottom:1px solid var(--rule);cursor:pointer;position:relative}
+.ob-row:last-child{border-bottom:none}
+.ob-row:active{opacity:.6}
+.ob-box{flex:0 0 20px;width:20px;height:20px;border:1.5px solid var(--rule2);border-radius:3px;
+margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .18s ease}
+.ob-row.on .ob-box{background:var(--accent);border-color:var(--accent)}
+.ob-box svg{width:12px;height:12px;stroke:var(--btn-text);fill:none;stroke-width:2.6;
+stroke-linecap:round;stroke-linejoin:round;opacity:0}
+.ob-row.on .ob-box svg{opacity:1}
+.ob-b{flex:1}
+.ob-t{font-size:16px;line-height:1.3}
+.ob-s{font-size:12.5px;color:var(--ink3);line-height:1.45;margin-top:3px}
+.ob-warn{font-size:11.5px;color:var(--skip);line-height:1.45;margin-top:5px}
+.ob-ord{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid var(--rule)}
+.ob-ord:last-child{border-bottom:none}
+.ob-n{flex:0 0 22px;font-size:11px;font-weight:600;color:var(--accent);
+font-variant-numeric:tabular-nums}
+.ob-ord .ob-t{flex:1}
+.ob-arrows{display:flex;gap:4px;flex:0 0 auto}
+.ob-ar{width:44px;height:44px;background:none;border:1px solid var(--rule2);border-radius:3px;
+color:var(--ink2);display:flex;align-items:center;justify-content:center;cursor:pointer;padding:0}
+.ob-ar svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;
+stroke-linecap:round;stroke-linejoin:round}
+.ob-ar:disabled{opacity:.25}
+.ob-ar:active{background:var(--sheet)}
+.ob-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.ob-tag{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+padding:14px 15px;border:1px solid var(--rule2);border-radius:3px;background:none;
+font-family:inherit;color:var(--ink3);cursor:pointer}
+.ob-tag.on{border-color:var(--accent);color:var(--accent)}
+.ob-cat{font-size:10px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
+color:var(--cool);margin:26px 0 2px}
+.ob-count{font-size:12px;color:var(--ink3);margin-top:16px}
+
+/* ── the stretch ── */
+.str{display:flex;flex-direction:column;align-items:center;padding:20px 0 6px}
+.str-fig{width:150px;height:120px;color:var(--accent);margin-bottom:20px}
+.str-fig svg{width:100%;height:100%;stroke:currentColor;fill:none;
+stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+.str-name{font-size:23px;line-height:1.25;letter-spacing:-.014em;text-align:center}
+.str-cue{font-size:13px;color:var(--ink2);line-height:1.5;text-align:center;
+margin-top:9px;max-width:270px}
+.str-time{font-size:40px;font-weight:400;letter-spacing:-.03em;
+font-variant-numeric:tabular-nums;line-height:1;margin-top:20px}
+.str-dots{display:flex;gap:6px;margin-top:16px;margin-bottom:20px}
+.str-dot{width:6px;height:6px;border-radius:50%;background:var(--rule2);
+transition:background .3s ease,transform .3s var(--spring)}
+.str-dot.now{background:var(--accent);transform:scale(1.5)}
+.str-dot.seen{background:var(--ink3)}
+/* Each move animates only while it's the live one. */
+.str-go .fig-sway{animation:figSway 3.2s ease-in-out infinite}
+.str-go .fig-roll{animation:figRoll 4s linear infinite;transform-origin:center}
+.str-go .fig-arch{animation:figArch 4s ease-in-out infinite}
+.str-go .fig-reach{animation:figReach 3.6s ease-in-out infinite}
+.str-go .fig-sink{animation:figSink 4.4s ease-in-out infinite}
+.str-go .fig-twist{animation:figTwist 4s ease-in-out infinite}
+@keyframes figSway{0%,100%{transform:rotate(-7deg)}50%{transform:rotate(7deg)}}
+@keyframes figRoll{to{transform:rotate(360deg)}}
+@keyframes figArch{0%,100%{transform:translateY(0) scaleY(1)}50%{transform:translateY(-5px) scaleY(.9)}}
+@keyframes figReach{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes figSink{0%,100%{transform:translateY(0)}50%{transform:translateY(6px)}}
+@keyframes figTwist{0%,100%{transform:rotate(-11deg) skewX(0deg)}50%{transform:rotate(11deg) skewX(-4deg)}}
+
 /* ── breathe ── */
 .med{display:flex;flex-direction:column;align-items:center;padding:16px 0}
 .med-time{font-size:52px;font-weight:400;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
@@ -564,6 +631,7 @@ color:var(--ink3);cursor:pointer}
 <button class="btn-sec" onclick="newSpark()">Another &#8635;</button>
 <button class="btn-sec" id="sparkWhyBtn" onclick="toggleNote('spark')">What does this mean?</button>
 </div>
+<div class="p" id="sparkWide" style="display:none;margin-top:14px;font-size:12px;color:var(--ink3)"></div>
 <div class="tip" id="sparkTip" style="display:none"><div class="tip-l">Sit with it</div><div class="tip-t">What would today look like if this were true?</div></div>
 <div class="note" id="sparkNote"><div class="note-in">
 <div class="note-m disp" id="sparkNoteM"></div>
@@ -599,6 +667,7 @@ color:var(--ink3);cursor:pointer}
 <button class="btn-sec" onclick="newStory()">Another story &#8635;</button>
 <button class="btn-sec" id="storyWhyBtn" onclick="toggleNote('story')">What does this mean?</button>
 </div>
+<div class="p" id="storyWide" style="display:none;margin-top:14px;font-size:12px;color:var(--ink3)"></div>
 <div class="note" id="storyNote"><div class="note-in">
 <div class="note-m disp" id="storyNoteM"></div>
 <div class="note-q disp"><div class="note-ql">Sit with it</div><span id="storyNoteQ"></span></div>
@@ -756,6 +825,10 @@ color:var(--ink3);cursor:pointer}
 <div class="main">
 <div class="h1 disp">Make it yours</div>
 <div class="p">One per line. Format: <b>Category | Line</b> for reminders, <b>Quote | Author</b> for quotes.</div>
+<div class="set-lbl">Your morning</div>
+<div class="btn-row" style="margin-top:10px"><button class="btn-sec" onclick="openOnboard()">Rebuild my morning &#8594;</button></div>
+<div class="set-note">Which modules, in what order, and what kind of quotes and fables.</div>
+<div class="divider"></div>
 <div class="set-lbl">Your Software — Daily Reminders</div>
 <textarea class="input" id="setAffirms" rows="10" spellcheck="false"></textarea>
 <div class="set-lbl">Quotes to Ponder</div>
@@ -814,6 +887,41 @@ color:var(--ink3);cursor:pointer}
 </div></div>
 </div>
 
+<!-- 13 ONBOARDING — build your own morning -->
+<div class="scr" id="s13">
+<div class="nav"><button class="nav-btn" id="obBack" onclick="obPrev()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="obNav">Your morning</div><button class="nav-btn" onclick="obQuit()" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="main">
+<div class="ob-step" id="obStep"></div>
+<div class="h1 disp" id="obTitle"></div>
+<div class="p" id="obLead"></div>
+<div id="obBody"></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" id="obSkip" onclick="obSkipAll()">Skip setup</button><button class="btn-go" id="obNext" onclick="obNext()">Next</button></div></div>
+</div>
+
+<!-- 14 THE STRETCH -->
+<div class="scr" id="s14">
+<div class="nav"><button class="nav-btn" onclick="flowBack(14)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav14"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="prog" id="p14"></div>
+<div class="main">
+<div class="h1 disp">The Stretch</div>
+<div class="p">Loosen the hinges. Gentle range of motion &mdash; ease off if anything hurts.</div>
+<div class="chips" id="strChips"></div>
+<div class="sheet str">
+<div class="str-fig" id="strFig"></div>
+<div class="str-name disp" id="strName">Ready when you are</div>
+<div class="str-cue" id="strCue"></div>
+<div class="str-time disp" id="strTime">0:00</div>
+<div class="str-dots" id="strDots"></div>
+<div class="btn-row" style="margin-top:0">
+<button class="btn-sec" id="strBtn" onclick="strToggle()">Start</button>
+<button class="btn-sec" onclick="strReset()">Reset</button>
+</div>
+</div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(14,'skip');flowNext(14)">Skip</button><button class="btn-go" onclick="mark(14,'done');flowNext(14)">Continue</button></div></div>
+</div>
+
 <!-- 10 EVENING -->
 <div class="scr" id="s10">
 <div class="nav"><button class="nav-btn" onclick="navBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Evening · Close-out</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
@@ -841,20 +949,61 @@ color:var(--ink3);cursor:pointer}
 <script>
 /* ============================= DATA ============================= */
 
+const CARD_LIBRARY=[
+"Presence | Put the phone down. Whoever is in front of you is the point.",
+"Presence | Be where you are. This is the life, not the rehearsal.",
+"Presence | Listen to understand, not to reply.",
+"Presence | Attention is the most generous thing you own.",
+"Presence | Say the kind thing out loud. Thinking it doesn't count.",
+"Discipline | Do the hard thing first, while it's still quiet.",
+"Discipline | Motion beats deliberation on a decision you've already made.",
+"Discipline | Nobody is coming. That's the good news.",
+"Discipline | You can do anything, not everything. Choose.",
+"Discipline | Discipline is remembering what you actually want.",
+"Craft | Slow is smooth, and smooth is fast.",
+"Craft | Finish something. A finished ordinary thing beats a perfect unstarted one.",
+"Craft | If you can't measure it, you can't improve it.",
+"Craft | Do the unglamorous part well. That's where the difference lives.",
+"Craft | Ship it, then make it better. Not the other way round.",
+"Perspective | Assume the best intention first. You're usually right, and always calmer.",
+"Perspective | You have survived every one of your worst days.",
+"Perspective | Most of what you're worried about will not happen.",
+"Perspective | This is temporary. So is the good part \u2014 enjoy that one.",
+"Perspective | Compare yourself to yesterday, not to anyone else.",
+"Health | Move before you think. The body votes first.",
+"Health | Drink the water. It's almost always the water.",
+"Health | Sleep is not a reward for finishing. It's the thing that lets you finish.",
+"Health | Go outside. Ten minutes changes the whole day.",
+"Relationships | Be the first to apologise. It costs less than being right.",
+"Relationships | Ask one real question and then be quiet.",
+"Relationships | People remember how you made them feel, not what you said.",
+"Relationships | Give more than you take. Keep no ledger.",
+"Parenting | Be a coach, not just a disciplinarian.",
+"Parenting | They are watching what you do, not hearing what you say.",
+"Parenting | Get on the floor. Play the boring game. It's not boring to them.",
+"Parenting | Your calm is the ceiling for theirs.",
+"Money | Spend on what you actually use, not on what you'd like to be.",
+"Money | The best purchase is usually the one you didn't make.",
+"Money | Pay yourself first, before the month spends it for you.",
+"Work | A meeting is not an achievement.",
+"Work | Say no early. A late no is far more expensive.",
+"Work | Write it down. Your memory is lying to you confidently.",
+"Work | The hard conversation is cheaper today than it will be next month.",
+"Purpose | Know why you're doing this. The what gets easier after that."
+];
+
+/* What a brand-new person gets: neutral, broadly true, and replaceable.
+   It is no longer one person's thirteen cards about their own kids. */
 const DEF_AFFIRMS=[
-"Love & Presence | But first, Love.",
-"Love & Presence | Be where you are — life is right now.",
-"Love & Presence | Love is the quality of attention given to something.",
-"Positive Mindset | Happiness is a choice, not a result of circumstances.",
-"Positive Mindset | SMILE in adversity and everyday BS. Actually smile.",
-"Positive Mindset | Be more funny — life isn't that serious.",
-"Action | If you cannot measure it, you cannot improve it.",
-"Action | Action is the antidote to despair.",
-"Patience & Growth | Easy does it. Slow is smooth, smooth is fast.",
-"Patience & Growth | Embrace life's interruptions — they are opportunities for growth.",
-"Parenting | Be a better Dad and Coach, not just a disciplinarian.",
-"Parenting | Give your kids Puppy Love.",
-"Problem Solving | Focus on solutions, not complaints."
+"Presence | Put the phone down. Whoever is in front of you is the point.",
+"Discipline | Do the hard thing first, while it's still quiet.",
+"Craft | Slow is smooth, and smooth is fast.",
+"Perspective | Assume the best intention first. You're usually right, and always calmer.",
+"Health | Move before you think. The body votes first.",
+"Relationships | Ask one real question and then be quiet.",
+"Parenting | Be a coach, not just a disciplinarian.",
+"Work | A meeting is not an achievement.",
+"Purpose | Know why you're doing this. The what gets easier after that."
 ];
 
 const DEF_QUOTES=[
@@ -1007,6 +1156,205 @@ const DEF_QUOTES=[
 "The world breaks everyone, and afterward many are strong at the broken places. | Ernest Hemingway",
 "Now that you don't have to be perfect, you can be good. | John Steinbeck",
 ];
+
+/* Flavour tags, so someone can ask for the kind of thing they want.
+   Keyed by text and title, exactly as the notes are. */
+const TAG_NAMES={strategy:"Strategy",stoic:"Stoic",mindful:"Mindfulness",poetry:"Poetry & wonder",grit:"Grit & action",reflect:"Reflection"};
+const QUOTE_TAGS={
+"Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.":["strategy"],
+"In the midst of chaos, there is also opportunity.":["strategy"],
+"Opportunities multiply as they are seized.":["strategy"],
+"He will win who knows when to fight and when not to fight.":["strategy"],
+"The supreme art of war is to subdue the enemy without fighting.":["strategy"],
+"Do not act as your opponent expects. Move where he is not.":["strategy"],
+"Think lightly of yourself and deeply of the world.":["strategy","grit"],
+"Do nothing which is of no use.":["strategy","grit"],
+"Perceive that which cannot be seen with the eye.":["strategy","grit"],
+"You must understand that there is more than one path to the top of the mountain.":["strategy","grit"],
+"Today is victory over yourself of yesterday; tomorrow is your victory over lesser men.":["strategy","grit"],
+"Get beyond love and grief: exist for the good of man.":["strategy","grit"],
+"You have power over your mind \u2014 not outside events. Realize this, and you will find strength.":["stoic"],
+"The impediment to action advances action. What stands in the way becomes the way.":["stoic"],
+"Waste no more time arguing what a good man should be. Be one.":["stoic"],
+"When you arise in the morning, think of what a privilege it is to be alive \u2014 to think, to enjoy, to love.":["stoic"],
+"Confine yourself to the present.":["stoic"],
+"It is not death that a man should fear, but never beginning to live.":["stoic"],
+"We suffer more often in imagination than in reality.":["stoic"],
+"It is not that we have a short time to live, but that we waste much of it.":["stoic"],
+"Every new beginning comes from some other beginning's end.":["stoic"],
+"Luck is what happens when preparation meets opportunity.":["stoic"],
+"He who is brave is free.":["stoic"],
+"It's not what happens to you, but how you react to it that matters.":["stoic"],
+"First say to yourself what you would be; and then do what you have to do.":["stoic"],
+"No man is free who is not master of himself.":["stoic"],
+"Wealth consists not in having great possessions, but in having few wants.":["stoic"],
+"Make the best use of what is in your power, and take the rest as it happens.":["stoic"],
+"Discipline equals freedom.":["strategy","grit"],
+"The obstacle is the way.":["stoic"],
+"What you seek is seeking you.":["poetry","mindful"],
+"Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.":["poetry","mindful"],
+"The wound is the place where the Light enters you.":["poetry","mindful"],
+"Let yourself be silently drawn by the strange pull of what you really love. It will not lead you astray.":["poetry","mindful"],
+"Tell me, what is it you plan to do with your one wild and precious life?":["poetry","mindful"],
+"Instructions for living a life: Pay attention. Be astonished. Tell about it.":["poetry","mindful"],
+"You do not have to be good. You only have to let the soft animal of your body love what it loves.":["poetry","mindful"],
+"I do not ask the wounded person how he feels \u2014 I myself become the wounded person.":["poetry"],
+"Keep your face always toward the sunshine, and shadows will fall behind you.":["poetry"],
+"Re-examine all you have been told. Dismiss what insults your soul.":["poetry"],
+"That you are here \u2014 that life exists, and identity; that the powerful play goes on, and you may contribute a verse.":["poetry"],
+"Be patient toward all that is unsolved in your heart, and try to love the questions themselves.":["poetry","reflect"],
+"Perhaps all the dragons in our lives are princesses who are only waiting to see us act, just once, with beauty and courage.":["poetry","reflect"],
+"Let everything happen to you: beauty and terror. Just keep going. No feeling is final.":["poetry","reflect"],
+"Two roads diverged in a wood, and I \u2014 I took the one less traveled by, and that has made all the difference.":["poetry"],
+"The best way out is always through.":["poetry"],
+"The woods are lovely, dark and deep, but I have promises to keep, and miles to go before I sleep.":["poetry"],
+"If you can keep your head when all about you are losing theirs and blaming it on you\u2026 yours is the Earth and everything that's in it.":["poetry","grit"],
+"If you can meet with Triumph and Disaster and treat those two impostors just the same.":["poetry","grit"],
+"If you can fill the unforgiving minute with sixty seconds' worth of distance run.":["poetry","grit"],
+"Come, my friends, 'tis not too late to seek a newer world.":["poetry","grit"],
+"To strive, to seek, to find, and not to yield.":["poetry","grit"],
+"You may not control all the events that happen to you, but you can decide not to be reduced by them.":["poetry","grit"],
+"Nothing will work unless you do.":["poetry","grit"],
+"We may encounter many defeats but we must not be defeated.":["poetry","grit"],
+"What lies behind us and what lies before us are tiny matters compared to what lies within us.":["grit","reflect"],
+"Nothing can bring you peace but yourself.":["grit","reflect"],
+"Finish each day and be done with it. You have done what you could.":["grit","reflect"],
+"Start close in, don't take the second step or the third, start with the first thing close in, the step you don't want to take.":["poetry","reflect"],
+"Anything or anyone that does not bring you alive is too small for you.":["poetry","reflect"],
+"The best time to plant a tree was 20 years ago. The second best time is now.":["reflect"],
+"Wherever you go, there you are.":["mindful"],
+"The quieter you become, the more you can hear.":["mindful"],
+"Feelings come and go like clouds in a windy sky. Conscious breathing is my anchor.":["mindful"],
+"Smile, breathe, and go slowly.":["mindful"],
+"Do what you can, with what you have, where you are.":["grit"],
+"How we spend our days is, of course, how we spend our lives.":["poetry","reflect"],
+"Almost everything will work again if you unplug it for a few minutes \u2014 including you.":["reflect"],
+"What you do today can improve all your tomorrows.":["grit"],
+"The unexamined life is not worth living.":["reflect"],
+"Knowing yourself is the beginning of all wisdom.":["reflect"],
+"A journey of a thousand miles begins beneath one's feet.":["mindful","reflect"],
+"Nature does not hurry, yet everything is accomplished.":["mindful","reflect"],
+"It does not matter how slowly you go so long as you do not stop.":["reflect"],
+"The superior man blames himself. The inferior man blames others.":["reflect"],
+"He who has a why to live can bear almost any how.":["reflect","grit"],
+"What does not kill me makes me stronger.":["reflect","grit"],
+"One must still have chaos in oneself to give birth to a dancing star.":["reflect","grit"],
+"The struggle itself toward the heights is enough to fill a man's heart.":["reflect","grit"],
+"In the depth of winter I finally learned that within me there lay an invincible summer.":["reflect","grit"],
+"We tell ourselves stories in order to live.":["reflect"],
+"I am not what happened to me. I am what I choose to become.":["reflect"],
+"Until you make the unconscious conscious, it will direct your life and you will call it fate.":["reflect"],
+"Not everything that is faced can be changed, but nothing can be changed until it is faced.":["reflect","grit"],
+"The most difficult thing is the decision to act. The rest is merely tenacity.":["grit"],
+"Do the thing you fear and the death of fear is certain.":["grit","reflect"],
+"It is not the mountain we conquer but ourselves.":["grit"],
+"Whether you think you can or think you can't, you're right.":["grit"],
+"Continuous improvement is better than delayed perfection.":["reflect"],
+"Comparison is the thief of joy.":["grit"],
+"Courage is what it takes to stand up and speak; courage is also what it takes to sit down and listen.":["grit"],
+"If you want to go fast, go alone. If you want to go far, go together.":["reflect"],
+"Fall seven times, stand up eight.":["reflect"],
+"The bamboo that bends is stronger than the oak that resists.":["reflect"],
+"Vision without execution is hallucination.":["grit"],
+"You miss 100% of the shots you don't take.":["grit"],
+"Hard choices, easy life. Easy choices, hard life.":["grit"],
+"Between stimulus and response there is a space. In that space is our power to choose our response.":["stoic","reflect"],
+"A ship in harbour is safe, but that is not what ships are built for.":["grit"],
+"Tell me and I forget. Teach me and I remember. Involve me and I learn.":["reflect"],
+"Ask not what your country can do for you \u2014 ask what you can do for your country.":["grit"],
+"We choose to go to the Moon in this decade and do the other things, not because they are easy, but because they are hard.":["grit"],
+"Things do not happen. Things are made to happen.":["grit"],
+"Whatever you are, be a good one.":["grit"],
+"I am a slow walker, but I never walk back.":["grit"],
+"The best way to predict the future is to create it.":["grit"],
+"If there is no struggle, there is no progress.":["grit"],
+"It is easier to build strong children than to repair broken men.":["grit"],
+"Go confidently in the direction of your dreams. Live the life you have imagined.":["reflect","mindful"],
+"It is not enough to be busy. The question is: what are we busy about?":["reflect","mindful"],
+"No one can make you feel inferior without your consent.":["grit","reflect"],
+"You must do the thing you think you cannot do.":["grit","reflect"],
+"The time is always right to do what is right.":["grit","reflect"],
+"Faith is taking the first step even when you don't see the whole staircase.":["grit","reflect"],
+"Don't count the days. Make the days count.":["grit"],
+"It isn't the mountains ahead to climb that wear you out; it's the pebble in your shoe.":["grit"],
+"Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason which today arm you against the present.":["reflect"],
+"The two most important days in your life are the day you are born and the day you find out why.":["reflect"],
+"A goal is not always meant to be reached; it often serves simply as something to aim at.":["grit","strategy"],
+"The beginning is the most important part of the work.":["reflect"],
+"Courage is knowing what not to fear.":["reflect"],
+"The first and greatest victory is to conquer yourself.":["reflect"],
+"We are what we repeatedly do. Excellence, then, is not an act but a habit.":["reflect"],
+"It is the mark of an educated mind to be able to entertain a thought without accepting it.":["reflect"],
+"Patience is bitter, but its fruit is sweet.":["reflect"],
+"There is only one good, knowledge, and one evil, ignorance.":["reflect"],
+"I cannot teach anybody anything. I can only make them think.":["reflect"],
+"No man ever steps in the same river twice, for it is not the same river and he is not the same man.":["reflect"],
+"Character is destiny.":["reflect"],
+"Life is like riding a bicycle. To keep your balance, you must keep moving.":["reflect"],
+"It's not that I'm so smart, it's just that I stay with problems longer.":["reflect"],
+"A person who never made a mistake never tried anything new.":["reflect"],
+"The first principle is that you must not fool yourself \u2014 and you are the easiest person to fool.":["reflect"],
+"I would rather have questions that can't be answered than answers that can't be questioned.":["reflect"],
+"Somewhere, something incredible is waiting to be known.":["poetry","reflect"],
+"Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less.":["reflect"],
+"You want to write a sentence as clean as a bone. That is the goal.":["reflect","grit"],
+"You are your best thing.":["reflect"],
+"We are what we pretend to be, so we must be careful about what we pretend to be.":["reflect"],
+"The world breaks everyone, and afterward many are strong at the broken places.":["grit","reflect"],
+"Now that you don't have to be perfect, you can be good.":["reflect"]
+};
+const STORY_TAGS={
+"The Empty Cup":["reflect","mindful"],
+"Two Monks and the River":["mindful","reflect"],
+"The Fisherman and the Consultant":["reflect"],
+"The Stonecutter":["reflect"],
+"Knowing Where to Tap":["reflect","strategy"],
+"Salt in the Water":["stoic","mindful"],
+"The Strawberry":["mindful"],
+"Diogenes and the Emperor":["stoic","reflect"],
+"The Jar of Rocks":["strategy"],
+"The Two Arrows":["stoic","mindful"],
+"The Trouble Tree":["reflect"],
+"The Window":["reflect"],
+"The Last House":["grit"],
+"This Too Shall Pass":["stoic"],
+"Sharpening the Axe":["strategy"],
+"The Farmer's Horse":["stoic","reflect"],
+"The Cracked Pot":["reflect"],
+"Two Rabbits":["strategy"],
+"Is That So?":["stoic"],
+"The Gift of Insults":["stoic"],
+"The Empty Boat":["stoic","mindful"],
+"The Useless Tree":["reflect"],
+"The Monkey's Fist":["reflect"],
+"The Blind Men and the Elephant":["reflect"],
+"Nasrudin's Key":["strategy","reflect"],
+"The Smuggler":["strategy"],
+"The Three Sieves":["reflect"],
+"The Sword of Damocles":["stoic","reflect"],
+"The Gordian Knot":["strategy"],
+"Odysseus and the Mast":["strategy","grit"],
+"The Choice of Heracles":["grit"],
+"The Crow and the Pitcher":["grit","strategy"],
+"The Goose and the Golden Eggs":["strategy"],
+"The North Wind and the Sun":["strategy"],
+"The Milkmaid's Pail":["reflect"],
+"The Lion and the Mouse":["reflect"],
+"The Bundle of Sticks":["reflect"],
+"Stone Soup":["strategy","reflect"],
+"The Two Wolves":["reflect","grit"],
+"The Starfish":["grit","reflect"],
+"The Boulder in the Road":["grit"],
+"The Donkey in the Well":["grit","stoic"],
+"The Chinese Bamboo":["grit"],
+"The Elephant and the Rope":["reflect","grit"],
+"The Glass of Water":["mindful","stoic"],
+"The Three Bricklayers":["reflect"],
+"The Long Spoons":["reflect"],
+"The Fence and the Nails":["reflect"],
+"The Emperor's Seeds":["grit","reflect"],
+"The Violinist in the Metro":["mindful","reflect"]
+};
 
 const QUOTE_NOTES={
 "Ask not what your country can do for you \u2014 ask what you can do for your country.":{m:"From the 1961 inaugural, delivered in twenty-degree cold to a country used to being sold things. The construction is a mirror, and the second half only lands because the first half names the instinct honestly \u2014 everyone does arrive asking. Kennedy doesn't scold the question; he flips it.",q:"Where have you been asking what this gives you, when the better question runs the other way?"},
@@ -1539,6 +1887,39 @@ function readJSON(k,fb){try{return JSON.parse(localStorage.getItem(k))||fb}catch
 const S=Object.assign({affirms:DEF_AFFIRMS.slice(),quotes:DEF_QUOTES.slice()},readJSON('flSettings',{}));
 if(!S.affirms||!S.affirms.length)S.affirms=DEF_AFFIRMS.slice();
 if(!S.quotes||!S.quotes.length)S.quotes=DEF_QUOTES.slice();
+/* Persist the whole settings object. This used to write only {affirms,quotes},
+   which silently dropped every other preference the moment anyone pressed Save
+   in Settings — so the flow and tags had to become part of the same write. */
+function saveS(){try{localStorage.setItem('flSettings',JSON.stringify(S))}catch(e){}}
+
+/* DEF_AFFIRMS used to be one person's thirteen cards, and S.affirms falls back
+   to it whenever flSettings has no saved affirms. Shipping a neutral default
+   would therefore have silently replaced the cards of anyone who had never
+   pressed Save — which is most people. Pin the old set for them, once, before
+   the new default can take effect. */
+const LEGACY_AFFIRMS=[
+"Love & Presence | But first, Love.",
+"Love & Presence | Be where you are — life is right now.",
+"Love & Presence | Love is the quality of attention given to something.",
+"Positive Mindset | Happiness is a choice, not a result of circumstances.",
+"Positive Mindset | SMILE in adversity and everyday BS. Actually smile.",
+"Positive Mindset | Be more funny — life isn't that serious.",
+"Action | If you cannot measure it, you cannot improve it.",
+"Action | Action is the antidote to despair.",
+"Patience & Growth | Easy does it. Slow is smooth, smooth is fast.",
+"Patience & Growth | Embrace life's interruptions — they are opportunities for growth.",
+"Parenting | Be a better Dad and Coach, not just a disciplinarian.",
+"Parenting | Give your kids Puppy Love.",
+"Problem Solving | Focus on solutions, not complaints."
+];
+function migrateSettings(){
+  const raw=readJSON('flSettings',null);
+  const hasHistory=!!localStorage.getItem('flDone')||Object.keys(readJSON('flHistory',{})||{}).length>0;
+  if(hasHistory&&(!raw||!raw.affirms||!raw.affirms.length)){
+    S.affirms=LEGACY_AFFIRMS.slice();
+    saveS();
+  }
+}
 let DAY=readJSON('flDay-'+todayKey(),{});
 const FIELDS=['note'];   // tasks are objects now; only the freestyle note is a raw field
 function saveDay(){FIELDS.forEach(k=>{const el=$(k);if(el)DAY[k]=el.value});
@@ -1679,31 +2060,63 @@ function mark(n,st){
   if(st==='done'&&was!=='done')celebrateRow(n);
 }
 function stClass(j,cur){const st=statusOf(j);if(j===cur)return' now';if(st==='done')return' done';if(st==='skip')return' skip';return''}
-function prog(step){for(let i=1;i<=7;i++){const el=$('p'+i);if(!el)continue;el.innerHTML='';
+function prog(step){Object.keys(STEPS).forEach(i=>{const el=$('p'+i);if(!el)return;el.innerHTML='';
   FLOW.forEach(j=>{const d=document.createElement('div');d.className='prog-bar'+stClass(j,step);
-  d.title=STEP_NAMES[j-1];d.onclick=()=>go(j);el.appendChild(d)})}}
-const STEP_NAMES=['Spark','Laugh','Story','Breathe','Software','Today','Mini'];
-/* The running order. Step numbers are permanent identifiers — they key
-   DAY.status on every day ever saved — so the order lives here instead of
-   renumbering the screens and silently rewriting history. */
-const FLOW=[1,3,7,5,4,6,2];        // Spark, Story, Mini, Software, Breathe, Today, Laugh
+  d.title=stepName(j);d.onclick=()=>go(j);el.appendChild(d)})})}
+/* One registry per module, keyed by step id. Step ids are PERMANENT — they key
+   DAY.status on every day ever saved — so a module is added by giving it a new
+   id, never by renumbering. `blurb` is the one-liner shown when choosing. */
+const STEPS={
+  1 :{name:'Spark',   t:'The Spark',   s:'One idea to carry',
+      blurb:'A quote to carry into the day, with a written explanation.'},
+  2 :{name:'Laugh',   t:'The Laugh',   s:'Loosen up',
+      blurb:'One good line. Life is not that serious.'},
+  3 :{name:'Story',   t:'The Story',   s:'A fable to chew on',
+      blurb:'A short fable that ends on an earned takeaway.'},
+  4 :{name:'Breathe', t:'Breathe',     s:'Two minutes, or ten',
+      blurb:'A timer and a breathing circle. Calm, box, or 4-7-8.'},
+  5 :{name:'Software',t:'The Software',s:'Your own operating principles',
+      blurb:'Your own reminders, one card at a time.'},
+  6 :{name:'Today',   t:'Today',       s:'Purge, prioritise, name the win',
+      blurb:'Empty your head, pick three, name the one that matters.',
+      core:true},
+  7 :{name:'Mini',    t:'The Mini',    s:'Five by five',
+      blurb:'A crossword to switch the brain on. Bigger at the weekend.'},
+  14:{name:'Stretch', t:'The Stretch', s:'Loosen the hinges',
+      blurb:'A few gentle mobility moves, guided on a timer.'}
+};
+const stepName=n=>(STEPS[n]||{}).name||('Step '+n);
+/* Kept as a name so older reads still work; derived, not maintained. */
+const STEP_NAMES=Object.keys(STEPS).map(Number).sort((a,b)=>a-b).map(n=>STEPS[n].name);
+
+/* The running order, and which modules are in it at all. It belongs to the
+   user now: DEFAULT_FLOW is only the starting point. */
+const DEFAULT_FLOW=[1,3,7,5,4,6,2];   // Spark, Story, Mini, Software, Breathe, Today, Laugh
+let FLOW=DEFAULT_FLOW.slice();
+function validFlow(f){
+  const seen=[];
+  (Array.isArray(f)?f:[]).forEach(n=>{n=+n;if(STEPS[n]&&seen.indexOf(n)<0)seen.push(n)});
+  return seen.length?seen:DEFAULT_FLOW.slice();   // never leave someone a blank app
+}
+function setFlow(f){FLOW=validFlow(f);S.flow=FLOW.slice();saveS()}
 const flowPos=n=>FLOW.indexOf(n);  // 0-based position of a step
 function flowNext(n){const i=flowPos(n);return go(i<0||i>=FLOW.length-1?8:FLOW[i+1])}
 function flowBack(n){const i=flowPos(n);return go(i<=0?0:FLOW[i-1])}
 function paintNav(n){
   const el=$('nav'+n);if(!el)return;
   const i=flowPos(n);
-  el.textContent=STEP_NAMES[n-1]+' · '+(i+1)+' of '+FLOW.length;
+  el.textContent=stepName(n)+' · '+(i+1)+' of '+FLOW.length;
 }
 function go(n){
   saveDay();
   const dir=(n===0||n<curScr)?-1:1;curScr=n;
   haptic(7);                                 // touch feedback yes, sound no
-  if(n===0){syncDash();show('s0',dir);return}
+  if(n===0){syncDash();show('s0',dir);sizeBand();return}
   if(n===10){renderEvening();show('s10',dir);return}
   if(n===11){renderLook();show('s11',dir);return}
   if(n===12){renderJournal();show('s12',dir);return}
-  if(n>=1&&n<=7){prog(n);paintNav(n)}
+  if(n===13){renderOnboard();show('s13',dir);return}
+  if(STEPS[n]){prog(n);paintNav(n)}
   show('s'+n,dir);
   if(n===1)renderSpark();
   if(n===2)renderJoke();
@@ -1712,17 +2125,11 @@ function go(n){
   if(n===5)softStart();
   if(n===6)ppOpen();
   if(n===7)cwOpen();
+  if(n===14)strOpen();
   if(n===8)renderRecap();
 }
 
 /* ============================= DASHBOARD ============================= */
-const CARDS=[
-{n:2,t:'The Laugh',s:'Loosen up'},
-{n:3,t:'The Story',s:'A fable to chew on'},
-{n:4,t:'Breathe',s:'Two minutes, or ten'},
-{n:5,t:'The Software',s:'Your own operating principles'},
-{n:7,t:'The Mini',s:'Five by five'}
-];
 let sparkI=null,jokeI=null,storyI=null;
 const MARK={done:'Done',skip:'Skipped',todo:''};
 const CHEV='<svg class="idx-go" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
@@ -1764,8 +2171,8 @@ function syncDash(){
   renderMonth();
 
   // the sequence, as a contents list
-  const done=[1,2,3,4,5,6,7].filter(n=>statusOf(n)==='done').length;
-  $('seqCount').textContent=done+'/7';
+  const done=FLOW.filter(n=>statusOf(n)==='done').length;
+  $('seqCount').textContent=done+'/'+FLOW.length;
   const rule=$('seqRule');rule.innerHTML='';
   FLOW.forEach((n,i)=>{
     const seg=document.createElement('i');
@@ -1774,9 +2181,7 @@ function syncDash(){
     rule.appendChild(seg);
   });
   const idx=$('idx');idx.innerHTML='';
-  const all=[{n:1,t:'The Spark',s:'One idea to carry'}].concat(CARDS)
-    .concat([{n:6,t:'Today',s:'Purge, prioritise, name the win'}]);
-  const rows=FLOW.map(n=>all.find(c=>c.n===n)).filter(Boolean);
+  const rows=FLOW.filter(n=>STEPS[n]).map(n=>({n:n,t:STEPS[n].t,s:STEPS[n].s}));
   const nextUp=FLOW.find(n=>statusOf(n)==='todo');      // resume at the first untouched step,
                                                         // not one you deliberately skipped
   /* The button names where it goes. beginTarget() is what it actually does, so
@@ -1951,8 +2356,15 @@ function renderJournal(){
   // ── how the morning went ──
   const facts=[];
   const st=d.status||{};
-  if(Object.keys(st).length)facts.push('<div class="jr-steps">'+
-    FLOW.map(n=>'<span class="jr-chip '+(st[n]||'')+'">'+STEP_NAMES[n-1]+'</span>').join('')+'</div>');
+  /* Show the day as it was, not as today's program is. Rendering FLOW here meant
+     turning a module off erased it from every past page you had done it on. So
+     take the steps that day actually recorded, in flow order where they are
+     still in your program and after it where they are not. */
+  const dayStepIds=Object.keys(st).map(Number).filter(n=>STEPS[n])
+    .sort((a,b)=>{const ia=flowPos(a),ib=flowPos(b);
+      return (ia<0?99+a:ia)-(ib<0?99+b:ib)});
+  if(dayStepIds.length)facts.push('<div class="jr-steps">'+
+    dayStepIds.map(n=>'<span class="jr-chip '+(st[n]||'')+'">'+stepName(n)+'</span>').join('')+'</div>');
   if(d.quote){const [q,a]=splitLine(d.quote);
     facts.push('<div class="jr-fact"><b>The spark</b>“'+esc(q)+'”'+(a?' — '+esc(a):'')+'</div>')}
   if(d.story)facts.push('<div class="jr-fact"><b>The story</b>'+esc(d.story)+'</div>');
@@ -1981,7 +2393,37 @@ function jrAge(from,onKey){
 }
 
 /* ============================= SPARK / LAUGH / STORY ============================= */
-function renderSpark(){sparkI=Math.floor(Math.random()*S.quotes.length);paintSpark()}
+/* Pick from the flavours you asked for — but never let a narrow filter starve
+   the pool into weekly repeats. Below MIN_POOL we widen to everything and say
+   so on screen, rather than silently ignoring the preference. */
+const MIN_POOL=8;
+function activeTags(){return Array.isArray(S.tags)&&S.tags.length?S.tags:[]}
+function poolFor(kind){
+  const tags=activeTags();
+  const all=kind==='quote'?S.quotes.map((q,i)=>i):STORIES.map((s,i)=>i);
+  if(!tags.length)return{ix:all,widened:false};
+  const tagsOf=i=>kind==='quote'
+    ? (QUOTE_TAGS[splitLine(S.quotes[i])[0]]||[])
+    : (STORY_TAGS[STORIES[i].t]||[]);
+  const hit=all.filter(i=>tagsOf(i).some(t=>tags.indexOf(t)>=0));
+  return hit.length>=MIN_POOL?{ix:hit,widened:false}:{ix:all,widened:true};
+}
+function poolNote(kind){
+  const el=$(kind==='quote'?'sparkWide':'storyWide');if(!el)return;
+  const w=poolFor(kind).widened&&activeTags().length;
+  el.style.display=w?'':'none';
+  if(w)el.textContent='Not enough in your chosen flavours, so this is drawn from everything.';
+}
+function pick(kind,cur){
+  const ix=poolFor(kind).ix;
+  if(!ix.length)return 0;
+  if(ix.length<2)return ix[0];
+  let n=ix[Math.floor(Math.random()*ix.length)];
+  let guard=0;
+  while(n===cur&&guard++<12)n=ix[Math.floor(Math.random()*ix.length)];
+  return n;
+}
+function renderSpark(){sparkI=pick('quote',null);paintSpark()}
 
 /* Explanations are written into the file, so this opens instantly and works
    with no signal. A quote you added yourself has none — hide the button
@@ -2018,9 +2460,8 @@ function toggleNote(kind){
 function paintSpark(){const [q,a]=splitLine(S.quotes[sparkI]);
   if($('sparkQ')){$('sparkQ').textContent='\u201C'+q+'\u201D';$('sparkA').textContent=a}
   if(DAY.quote!==S.quotes[sparkI]){DAY.quote=S.quotes[sparkI];saveDay()}
-  paintNote('spark')}
-function newSpark(){if(S.quotes.length<2)return renderSpark();
-  sparkI=(sparkI+1+Math.floor(Math.random()*(S.quotes.length-1)))%S.quotes.length;paintSpark()}
+  paintNote('spark');poolNote('quote')}
+function newSpark(){sparkI=pick('quote',sparkI);paintSpark()}
 function paintJoke(){
   /* Jokes carry an optional "| Name" the same way quotes do. Ours are
      unattributed and render with nothing underneath. */
@@ -2034,10 +2475,10 @@ function paintStory(){const st=STORIES[storyI];
   $('storyTitle').textContent=st.t;$('storyRead').textContent=st.r;
   $('storyText').textContent=st.s;$('storyMoral').textContent=st.m;
   if(DAY.story!==st.t){DAY.story=st.t;saveDay()}
-  paintNote('story');
+  paintNote('story');poolNote('story');
   const el=$('s3');if(el)el.scrollTop=0}
-function renderStory(){storyI=Math.floor(Math.random()*STORIES.length);paintStory()}
-function newStory(){storyI=(storyI+1+Math.floor(Math.random()*(STORIES.length-1)))%STORIES.length;paintStory()}
+function renderStory(){storyI=pick('story',null);paintStory()}
+function newStory(){storyI=pick('story',storyI);paintStory()}
 
 /* ============================= BREATHE ============================= */
 let medDur=120,medLeft=120,medRun=false,medTimer=null,medBreath=null,medHold=null,medOut=null;
@@ -2325,6 +2766,240 @@ function carriedAge(from){
   if(days<7)return a.toLocaleDateString(undefined,{weekday:'long'});
   return days+' days ago';
 }
+
+/* ============================= ONBOARDING =============================
+   Four steps: which modules, what order, what flavour, which cards. It runs
+   itself on day one and is re-openable from Settings, so nothing here is a
+   one-shot you can never get back to. Nothing is written until "Done". */
+const OB_TICK='<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
+const OB_UP='<svg viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>';
+const OB_DOWN='<svg viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>';
+let obPage=0,obPick=[],obTags=[],obCards=[];
+
+function openOnboard(){
+  obPage=0;
+  obPick=FLOW.slice();
+  obTags=activeTags().slice();
+  obCards=S.affirms.slice();
+  go(13);
+}
+function obQuit(){go(0)}
+function obSkipAll(){                       // keep whatever they already had
+  S.onboarded=true;saveS();go(0);
+}
+function obPrev(){if(obPage<=0)return obQuit();obPage--;renderOnboard()}
+function obNext(){
+  if(obPage===0&&!obPick.length)return;     // the floor: never a blank app
+  if(obPage>=3)return obFinish();
+  obPage++;renderOnboard();haptic(8);
+}
+function obFinish(){
+  setFlow(obPick);
+  S.tags=obTags.slice();
+  S.affirms=obCards.length?obCards.slice():DEF_AFFIRMS.slice();
+  S.onboarded=true;
+  saveS();
+  sparkI=null;storyI=null;softI=0;
+  burst();haptic([16,36,20]);
+  setTimeout(()=>go(0),420);
+}
+
+function renderOnboard(){
+  const box=$('obBody');
+  const steps=['Step 1 of 4','Step 2 of 4','Step 3 of 4','Step 4 of 4'];
+  $('obStep').textContent=steps[obPage];
+  $('obNext').textContent=obPage>=3?'Done':'Next';
+  $('obSkip').style.display=obPage===0?'':'none';
+  box.innerHTML='';
+
+  if(obPage===0){
+    $('obTitle').textContent='Build your morning.';
+    $('obLead').textContent='Pick what you want in it. You can change any of this later in Settings.';
+    Object.keys(STEPS).map(Number).forEach(n=>{
+      const st=STEPS[n],on=obPick.indexOf(n)>=0;
+      const r=document.createElement('div');
+      r.className='ob-row'+(on?' on':'');
+      r.innerHTML='<div class="ob-box">'+OB_TICK+'</div><div class="ob-b">'+
+        '<div class="ob-t disp">'+esc(st.t)+'</div>'+
+        '<div class="ob-s">'+esc(st.blurb)+'</div>'+
+        (st.core&&!on?'<div class="ob-warn">Without this there is no WIN or Top 3, so the dashboard, the evening check-in and the journal all have less to show.</div>':'')+
+        '</div>';
+      r.onclick=()=>{
+        const i=obPick.indexOf(n);
+        if(i>=0)obPick.splice(i,1);else obPick.push(n);
+        haptic(6);renderOnboard();
+      };
+      box.appendChild(r);
+    });
+    const c=document.createElement('div');c.className='ob-count';
+    c.textContent=obPick.length?(obPick.length+' in your morning.'):'Pick at least one to continue.';
+    box.appendChild(c);
+    $('obNext').disabled=!obPick.length;
+    $('obNext').style.opacity=obPick.length?'':'.4';
+    return;
+  }
+
+  $('obNext').disabled=false;$('obNext').style.opacity='';
+
+  if(obPage===1){
+    $('obTitle').textContent='What order?';
+    $('obLead').textContent='This one works well: brain first, planning once it is running, the laugh on the way out.';
+    obPick.forEach((n,i)=>{
+      const r=document.createElement('div');r.className='ob-ord';
+      r.innerHTML='<div class="ob-n">'+String(i+1).padStart(2,'0')+'</div>'+
+        '<div class="ob-t disp">'+esc(STEPS[n].t)+'</div>'+
+        '<div class="ob-arrows">'+
+        '<button class="ob-ar" aria-label="Move earlier"'+(i===0?' disabled':'')+'>'+OB_UP+'</button>'+
+        '<button class="ob-ar" aria-label="Move later"'+(i===obPick.length-1?' disabled':'')+'>'+OB_DOWN+'</button>'+
+        '</div>';
+      const [up,dn]=r.querySelectorAll('.ob-ar');
+      up.onclick=()=>{if(i>0){obPick.splice(i-1,0,obPick.splice(i,1)[0]);haptic(8);renderOnboard()}};
+      dn.onclick=()=>{if(i<obPick.length-1){obPick.splice(i+1,0,obPick.splice(i,1)[0]);haptic(8);renderOnboard()}};
+      box.appendChild(r);
+    });
+    return;
+  }
+
+  if(obPage===2){
+    $('obTitle').textContent='What kind of thing?';
+    $('obLead').textContent='Shapes which quotes and fables you get. Pick none and you get everything — which is a perfectly good answer.';
+    const wrap=document.createElement('div');wrap.className='ob-tags';
+    Object.keys(TAG_NAMES).forEach(k=>{
+      const b=document.createElement('button');
+      b.className='ob-tag'+(obTags.indexOf(k)>=0?' on':'');
+      b.textContent=TAG_NAMES[k];
+      b.onclick=()=>{const i=obTags.indexOf(k);if(i>=0)obTags.splice(i,1);else obTags.push(k);
+        haptic(6);renderOnboard()};
+      wrap.appendChild(b);
+    });
+    box.appendChild(wrap);
+    const c=document.createElement('div');c.className='ob-count';
+    c.textContent=obTags.length?'Narrow picks widen automatically rather than repeat on you.':'Everything is in play.';
+    box.appendChild(c);
+    return;
+  }
+
+  $('obTitle').textContent='Your own reminders.';
+  $('obLead').textContent='The principles you want read back to you, one card at a time. Tap to include. You can write your own in Settings.';
+  let cat='';
+  CARD_LIBRARY.forEach(card=>{
+    const [c,txt]=parsePair(card);
+    if(c&&c!==cat){cat=c;const h=document.createElement('div');h.className='ob-cat';
+      h.textContent=c;box.appendChild(h)}
+    const on=obCards.indexOf(card)>=0;
+    const r=document.createElement('div');r.className='ob-row'+(on?' on':'');
+    r.innerHTML='<div class="ob-box">'+OB_TICK+'</div><div class="ob-b"><div class="ob-s" style="font-size:14px;color:var(--ink2)">'+esc(txt)+'</div></div>';
+    r.onclick=()=>{const i=obCards.indexOf(card);
+      if(i>=0)obCards.splice(i,1);else obCards.push(card);
+      haptic(6);renderOnboard()};
+    box.appendChild(r);
+  });
+  const c2=document.createElement('div');c2.className='ob-count';
+  c2.textContent=obCards.length?(obCards.length+' card'+(obCards.length===1?'':'s')+' selected.'):'None selected — you will get a starter set.';
+  box.appendChild(c2);
+}
+
+/* ============================= THE STRETCH =============================
+   Gentle range of motion, guided on a timer. Same shape as PATTERNS: a named
+   routine holding [name, seconds, cue, figure] moves. Figures are inline SVG
+   stroked with currentColor, so both themes work without a second asset. */
+const STRETCH_FIGS={
+"neck":"<svg viewBox=\"0 0 100 90\"><g class=\"fig-sway\" style=\"transform-origin:50px 34px\"><circle cx=\"50\" cy=\"20\" r=\"11\"/><path d=\"M50 31v6\"/></g><path d=\"M50 37v26\"/><path d=\"M50 44l-17 9M50 44l17 9\"/><path d=\"M50 63l-11 20M50 63l11 20\"/></svg>",
+"shoulder":"<svg viewBox=\"0 0 100 90\"><circle cx=\"50\" cy=\"17\" r=\"10\"/><path d=\"M50 27v36\"/><g class=\"fig-roll\" style=\"transform-origin:50px 40px\"><path d=\"M50 40l-19 6M50 40l19-6\"/></g><path d=\"M50 63l-11 20M50 63l11 20\"/></svg>",
+"reach":"<svg viewBox=\"0 0 100 90\"><circle cx=\"50\" cy=\"24\" r=\"10\"/><path d=\"M50 34v29\"/><g class=\"fig-reach\"><path d=\"M50 40l-15-16M50 40l15-16\"/></g><path d=\"M50 63l-11 20M50 63l11 20\"/></svg>",
+"side":"<svg viewBox=\"0 0 100 90\"><g class=\"fig-sway\" style=\"transform-origin:50px 66px\"><circle cx=\"50\" cy=\"22\" r=\"10\"/><path d=\"M50 32v34\"/><path d=\"M50 38l-16 10M50 38l14-16\"/></g><path d=\"M50 66l-11 18M50 66l11 18\"/></svg>",
+"twist":"<svg viewBox=\"0 0 100 90\"><g class=\"fig-twist\" style=\"transform-origin:50px 62px\"><circle cx=\"50\" cy=\"20\" r=\"10\"/><path d=\"M50 30v32\"/><path d=\"M50 40l-18 4M50 40l18-4\"/></g><path d=\"M50 62l-11 21M50 62l11 21\"/></svg>",
+"fold":"<svg viewBox=\"0 0 100 90\"><g class=\"fig-sink\" style=\"transform-origin:50px 50px\"><circle cx=\"34\" cy=\"52\" r=\"10\"/><path d=\"M43 47l14-9\"/><path d=\"M34 62v14\"/></g><path d=\"M57 38v22\"/><path d=\"M57 60l-6 24M57 60l8 24\"/></svg>",
+"arch":"<svg viewBox=\"0 0 100 90\"><circle cx=\"22\" cy=\"38\" r=\"9\"/><g class=\"fig-arch\" style=\"transform-origin:55px 40px\"><path d=\"M31 40h48\"/></g><path d=\"M33 42v28M77 40v30\"/></svg>",
+"sink":"<svg viewBox=\"0 0 100 90\"><g class=\"fig-sink\"><circle cx=\"42\" cy=\"22\" r=\"10\"/><path d=\"M42 32v26\"/><path d=\"M42 40l-13 12M42 40l14 8\"/></g><path d=\"M42 58l22 20M42 58l-16 20\"/><path d=\"M26 78h20\"/></svg>"
+};
+const ROUTINES={
+"wake":{name:"Wake-up",note:"Standing, four minutes to get the blood moving.",moves:[
+  ["Neck rolls",40,"Chin toward your chest, roll slowly ear to shoulder. Both directions. Never force the back of the range.","neck"],
+  ["Shoulder circles",40,"Big, slow circles backward. Let the shoulder blades move, not just the arms.","shoulder"],
+  ["Overhead reach",40,"Reach both arms up and lengthen through one side, then the other. Breathe into the ribs.","reach"],
+  ["Standing side bend",45,"One arm overhead, lean gently away. Keep the hips square and the ribs stacked.","side"],
+  ["Gentle spinal twist",45,"Feet planted, turn from the middle of the back. Let your head follow your chest.","twist"],
+  ["Forward fold",50,"Soft knees, hinge at the hips and hang. Let the head go heavy. Roll up slowly.","fold"]
+]},
+"desk":{name:"Desk-stiff",note:"For a back that has been in a chair too long.",moves:[
+  ["Chin tucks",35,"Draw the chin straight back, making a double chin. Hold two seconds, release. Undoes the screen lean.","neck"],
+  ["Shoulder blade squeeze",35,"Pull the shoulder blades together and down. Hold, then let go completely.","shoulder"],
+  ["Doorway chest opener",45,"Forearm on a frame, step through gently until you feel the chest open. Both sides.","reach"],
+  ["Seated spinal twist",45,"Sit tall, turn to one side and hold the chair. Lengthen up before you turn further.","twist"],
+  ["Hip flexor lunge",50,"Half-kneeling, tuck the pelvis under and ease forward. The front of the back hip should lengthen.","sink"],
+  ["Cat-cow",50,"On all fours, arch and round slowly with the breath. Move the whole spine, one vertebra at a time.","arch"]
+]},
+"back":{name:"Lower back",note:"Gentle and floor-based. Nothing that loads the spine.",moves:[
+  ["Knees to chest",45,"On your back, draw both knees in and hold. Let the lower back soften into the floor.","sink"],
+  ["Cat-cow",50,"On all fours, arch and round slowly. Small range, led by the breath rather than the arms.","arch"],
+  ["Child's pose",55,"Knees wide, hips back toward the heels, arms long. Breathe into the back of the ribs.","fold"],
+  ["Supine twist",50,"On your back, knees fall to one side, arms wide. Let gravity do it. Both sides.","twist"],
+  ["Glute bridge",40,"Feet flat, lift the hips a few inches, squeeze, lower slowly. Strength, not stretch.","reach"]
+]}
+};
+let strKey='wake',strI=0,strLeft=0,strRun=false,strTimer=null;
+function strRoutine(){return ROUTINES[strKey]||ROUTINES.wake}
+function strMoves(){return strRoutine().moves}
+function strChips(){
+  const box=$('strChips');if(!box)return;box.innerHTML='';
+  Object.keys(ROUTINES).forEach(k=>{
+    const b=document.createElement('button');
+    b.className='chip'+(k===strKey?' on':'');b.textContent=ROUTINES[k].name;
+    b.onclick=()=>{strKey=k;S.stretch=k;saveS();strReset();strChips();haptic(8)};
+    box.appendChild(b);
+  });
+}
+function strPaint(){
+  const m=strMoves()[strI];
+  if(!m){strDone();return}
+  $('strFig').innerHTML=STRETCH_FIGS[m[3]]||'';
+  $('strName').textContent=m[0];
+  $('strCue').textContent=m[2];
+  $('strTime').textContent=fmt(strLeft);
+  const dots=$('strDots');dots.innerHTML='';
+  strMoves().forEach((_,i)=>{const d=document.createElement('div');
+    d.className='str-dot'+(i===strI?' now':(i<strI?' seen':''));dots.appendChild(d)});
+  document.querySelector('#s14 .str').classList.toggle('str-go',strRun&&!REDUCED);
+}
+function strReset(){
+  strStop();strI=0;strLeft=strMoves()[0][1];
+  $('strName').textContent='Ready when you are';
+  $('strCue').textContent=strRoutine().note;
+  $('strFig').innerHTML=STRETCH_FIGS[strMoves()[0][3]]||'';
+  $('strTime').textContent=fmt(strLeft);
+  $('strBtn').textContent='Start';
+  const dots=$('strDots');if(dots){dots.innerHTML='';
+    strMoves().forEach(()=>{const d=document.createElement('div');d.className='str-dot';dots.appendChild(d)})}
+  const box=document.querySelector('#s14 .str');if(box)box.classList.remove('str-go');
+}
+function strStop(){if(strTimer){clearInterval(strTimer);strTimer=null}strRun=false}
+function strToggle(){
+  if(strRun){strStop();$('strBtn').textContent='Resume';strPaint();return}
+  strRun=true;$('strBtn').textContent='Pause';haptic(10);strPaint();
+  strTimer=setInterval(()=>{
+    strLeft--;
+    if(strLeft<=0){
+      strI++;
+      if(strI>=strMoves().length){strDone();return}
+      strLeft=strMoves()[strI][1];tick(660);haptic([10,30,12]);
+    }
+    strPaint();
+  },1000);
+}
+function strDone(){
+  strStop();
+  $('strFig').innerHTML='';
+  $('strName').textContent='Loosened up.';
+  $('strCue').textContent='That is the whole routine. Carry it into the day.';
+  $('strTime').textContent='0:00';
+  $('strBtn').textContent='Again';
+  const box=document.querySelector('#s14 .str');if(box)box.classList.remove('str-go');
+  chime();haptic([14,40,20]);DAY.stretch=true;saveDay();
+  strI=0;strLeft=strMoves()[0][1];
+}
+function strOpen(){strKey=ROUTINES[S.stretch]?S.stretch:'wake';strChips();strReset()}
+
 /* ============================= THE MINI ==============================
    5x5 on weekdays, 7x7 at the weekend. Grid size is read from the puzzle,
    so nothing below is hardcoded to a width. */
@@ -2532,6 +3207,8 @@ function cwClear(){
 /* Day one explains itself in place, then gets out of the way for good. */
 const isFirstRun=()=>!localStorage.getItem('flDone')&&!Object.keys(history()).length;
 function applyEmptyState(){const el=$('firstRun');if(el)el.style.display=isFirstRun()?'':'none'}
+/* Day one builds their own morning rather than inheriting someone else's. */
+function maybeOnboard(){if(isFirstRun()&&!S.onboarded)openOnboard()}
 
 /* the same line every morning stops landing after a week */
 const LAUNCH_LINES=[
@@ -2549,7 +3226,7 @@ const LAUNCH_LINES=[
 function renderRecap(){
   saveDay();
   $('launchLine').textContent=LAUNCH_LINES[dayOfYear()%LAUNCH_LINES.length];
-  const open=[];for(let i=1;i<=7;i++){if(statusOf(i)!=='done')open.push(STEP_NAMES[i-1])}
+  const open=[];FLOW.forEach(i=>{if(statusOf(i)!=='done')open.push(stepName(i))});
   const rows=[];
   const add=(l,t)=>{if(t&&String(t).trim())rows.push('<div class="recap-item"><div class="recap-l">'+l+
     '</div><div class="recap-t">'+esc(t)+'</div></div>')};
@@ -2671,7 +3348,7 @@ function saveSettings(){
   const q=$('setQuotes').value.split('\n').map(x=>x.trim()).filter(Boolean);
   S.affirms=a.length?a:DEF_AFFIRMS.slice();
   S.quotes=q.length?q:DEF_QUOTES.slice();
-  try{localStorage.setItem('flSettings',JSON.stringify({affirms:S.affirms,quotes:S.quotes}))}catch(e){}
+  saveS();
   sparkI=null;softI=0;
   go(0);
 }
@@ -2799,6 +3476,8 @@ function showUpdate(){
 /* ============================= BOOT ============================= */
 FIELDS.forEach(k=>{const el=$(k);if(el)el.addEventListener('input',()=>{DAY[k]=el.value;saveDay()})});
 loadDayFields();
+migrateSettings();  // protect an existing user's cards before defaults change
+FLOW=validFlow(S.flow);
 migrateItems();
 carryOver();        // yesterday's unfinished items are waiting this morning
 paintFeel();
@@ -2809,6 +3488,8 @@ setPat(localStorage.getItem('flPattern')||'calm');
 })();
 applyEmptyState();
 syncDash();
+sizeBand();      // after applyEmptyState: the hint changes the height under it
+maybeOnboard();
 /* iOS won't make a sound until the user has touched something */
 document.addEventListener('pointerdown',()=>audio(),{once:true});
 let openedOn=todayKey();

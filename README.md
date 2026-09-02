@@ -31,17 +31,23 @@ The trade-off is the same fact from the other side: your data lives on that one 
 
 ## ☀️ The Morning Sequence
 
-Brain first, planning once it's running, and out the door laughing.
+**You build your own.** On day one the app asks which modules you want, in what
+order, and what kind of quotes and fables — then gets out of the way. Change any
+of it later in Settings.
 
-| # | Step | What happens |
-|---|------|--------------|
-| 1 | **Spark** | A quote to carry into the day. Fresh every time you open it |
-| 2 | **Story** | A full-length fable that ends on an earned takeaway |
-| 3 | **The Mini** | A crossword to switch the brain on — new puzzle daily, 7x7 at the weekend |
-| 4 | **Software** | Your own daily reminders, one card at a time, so they get read instead of skimmed |
-| 5 | **Breathe** | A 2/5/10-minute timer with a breathing circle and a soft chime |
-| 6 | **Today** | Purge the clutter, set your Top 3, name the one **WIN** |
-| 7 | **Laugh** | A one-liner on the way out, because life isn't that serious |
+| Module | What happens |
+|--------|--------------|
+| **Spark** | A quote to carry into the day, with a written explanation |
+| **Story** | A full-length fable that ends on an earned takeaway |
+| **The Mini** | A crossword to switch the brain on — new puzzle daily, 7x7 at the weekend |
+| **Software** | Your own daily reminders, one card at a time, so they get read instead of skimmed |
+| **Breathe** | A 2/5/10-minute timer with a breathing circle and a soft chime |
+| **The Stretch** | Gentle mobility, guided on a timer, with a figure that shows the movement |
+| **Today** | Purge the clutter, set your Top 3, name the one **WIN** |
+| **Laugh** | A one-liner on the way out, because life isn't that serious |
+
+The default order is brain first, planning once it's running, and out the door
+laughing — but it's yours to rearrange.
 
 Then **Launch** recaps the day and ticks the streak.
 
@@ -69,7 +75,8 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
 * **Built to touch** — springs on press, haptics, a real breathing circle, and a sunrise burst when you finish. All of it toggleable, and it respects reduced-motion.
 * **Zero network requests** — fonts embedded, everything local. It works the same in a tunnel as at your kitchen table.
 * **Two looks** — **Dawn**, oat paper and ink for daylight, and **Dusk** for the hours before sunrise. Set in Fraunces over Inter.
-* **Your software is yours** — reminders and quotes are edited in Settings, never in the code.
+* **Your software is yours** — reminders and quotes are edited in Settings, never in the code. A library of 40 written cards to start from, or write your own.
+* **Flavours** — tag what you want more of (Strategy, Stoic, Mindfulness, Poetry, Grit, Reflection) and the quotes and fables follow. A narrow pick widens itself rather than repeating on you.
 * **Export / import** — one tap dumps everything to a JSON file, and restores from one. Insurance against a cleared browser.
 * **Day streak** that only counts consecutive days.
 * **Fully offline** — no API calls, no network needed after the first load.
