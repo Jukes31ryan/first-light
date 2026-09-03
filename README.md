@@ -65,7 +65,7 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
 * **A lot of content, no repetition:**
   * 141 quotes — strategists (Sun Tzu, Musashi, Marcus Aurelius, Seneca, Epictetus), philosophers (Plato, Aristotle, Socrates, Lao Tzu, Confucius, Nietzsche, Camus, Jung, Frankl), Americans (Kennedy, Lincoln, Douglass, Thoreau, the Roosevelts, King, Ali, Twain), scientists (Einstein, Feynman, Sagan, Curie) and poets (Rumi, Whitman, Oliver, Rilke, Frost, Angelou, Kipling, Emerson)
   * 50 full-length fables, each with a takeaway — Zen, Sufi, Aesop, Stoic and folk
-  * 84 one-liners, credited where they belong to someone — Hedberg, Steven Wright, Demetri Martin, Wilde, Groucho, Dorothy Parker, Pratchett, Adams
+  * 102 one-liners, credited where they belong to someone — Jack Handey, Hedberg, Steven Wright, Demetri Martin, Dangerfield, Groucho, Dorothy Parker, Pratchett, Adams
   * 24 hand-built mini crosswords, one per day
 * **"What does this mean?"** — every quote and every fable has a written explanation: what it means, where it came from, and a question to sit with. Written into the app, so it opens instantly and works with no signal.
 * **The month grid** — every morning you showed up, filled in. The streak as a shape, not just a number.
