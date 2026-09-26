@@ -40,7 +40,7 @@ of it later in Settings.
 | **Spark** | A quote to carry into the day, with a written explanation |
 | **Story** | A full-length fable that ends on an earned takeaway |
 | **The Mini** | A crossword to switch the brain on — new puzzle daily, 7x7 at the weekend |
-| **Software** | Your own daily reminders, one card at a time, so they get read instead of skimmed |
+| **Software** | One of your own reminders each morning, rotating through the set, so it gets read instead of skimmed |
 | **Breathe** | A 2/5/10-minute timer with a breathing circle and a soft chime |
 | **The Stretch** | Gentle mobility, guided on a timer, with a figure that shows the movement |
 | **Today** | Purge the clutter, set your Top 3, name the one **WIN** |

@@ -496,10 +496,6 @@ justify-content:center;text-align:center;cursor:pointer}
 .soft-cat{font-size:9px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--accent);margin-bottom:24px}
 .soft-txt{font-size:25px;line-height:1.42;letter-spacing:-.014em}
 .soft-hint{font-size:11px;color:var(--ink3);margin-top:30px;letter-spacing:.03em}
-.soft-dots{display:flex;gap:0;margin-top:20px;height:2px}
-.soft-dot{flex:1;height:2px;background:var(--rule2);opacity:.4;border-right:2px solid var(--paper)}
-.soft-dot.seen{background:var(--accent);opacity:.5}
-.soft-dot.now{background:var(--accent);opacity:1}
 
 /* ── the mini ── */
 .cw-meta{display:flex;justify-content:space-between;align-items:baseline;margin-top:22px;
@@ -713,21 +709,18 @@ color:var(--ink3);cursor:pointer}
 <div class="prog" id="p5"></div>
 <div class="main">
 <div class="h1 disp">Load the Software</div>
-<div class="p">The operating system you already wrote. One line at a time — read it like you mean it.</div>
-<div class="sheet soft" id="softCard" onclick="softNext()">
+<div class="p">The operating system you already wrote. One line today &mdash; read it like you mean it.</div>
+<div class="sheet soft" id="softCard" onclick="softMore()">
 <div class="soft-cat" id="softCat"></div>
 <div class="soft-txt disp" id="softTxt"></div>
-<div class="soft-hint" id="softHint">Tap the card for the next one</div>
+<div class="soft-hint" id="softHint"></div>
 </div>
-<div class="soft-dots" id="softDots"></div>
 <div class="btn-row">
-<button class="btn-sec" onclick="softPrev()">&#8592; Back</button>
-<button class="btn-sec" onclick="softNext()">Next &#8594;</button>
-<button class="btn-sec" onclick="softRestart()">Start over</button>
+<button class="btn-sec" id="softMore" onclick="softMore()">Another &#8635;</button>
 </div>
 <div class="p" style="margin-top:26px;font-size:12px;text-align:center">Edit your software any time in Settings.</div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(5,'skip');flowNext(5)">Skip</button><button class="btn-go" id="softGo" onclick="softGoAction()">Software loaded</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(5,'skip');flowNext(5)">Skip</button><button class="btn-go" id="softGo" onclick="softDone()">Continue</button></div></div>
 </div>
 
 <!-- 6 TODAY — THE THREE P'S -->
@@ -2415,6 +2408,8 @@ function renderJournal(){
   if(d.quote){const [q,a]=splitLine(d.quote);
     facts.push('<div class="jr-fact"><b>The spark</b>“'+esc(q)+'”'+(a?' — '+esc(a):'')+'</div>')}
   if(d.story)facts.push('<div class="jr-fact"><b>The story</b>'+esc(d.story)+'</div>');
+  if(d.software){const [sc,st]=splitLine(d.software);
+    facts.push('<div class="jr-fact"><b>Your software</b>'+esc(st||d.software)+(sc?' \u2014 '+esc(sc):'')+'</div>')}
   if(d.joke){const [jl,jw]=splitLine(d.joke);
     facts.push('<div class="jr-fact"><b>The laugh</b>'+esc(jl)+(jw?' \u2014 '+esc(jw):'')+'</div>')}
   if(d.cwSolved)facts.push('<div class="jr-fact"><b>The mini</b>Solved'+(d.cwTime?' in '+fmt(d.cwTime):'')+'</div>');
@@ -2584,31 +2579,31 @@ function medReset(){medStopTimers();medRun=false;medLeft=medDur;
   $('medTime').textContent=fmt(medLeft);$('medPhase').textContent='Press start when ready';
   $('medBtn').textContent='Start';$('medCircle').classList.remove('inhale')}
 
-/* ============================= SOFTWARE (one card at a time) ============================= */
-let softI=0,softMax=0;
-function softStart(){softI=0;softMax=0;paintSoft()}
-function softRestart(){softStart()}
+/* ============================= SOFTWARE (one card a day) ============================= */
+let softI=0;
+/* One card a day, on the same rotation the crossword banks use. This used to
+   march you through every card before it would let you leave: the primary
+   button was relabelled "Next reminder" instead of completing the step, so the
+   only exit was Skip — which recorded the step as avoided. */
+function softToday(){
+  const n=S.affirms.length;
+  return n?dayOfYear()%n:0;                 // guard: the list can be empty
+}
 function paintSoft(){
   const list=S.affirms;
   if(!list.length){$('softCat').textContent='';$('softTxt').textContent='No reminders yet — add some in Settings.';
-    $('softHint').textContent='';$('softDots').innerHTML='';return}
-  softI=Math.max(0,Math.min(softI,list.length-1));
-  softMax=Math.max(softMax,softI);
-  const [cat,txt]=parsePair(list[softI]);
+    $('softHint').textContent='';return}
+  softI=((softI%list.length)+list.length)%list.length;
+  const [cat,txt]=splitLine(list[softI]);
   $('softCat').textContent=cat||'Daily Reminder';
-  $('softTxt').textContent=txt;
-  const last=softI===list.length-1;
-  $('softHint').textContent=(softI+1)+' of '+list.length+(last?' — that\'s the whole system.':' · tap for the next one');
-  const dots=$('softDots');dots.innerHTML='';
-  list.forEach((_,i)=>{const d=document.createElement('div');
-    d.className='soft-dot'+(i===softI?' now':(i<=softMax?' seen':''));dots.appendChild(d)});
-  /* textContent, so the arrow goes in as a character — an HTML entity here
-     would be shown literally rather than decoded. */
-  $('softGo').textContent=last?'Software loaded':'Next reminder →';
+  $('softTxt').textContent=txt||list[softI];
+  $('softHint').textContent=(softI+1)+' of '+list.length+' in your rotation';
+  if(DAY.software!==list[softI]){DAY.software=list[softI];saveDay()}
 }
-function softNext(){if(softI<S.affirms.length-1){softI++;paintSoft()}else{mark(5,'done');flowNext(5)}}
-function softGoAction(){softNext()}
-function softPrev(){if(softI>0){softI--;paintSoft()}}
+function softStart(){softI=softToday();paintSoft()}
+/* Another one, wrapping. Never a dead end and never a blank card. */
+function softMore(){if(S.affirms.length)softI=(softI+1)%S.affirms.length;paintSoft()}
+function softDone(){mark(5,'done');flowNext(5)}
 
 /* ============================= THE THREE P'S ============================= */
 let ppStage=1;
