@@ -27,13 +27,34 @@ The app keeps everything in `localStorage`, which browsers scope to one device a
 
 The trade-off is the same fact from the other side: your data lives on that one device, so use **Export** in Settings before you wipe a phone or clear your browser, and **Import** on the new one.
 
+### Keeping your data (please read this bit)
+
+Everything you write is in your browser's storage and nowhere else. Two things
+follow from that:
+
+* **On iPhone, add it to your Home Screen.** Safari deletes this kind of storage
+  after roughly seven days without a visit — but not for sites you've added to
+  the Home Screen. Share → Add to Home Screen, and your streak, journal and
+  tasks stop being at the mercy of a quiet fortnight. The app says so itself
+  after a couple of mornings, once.
+* **Export now and then.** Settings → Backup writes a single JSON file you can
+  keep anywhere. After a week of mornings with no copy saved, the app offers
+  once; it stays quiet again as soon as you've taken one.
+
+Where the browser supports it, the app also asks for *persistent* storage on
+load, which stops it being evicted under disk pressure. Chrome and Android grant
+that on engagement or after an install; Safari ignores it, which is why the Home
+Screen matters there.
+
 ---
 
 ## ☀️ The Morning Sequence
 
-**You build your own.** On day one the app asks which modules you want, in what
-order, and what kind of quotes and fables — then gets out of the way. Change any
-of it later in Settings.
+**You build your own — after you've seen it.** Day one runs on sensible defaults
+so there is nothing to configure before you know what any of it is. Once you've
+been through a morning, the app offers to let you pick the modules, the order and
+the kind of quotes and fables you want. Say no and it never asks again; Settings
+keeps **Rebuild my morning** for whenever you change your mind.
 
 | Module | What happens |
 |--------|--------------|
@@ -75,7 +96,7 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
 * **Built to touch** — springs on press, haptics, a real breathing circle, and a sunrise burst when you finish. All of it toggleable, and it respects reduced-motion.
 * **Zero network requests** — fonts embedded, everything local. It works the same in a tunnel as at your kitchen table.
 * **Two looks** — **Dawn**, oat paper and ink for daylight, and **Dusk** for the hours before sunrise. Set in Fraunces over Inter.
-* **Your software is yours** — reminders and quotes are edited in Settings, never in the code. A library of 40 written cards to start from, or write your own.
+* **Your software is yours** — reminders and quotes are edited in Settings, never in the code. Start from a ready-made set (**Operating rules**, eight rules that each name a situation and what to do in it, or a broader nine-card starter), pick from a library of 40 written cards, or write your own.
 * **Flavours** — tag what you want more of (Strategy, Stoic, Mindfulness, Poetry, Grit, Reflection) and the quotes and fables follow. A narrow pick widens itself rather than repeating on you.
 * **Export / import** — one tap dumps everything to a JSON file, and restores from one. Insurance against a cleared browser.
 * **Day streak** that only counts consecutive days.

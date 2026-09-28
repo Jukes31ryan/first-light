@@ -77,6 +77,17 @@ z-index:300;padding:12px 20px;border-radius:3px;border:1px solid var(--rule2);ba
 color:var(--btn-text);font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.12em;
 text-transform:uppercase;cursor:pointer;box-shadow:0 6px 24px rgba(0,0,0,.22);animation:riseIn .4s ease}
 
+/* One quiet offer at a time, in the slot the welcome hint used to hold. It sits
+   above the call to action, so it stays small enough not to push it down. */
+#nudge{margin-top:22px;padding:14px 16px;border:1px solid var(--rule2);border-left:2px solid var(--accent);
+border-radius:3px;background:var(--sheet);animation:riseIn .4s ease}
+.nudge-t{font-size:13px;line-height:1.5;color:var(--ink2)}
+.nudge-row{display:flex;align-items:center;gap:12px;margin-top:11px;flex-wrap:wrap}
+.nudge-x{background:none;border:none;padding:10px 4px;min-height:44px;color:var(--ink3);
+font-family:inherit;font-size:12px;letter-spacing:.04em;cursor:pointer;opacity:.7}
+.nudge-x:hover{opacity:1}
+.ob-presets{display:flex;flex-wrap:wrap;gap:9px;margin:2px 0 18px}
+
 /* display face — the thing that makes it look set rather than generated */
 .disp{font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Georgia,serif;
 font-optical-sizing:auto;font-variation-settings:'SOFT' 20,'WONK' 1}
@@ -575,6 +586,7 @@ color:var(--ink3);cursor:pointer}
 
 <div class="mark" aria-hidden="true"><svg viewBox="0 0 200 26"><path d="M2 22h78"/><path d="M120 22h78"/><path d="M89 22a11 11 0 0 1 22 0"/><path d="M100 3v5"/><path d="M83 8l3 3.5"/><path d="M117 8l-3 3.5"/></svg></div>
 <div class="p" id="firstRun" style="display:none;margin-top:22px;font-size:13px;padding-left:14px;border-left:2px solid var(--accent)">Five minutes, top to bottom &mdash; or tap any one of them on its own. Skip whatever you like; it keeps your place.</div>
+<div id="nudge" style="display:none"></div>
 
 <!-- The call to action and the sequence come first, above the fold on every
      phone. Everything below here is the day's state, which you only look at
@@ -823,6 +835,11 @@ color:var(--ink3);cursor:pointer}
 <div class="set-note">Which modules, in what order, and what kind of quotes and fables.</div>
 <div class="divider"></div>
 <div class="set-lbl">Your Software — Daily Reminders</div>
+<div class="btn-row" style="justify-content:flex-start;margin-bottom:10px">
+<button class="btn-sec" onclick="loadCards('sharp')">Load the operating rules</button>
+<button class="btn-sec" onclick="loadCards('broad')">Load the broad starter</button>
+<button class="btn-sec" id="legacyBtn" style="display:none" onclick="loadCards('legacy')">Restore my original set</button>
+</div>
 <textarea class="input" id="setAffirms" rows="10" spellcheck="false"></textarea>
 <div class="set-lbl">Quotes to Ponder</div>
 <textarea class="input" id="setQuotes" rows="10" spellcheck="false"></textarea>
@@ -983,6 +1000,20 @@ const CARD_LIBRARY=[
 "Work | Write it down. Your memory is lying to you confidently.",
 "Work | The hard conversation is cheaper today than it will be next month.",
 "Purpose | Know why you're doing this. The what gets easier after that."
+];
+
+/* Operating rules rather than affirmations. An affirmation asserts something
+   about you and is easy to skim past; a rule names the situation and tells you
+   what to do in it, which is harder to argue with at 6am. Eight, on purpose. */
+const SHARP_CARDS=[
+"Default | When you don't know what to do, do the boring obvious thing first.",
+"Two minutes | If it takes two minutes, it is already done. Stop moving it down the list.",
+"Numbers | Say the number and the date. Vague agreements are how a week disappears.",
+"Heat | Sleep on anything you wanted to reply to immediately.",
+"The hard one | Have the hard conversation this week. It gets more expensive, never less.",
+"Check the body | Before you trust an irritated thought, check whether you ate, slept and moved.",
+"The cut | Cut the list in the morning, not at four o'clock when you have already failed it.",
+"Warm start | Stop one step short of done on something you know how to finish. Tomorrow starts moving."
 ];
 
 /* What a brand-new person gets: neutral, broadly true, and replaceable.
@@ -1863,12 +1894,12 @@ const PUZZLES=[
 {r:["##VAN","#ROBE","BUILT","ONCE#","AGE##"],c:{ABLE:"Up to the task",AGE:"Mature, as cheddar",BOA:"Squeezer, or a feathery scarf",BUILT:"Put up",NET:"What's left after costs",ONCE:"___ upon a time",ROBE:"Thrown on over pajamas",RUNG:"Step up?",VAN:"Head of a procession",VOICE:"What you find, then use"}},
 {r:["##ICE","#CROW","PLANE","RATE#","OWE##"],c:{CLAW:"Cat's tool, or a crane's grabber",CONE:"It holds a scoop, or slows traffic",CROW:"Boast \u2014 or the bird that does",EWE:"Lamb's mother",ICE:"It breaks at a party",IRATE:"Seeing red",OWE:"Be in the red to",PLANE:"Carpenter's smoother, or a way to fly",PRO:"Not an amateur",RATE:"Score it 1 to 10"}},
 {r:["##RAT","#FILE","WAGON","ACHE#","NET##"],c:{ACHE:"Long, in a way",ALOE:"Burn soother",FACE:"What you wash first thing",FILE:"Nail smoother, or a folder's contents",NET:"Hoop's fringe",RAT:"Informer",RIGHT:"Not a privilege, but a ___",TEN:"Top of the scale",WAGON:"On the ___ (off the drink)",WAN:"Pale"}},
-{r:["##HIP","#LUTE","RAMEN","ATOM#","PER##"],c:{ATOM:"Splittable bit",HIP:"Cool \u2014 or a joint",HUMOR:"What the Laugh delivers",ITEM:"Thing on a list, or a couple in gossip",LATE:"Behind schedule, or the dearly departed",LUTE:"Renaissance strummer",PEN:"It's mightier than the sword",PER:"For each",RAMEN:"Instant noodles",RAP:"Knock, or a genre"}},
-{r:["##COY","#RIPE","SEVEN","PAIN#","ARC##"],c:{ARC:"The sun's path",CIVIC:"Honda model, or a duty",COY:"Playing hard to get",OPEN:"Unlocked",PAIN:"The first arrow, in the fable",REAR:"Bring up",RIPE:"Ready to pick, or smelling of it",SEVEN:"Steps in the morning sequence",SPA:"Place for a long soak",YEN:"Craving, or Tokyo money"}},
+{r:["##HIP","#LUTE","RAMEN","ATOM#","PER##"],c:{ATOM:"Splittable bit",HIP:"Cool \u2014 or a joint",HUMOR:"Funny bone's output, or one of Hippocrates' four",ITEM:"Thing on a list, or a couple in gossip",LATE:"Behind schedule, or the dearly departed",LUTE:"Renaissance strummer",PEN:"It's mightier than the sword",PER:"For each",RAMEN:"Instant noodles",RAP:"Knock, or a genre"}},
+{r:["##COY","#RIPE","SEVEN","PAIN#","ARC##"],c:{ARC:"The sun's path",CIVIC:"Honda model, or a duty",COY:"Playing hard to get",OPEN:"Unlocked",PAIN:"No gain without it",REAR:"Bring up",RIPE:"Ready to pick, or smelling of it",SEVEN:"Dwarfs, or seas",SPA:"Place for a long soak",YEN:"Craving, or Tokyo money"}},
 {r:["RAM##","IRON#","PILOT","#DATA","##RED"],c:{ARID:"Bone dry",DATA:"What you can't improve without measuring",IRON:"Pump it, or press with it",MOLAR:"Grinder in the back",NOTE:"The freestyle line at the end",PILOT:"First episode, or the one flying",RAM:"Battering ___",RED:"In the ___",RIP:"Tear along the dotted line",TAD:"A little bit"}},
 {r:["LED##","OVEN#","BELOW","#RATE","##YET"],c:{BELOW:"Under",DELAY:"Airport announcement",EVER:"At any time",LED:"Was out front, or a modern bulb",LOB:"High, soft throw",NOTE:"Short written message",OVEN:"Where the bread bakes",RATE:"Rank it",WET:"Just in from the rain",YET:"So far"}},
 {r:["BAD##","AREA#","GIANT","#ALTO","##TEN"],c:{ALTO:"Choir part",ANTE:"Poker's opening chip",AREA:"Square feet",ARIA:"Opera solo",BAD:"Michael Jackson album",BAG:"Paper or plastic",DEALT:"Handed out the cards",GIANT:"Jack's foe",TEN:"Fingers, all told",TON:"2,000 pounds"}},
-{r:["GYM##","NEAT#","ULTRA","#PEER","##SET"],c:{ART:"The ___ of War",GNU:"Wildebeest",GYM:"Place to sweat on purpose",MATES:"Partners",NEAT:"Tidy \u2014 or how you take your whiskey",PEER:"An equal, or to look closely",SET:"Ready, ___, go",TREE:"The trouble ___ in the fable",ULTRA:"Beyond extreme",YELP:"Sharp cry, or a review site"}},
+{r:["GYM##","NEAT#","ULTRA","#PEER","##SET"],c:{ART:"The ___ of War",GNU:"Wildebeest",GYM:"Place to sweat on purpose",MATES:"Partners",NEAT:"Tidy \u2014 or how you take your whiskey",PEER:"An equal, or to look closely",SET:"Ready, ___, go",TREE:"What you can't see the forest for",ULTRA:"Beyond extreme",YELP:"Sharp cry, or a review site"}},
 {r:["SLY##","HOOD#","ENDOW","#GENE","##LED"],c:{DONE:"Finished",ENDOW:"Gift generously",GENE:"Unit of heredity",HOOD:"A jacket's top, or a car's",LED:"Guided",LONG:"Not short, or to yearn",SHE:"Pronoun",SLY:"Cunning",WED:"Marry",YODEL:"Alpine warble"}},
 {r:["OLD##","AURA#","KNELT","#GATE","##DON"],c:{ALTO:"Not soprano, not tenor",AURA:"Vibe a person gives off",DON:"Put on, as a coat \u2014 or a boss",DREAD:"Deep fear of what's coming",GATE:"Airport waiting spot",KNELT:"Went down on one knee",LUNG:"Breathing organ",OAK:"It starts as an acorn",OLD:"Not new",TEN:"A perfect ___"}},
 {r:["##ADO","#ODOR","GNOME","ACRE#","SEE##"],c:{ACRE:"Chunk of land, about a football field",ADO:"Much ___ About Nothing",ADORE:"Love a great deal",DOME:"Roof of a capitol",GAS:"Fill 'er up with it",GNOME:"Garden statue with a hat",ODOR:"Smell, usually a bad one",ONCE:"___ upon a time",ORE:"It's mined for metal",SEE:"Get it now"}},
@@ -1957,6 +1988,10 @@ function migrateSettings(){
   const hasHistory=!!localStorage.getItem('flDone')||Object.keys(readJSON('flHistory',{})||{}).length>0;
   if(hasHistory&&(!raw||!raw.affirms||!raw.affirms.length)){
     S.affirms=LEGACY_AFFIRMS.slice();
+    /* Remember that these were pinned, not chosen. It is the only honest way
+       to decide whether "restore the original set" means anything to this
+       person — to anyone else it is thirteen cards about a stranger's kids. */
+    S.hadLegacy=true;
     saveS();
   }
 }
@@ -2175,6 +2210,7 @@ const MARK={done:'Done',skip:'Skipped',todo:''};
 const CHEV='<svg class="idx-go" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
 
 function syncDash(){
+  applyEmptyState();   // a finished morning is what unlocks the setup offer
   const now=new Date();
   const streak=+localStorage.getItem('flStreak')||0;
   const info=streakInfo();
@@ -2825,6 +2861,7 @@ function openOnboard(){
   obCards=S.affirms.slice();
   go(13);
 }
+const sameCards=(a,b)=>a.length===b.length&&b.every(c=>a.indexOf(c)>=0);
 function obQuit(){go(0)}
 function obSkipAll(){                       // keep whatever they already had
   S.onboarded=true;saveS();go(0);
@@ -2923,6 +2960,21 @@ function renderOnboard(){
 
   $('obTitle').textContent='Your own reminders.';
   $('obLead').textContent='The principles you want read back to you, one card at a time. Tap to include. You can write your own in Settings.';
+
+  /* Forty cards is a lot to read at 6am on day one. Two ready-made sets take
+     the decision away for anyone who would rather just start. */
+  const preHead=document.createElement('div');preHead.className='ob-cat';
+  preHead.textContent='Or start from a set';box.appendChild(preHead);
+  const pre=document.createElement('div');pre.className='ob-presets';
+  [['Operating rules',SHARP_CARDS],['Broad starter',DEF_AFFIRMS]].forEach(([label,set])=>{
+    const b=document.createElement('button');
+    b.className='ob-tag'+(sameCards(obCards,set)?' on':'');
+    b.textContent=label+' ('+set.length+')';
+    b.onclick=()=>{obCards=sameCards(obCards,set)?[]:set.slice();haptic(6);renderOnboard()};
+    pre.appendChild(b);
+  });
+  box.appendChild(pre);
+
   let cat='';
   CARD_LIBRARY.forEach(card=>{
     const [c,txt]=parsePair(card);
@@ -3245,12 +3297,117 @@ function cwClear(){
   $('cwMsg').textContent='';cwPaintList();
 }
 
-/* ============================= LAUNCH / RECAP ============================= */
+/* ==================== FIRST RUN, NUDGES, DURABILITY ==================== */
 /* Day one explains itself in place, then gets out of the way for good. */
 const isFirstRun=()=>!localStorage.getItem('flDone')&&!Object.keys(history()).length;
-function applyEmptyState(){const el=$('firstRun');if(el)el.style.display=isFirstRun()?'':'none'}
-/* Day one builds their own morning rather than inheriting someone else's. */
-function maybeOnboard(){if(isFirstRun()&&!S.onboarded)openOnboard()}
+
+/* Nobody configures a thing they have not tried. The setup wizard used to open
+   on arrival, which asked a stranger to rank eight modules before they had read
+   a single quote. Now day one runs on the defaults and the wizard is *offered*
+   afterwards, once "The Mini" and "The Stretch" mean something.
+
+   The gate is S.onboarded rather than isFirstRun(), and that is deliberate:
+   isFirstRun() requires no history, so anyone who has been using the app since
+   before the wizard existed could never be shown it. They get it once too. */
+function seenDays(){const a=readJSON('flSeen',[]);return Array.isArray(a)?a:[]}
+function markSeen(){
+  const a=seenDays(),t=todayKey();
+  if(a[a.length-1]===t)return a;
+  a.push(t);while(a.length>8)a.shift();
+  try{localStorage.setItem('flSeen',JSON.stringify(a))}catch(e){}
+  return a;
+}
+/* A finished morning is the good trigger. The second visit is the backstop, so
+   someone who pokes around twice without finishing still gets asked. */
+function offerSetup(){
+  if(S.onboarded)return false;
+  return Object.keys(history()).length>0||seenDays().length>=2;
+}
+
+/* Installed means the storage survives; in a tab on iOS it does not. */
+function isInstalled(){
+  try{
+    if(navigator.standalone)return true;
+    return !!(window.matchMedia&&window.matchMedia('(display-mode: standalone)').matches);
+  }catch(e){return false}
+}
+function isIOS(){
+  const ua=navigator.userAgent||'';
+  return /iPad|iPhone|iPod/.test(ua)||
+    (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+}
+/* Chrome and Android grant this on engagement or after an install; Safari
+   ignores it. It is the only thing that stops a browser quietly evicting the
+   whole app under storage pressure, and it costs nothing where unsupported. */
+function askPersist(){
+  try{
+    if(!navigator.storage||!navigator.storage.persist)return;
+    const done=p=>{if(!p)navigator.storage.persist().catch(()=>{})};
+    if(navigator.storage.persisted)navigator.storage.persisted().then(done,()=>{});
+    else navigator.storage.persist().catch(()=>{});
+  }catch(e){}
+}
+function markExported(){try{localStorage.setItem('flExport',todayKey())}catch(e){}}
+function daysSince(k){
+  if(!k)return 1e4;
+  const d=(new Date(todayKey()+'T12:00:00')-new Date(k+'T12:00:00'))/864e5;
+  return isFinite(d)?Math.round(d):1e4;
+}
+
+function nudgeOff(id){const d=readJSON('flNudge',{});return !!(d&&d[id])}
+function dismissNudge(id){
+  const d=readJSON('flNudge',{})||{};d[id]=todayKey();
+  try{localStorage.setItem('flNudge',JSON.stringify(d))}catch(e){}
+  /* Saying no to the wizard is an answer, not a postponement. Settings keeps
+     "Rebuild my morning" for whenever they change their mind. */
+  if(id==='setup'){S.onboarded=true;saveS()}
+  applyEmptyState();
+}
+
+/* One at a time, in the order that matters. A stack of three banners is how a
+   dashboard stops being glanceable. */
+function currentNudge(){
+  const days=Object.keys(history()).length;
+  if(offerSetup()&&!nudgeOff('setup'))return{
+    id:'setup',
+    text:'You have seen how it runs. Want to build your own version — which modules, in what order, and what kind of quotes and fables?',
+    cta:'Build my morning',
+    act:'openOnboard()'};
+  if(days>=2&&isIOS()&&!isInstalled()&&!nudgeOff('install'))return{
+    id:'install',
+    text:'Safari deletes this kind of storage after about a week away. Share → Add to Home Screen and it stops doing that — your streak and your journal stay put.',
+    cta:'Show me how',
+    act:'openSettings()'};
+  if(days>=7&&daysSince(localStorage.getItem('flExport'))>=30&&!nudgeOff('backup'))return{
+    id:'backup',
+    text:days+' mornings live in this browser and nowhere else. One tap saves a copy you can keep.',
+    cta:'Save a backup',
+    act:"quickBackup()"};
+  return null;
+}
+function quickBackup(){exportData();dismissNudge('backup')}
+
+function paintNudge(){
+  const el=$('nudge');if(!el)return null;
+  const n=currentNudge();
+  if(!n){el.style.display='none';el.innerHTML='';return null}
+  el.style.display='';
+  el.innerHTML='<div class="nudge-t">'+esc(n.text)+'</div>'+
+    '<div class="nudge-row">'+
+    '<button class="btn-sec" onclick="'+n.act+'">'+esc(n.cta)+'</button>'+
+    '<button class="nudge-x" onclick="dismissNudge(\''+n.id+'\')">Not now</button>'+
+    '</div>';
+  return n;
+}
+/* The welcome hint and a nudge share one slot and never both speak. */
+function applyEmptyState(){
+  const n=paintNudge();
+  const el=$('firstRun');
+  if(el)el.style.display=(isFirstRun()&&!n)?'':'none';
+  sizeBand();
+}
+
+/* ============================= LAUNCH / RECAP ============================= */
 
 /* the same line every morning stops landing after a week */
 const LAUNCH_LINES=[
@@ -3376,9 +3533,20 @@ function saveEvening(){
 }
 
 /* ============================= SETTINGS ============================= */
+/* Drops a set into the box rather than committing it, so Save is still the
+   thing that decides and nothing is lost to a mis-tap. */
+function loadCards(which){
+  const set=which==='sharp'?SHARP_CARDS:which==='legacy'?LEGACY_AFFIRMS:DEF_AFFIRMS;
+  $('setAffirms').value=set.join('\n');
+  $('backupMsg').textContent='Loaded '+set.length+' cards into the box. Press Save to keep them.';
+  haptic(8);
+}
 function openSettings(){
   $('setAffirms').value=S.affirms.join('\n');
   $('setQuotes').value=S.quotes.join('\n');
+  /* Only offered to someone whose old cards were pinned for them — to anyone
+     else it would be thirteen cards about a stranger's children. */
+  const lb=$('legacyBtn');if(lb)lb.style.display=S.hadLegacy?'':'none';
   $('backupMsg').textContent='';
   applyTheme(document.body.getAttribute('data-theme'));
   paintFeel();
@@ -3413,6 +3581,7 @@ function exportData(){
     const a=document.createElement('a');a.href=url;a.download=backupName();
     document.body.appendChild(a);a.click();document.body.removeChild(a);
     setTimeout(()=>URL.revokeObjectURL(url),2000);
+    markExported();
     $('backupMsg').textContent='Saved '+backupName()+' to your downloads. Keep it somewhere safe.';
   }catch(e){
     copyData();
@@ -3420,7 +3589,8 @@ function exportData(){
 }
 function copyData(){
   const txt=JSON.stringify(collectData(),null,2);
-  const done=()=>{$('backupMsg').textContent='Backup copied to the clipboard — paste it into a note or an email to yourself.'};
+  const done=()=>{markExported();
+    $('backupMsg').textContent='Backup copied to the clipboard — paste it into a note or an email to yourself.'};
   if(navigator.clipboard&&navigator.clipboard.writeText){
     navigator.clipboard.writeText(txt).then(done,()=>fallbackCopy(txt,done));
   }else fallbackCopy(txt,done);
@@ -3528,10 +3698,10 @@ setPat(localStorage.getItem('flPattern')||'calm');
   const el=$('itemInput');if(!el)return;
   el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addItem()}});
 })();
-applyEmptyState();
-syncDash();
+markSeen();      // before applyEmptyState: the second visit is what triggers the offer
+askPersist();    // ask the browser not to evict us, where that is a thing you can ask
+syncDash();      // calls applyEmptyState, which paints the hint or the nudge
 sizeBand();      // after applyEmptyState: the hint changes the height under it
-maybeOnboard();
 /* iOS won't make a sound until the user has touched something */
 document.addEventListener('pointerdown',()=>audio(),{once:true});
 let openedOn=todayKey();
