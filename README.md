@@ -1,6 +1,6 @@
 # 🌅 Calibrate
 
-> Point the day. A personal morning launcher — a boot sequence for the brain. Open it when you wake up: warm up, center, reload your operating principles, and point yourself at the day. No accounts, no ads, no network required.
+> Point the day. You go to sleep and wake up having forgotten where you were headed — your instruments drift overnight. This is the five minutes that set them back: warm up, center, reload your operating principles, and pick the direction you actually want. No accounts, no ads, no network required.
 
 [![Website](https://img.shields.io/badge/Website-Live-e8a06c?style=for-the-badge&logo=googlechrome&logoColor=white)](https://jukes31ryan.github.io/first-light/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -9,9 +9,17 @@
 
 ## 🤔 What is this?
 
-My brain runs good software, but I forget to start it up every day. This app is the boot-up.
+You knew what mattered yesterday. Then you slept, and this morning it's gone —
+not the facts, the *heading*. Instruments drift overnight and nobody hands you a
+correction.
 
-It takes about five minutes. Open it, tap through, get on with your life.
+This is the correction. It takes about five minutes. Open it, tap through, get
+on with your life.
+
+The honest competition isn't another productivity app — it's picking up your
+phone and opening the feed. That's why there's a crossword and a joke in here
+alongside the planning: it has to be worth opening at 6am, or none of the rest
+of it happens.
 
 ## 🚀 Live
 
