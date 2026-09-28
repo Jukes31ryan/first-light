@@ -87,6 +87,20 @@ border-radius:3px;background:var(--sheet);animation:riseIn .4s ease}
 font-family:inherit;font-size:12px;letter-spacing:.04em;cursor:pointer;opacity:.7}
 .nudge-x:hover{opacity:1}
 .ob-presets{display:flex;flex-wrap:wrap;gap:9px;margin:2px 0 18px}
+.open-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.open-chip{min-height:40px;padding:8px 14px;border:1px solid var(--rule2);border-radius:20px;background:var(--paper);
+color:var(--ink);font-family:inherit;font-size:14px;font-weight:500;cursor:pointer}
+.open-chip:active{background:var(--ink);color:var(--btn-text)}
+/* A setup, a beat, a punchline. The beat is the tap. */
+.joke-card{cursor:pointer}
+.joke-kind{font-size:11px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:12px}
+.joke-q,.joke-a{font-style:normal!important;font-weight:500;font-size:19px;line-height:1.4}
+.joke-a{max-height:0;opacity:0;overflow:hidden;transform:translateY(6px);
+transition:max-height .4s var(--ease),opacity .35s ease,transform .35s var(--spring),margin .3s}
+.joke-a.on{max-height:240px;opacity:1;transform:none;margin-top:14px;color:var(--accent)}
+.joke-tell{margin-top:18px;padding:11px 20px;min-height:44px;border:1px solid var(--ink);border-radius:3px;
+background:none;color:var(--ink);font-family:inherit;font-size:14px;font-weight:600;cursor:pointer}
+.joke-tell:active{background:var(--ink);color:var(--btn-text)}
 
 /* display face — the thing that makes it look set rather than generated */
 .disp{font-family:'Fraunces','Iowan Old Style','Palatino Linotype',Georgia,serif;
@@ -144,24 +158,35 @@ z-index:1;-webkit-overflow-scrolling:touch}
 .wrap{width:100%;max-width:600px;margin:0 auto}
 
 /* ── chrome ── */
-.nav{display:flex;align-items:center;justify-content:space-between;gap:14px;
-padding:calc(18px + env(safe-area-inset-top)) 24px 16px;position:sticky;top:0;z-index:50;
-background:var(--chrome);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
-/* 44px box, 17px icon — the glyph stays the size it was, the target doesn't. */
-.nav-btn{width:44px;height:44px;border-radius:2px;background:none;border:none;color:var(--ink2);
-font-family:inherit;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto}
-.nav-btn:active{opacity:.5}
-.nav-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.5;
+/* Three columns so the title stays centred whatever the side labels say.
+   Every control carries a word: an arrow alone was the thing people could not
+   read, and "back" and "close" looked like the same kind of button. */
+.nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;
+padding:calc(12px + env(safe-area-inset-top)) 14px 10px;position:sticky;top:0;z-index:50;
+background:var(--chrome);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+border-bottom:1px solid var(--rule)}
+.nav-btn{min-width:44px;height:44px;border-radius:3px;background:none;border:none;color:var(--ink);
+font-family:inherit;display:flex;align-items:center;gap:3px;cursor:pointer;padding:0 8px;max-width:100%}
+.nav-back{justify-self:start;padding-left:4px}
+.nav-home{justify-self:end;padding-right:6px}
+.nav-btn:active{opacity:.5;background:var(--accent-q)}
+.nav-btn svg{width:20px;height:20px;flex:0 0 20px;stroke:currentColor;fill:none;stroke-width:2;
 stroke-linecap:round;stroke-linejoin:round}
-.nav-step{font-size:10px;font-weight:600;color:var(--ink3);letter-spacing:.2em;text-transform:uppercase;
-white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prog{display:flex;gap:0;padding:0 24px 22px;border-bottom:1px solid var(--rule);margin-bottom:26px}
-.prog-bar{flex:1;height:2px;background:var(--rule2);cursor:pointer;opacity:.45;
-border-right:2px solid var(--chrome)}
-.prog-bar:last-child{border-right:none}
-.prog-bar.done{background:var(--done);opacity:1}
-.prog-bar.skip{background:var(--skip);opacity:1}
-.prog-bar.now{background:var(--accent);opacity:1;height:3px;margin-top:-.5px}
+.nav-home svg{width:18px;height:18px;flex-basis:18px}
+.nav-lbl{font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:96px}
+.nav-step{font-size:14px;font-weight:600;color:var(--ink);text-align:center;line-height:1.2;
+white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.nav-step small{display:block;font-size:11px;font-weight:500;color:var(--ink3);margin-top:2px;letter-spacing:.02em}
+/* Progress: thick enough to see, tall enough to tap, and each segment names
+   the step it jumps to. */
+.prog{display:flex;gap:4px;padding:4px 24px 14px;margin-bottom:18px}
+.prog-bar{flex:1;height:5px;padding:10px 0;background-clip:content-box;box-sizing:content-box;
+background-color:var(--rule2);border-radius:3px;cursor:pointer;opacity:.6}
+.prog-bar.done{background-color:var(--done);opacity:1}
+.prog-bar.skip{background-color:var(--skip);opacity:1}
+.prog-bar.now{background-color:var(--accent);opacity:1}
+.prog-cap{padding:0 24px;margin:-10px 0 16px;font-size:12px;color:var(--ink3)}
+.prog-cap b{color:var(--ink2);font-weight:600}
 
 .main{flex:1;padding:0 24px 132px;width:100%;max-width:600px;margin:0 auto}
 
@@ -193,8 +218,8 @@ textarea.input{border:1px solid var(--rule);border-radius:3px;padding:14px;backg
 .input:focus{border-color:var(--accent)}
 .btn-row{display:flex;gap:22px;margin-top:24px;flex-wrap:wrap;align-items:center}
 .btn-sec{padding:0;background:none;border:none;border-bottom:1px solid var(--rule2);
-font-family:inherit;font-size:12px;font-weight:500;letter-spacing:.04em;color:var(--ink2);
-cursor:pointer;padding-bottom:3px}
+font-family:inherit;font-size:14px;font-weight:500;letter-spacing:.01em;color:var(--ink);
+cursor:pointer;padding-bottom:3px;min-height:32px}
 .btn-sec:active{opacity:.5}
 /* These are underlined text links — 12px tall by design, and padding would push
    the underline off the text. Give them a 44px hit area instead, so the touch
@@ -207,10 +232,11 @@ background:var(--chrome);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur
 border-top:1px solid var(--rule);margin-top:auto}
 .foot-row{display:flex;gap:18px;align-items:center;max-width:600px;margin:0 auto}
 .btn-go{flex:1;padding:16px;border-radius:3px;background:var(--ink);border:none;font-family:inherit;
-font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:var(--btn-text);cursor:pointer}
+font-size:15px;font-weight:600;letter-spacing:.01em;color:var(--btn-text);cursor:pointer;min-height:52px}
 .btn-go:active{opacity:.82}
-.btn-skip{background:none;border:none;font-family:inherit;font-size:11px;font-weight:500;
-letter-spacing:.13em;text-transform:uppercase;color:var(--ink3);cursor:pointer;padding:16px 2px;flex:0 0 auto}
+.btn-skip{background:none;border:none;font-family:inherit;font-size:14px;font-weight:500;
+color:var(--ink2);cursor:pointer;padding:14px 6px;min-height:44px;flex:0 0 auto;
+text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule2)}
 .open-warn{margin-bottom:24px;padding-left:16px;border-left:2px solid var(--skip);
 font-size:13px;line-height:1.55;color:var(--ink2)}
 
@@ -283,10 +309,11 @@ stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;opacity:.55}
 .idx-row.done .idx-s{opacity:.7}
 .idx-row.done .idx-mark{color:var(--done)}
 .idx-row.skip .idx-mark{color:var(--skip)}
-.begin{margin-top:34px;padding:17px;border:1px solid var(--ink);border-radius:3px;background:none;
-font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
-color:var(--ink);cursor:pointer;width:100%}
-.begin:active{background:var(--ink);color:var(--btn-text)}
+/* The one thing to do on this page, so it looks like the one thing to do. */
+.begin{margin-top:30px;padding:18px;border:1px solid var(--ink);border-radius:3px;background:var(--ink);
+font-family:inherit;font-size:16px;font-weight:600;letter-spacing:.01em;
+color:var(--btn-text);cursor:pointer;width:100%;min-height:56px}
+.begin:active{opacity:.85}
 
 /* ── what does this mean ── */
 .note{overflow:hidden;max-height:0;transition:max-height .45s var(--ease),opacity .3s ease;opacity:0}
@@ -331,8 +358,8 @@ padding-left:14px;border-left:2px solid var(--skip);line-height:1.5}
 .pp{display:flex;gap:0;border-bottom:1px solid var(--rule);margin-bottom:30px}
 .pp-step{flex:1;background:none;border:none;border-bottom:2px solid transparent;font-family:inherit;
 padding:0 0 13px;text-align:left;cursor:pointer;opacity:.42;transition:opacity .25s ease}
-.pp-step i{display:block;font-style:normal;font-size:9px;font-weight:600;letter-spacing:.2em;color:var(--accent);margin-bottom:5px}
-.pp-step span{display:block;font-size:11px;font-weight:500;letter-spacing:.05em;color:var(--ink2)}
+.pp-step i{display:block;font-style:normal;font-size:11px;font-weight:600;letter-spacing:.06em;color:var(--accent);margin-bottom:4px}
+.pp-step span{display:block;font-size:13px;font-weight:500;color:var(--ink2)}
 .pp-step.on{opacity:1;border-bottom-color:var(--accent)}
 .pp-step.did{opacity:.8}
 .pp-step.did i{color:var(--done)}
@@ -591,10 +618,10 @@ color:var(--ink3);cursor:pointer}
 <!-- The call to action and the sequence come first, above the fold on every
      phone. Everything below here is the day's state, which you only look at
      once you know what the app is for. -->
-<button class="begin" id="beginBtn" onclick="beginAction()">Begin the sequence</button>
+<button class="begin" id="beginBtn" onclick="beginAction()">Start my morning</button>
 
 <div class="sect">
-<div class="sect-l"><span>The sequence</span><span id="seqCount"></span></div>
+<div class="sect-l"><span>Your morning</span><span id="seqCount"></span></div>
 <div class="seq-rule" id="seqRule"></div>
 <div class="idx" id="idx"></div>
 </div>
@@ -626,8 +653,8 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 1 SPARK -->
 <div class="scr" id="s1">
-<div class="nav"><button class="nav-btn" onclick="flowBack(1)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav1"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p1"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(1)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav1"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p1"></div><div class="prog-cap" id="cap1"></div>
 <div class="main">
 <div class="h1 disp">The Spark</div>
 <div class="p">One idea to carry into the day.</div>
@@ -651,21 +678,27 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 2 LAUGH -->
 <div class="scr" id="s2">
-<div class="nav"><button class="nav-btn" onclick="flowBack(2)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav2"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p2"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(2)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav2"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p2"></div><div class="prog-cap" id="cap2"></div>
 <div class="main">
 <div class="h1 disp">The Laugh</div>
 <div class="p">Life isn't that serious. Proof:</div>
-<div class="sheet"><div class="quote disp" id="jokeText" style="font-style:normal;font-weight:500;font-size:17px"></div><div class="quote-a" id="jokeWho"></div></div>
-<div class="btn-row"><button class="btn-sec" onclick="newJoke()">Another &#8635;</button></div>
+<div class="sheet joke-card" id="jokeCard" onclick="jokeReveal()">
+<div class="joke-kind" id="jokeKind"></div>
+<div class="quote disp joke-q" id="jokeText"></div>
+<div class="quote disp joke-a" id="jokeA" aria-live="polite"></div>
+<button class="joke-tell" id="jokeTell" type="button">Tell me</button>
+<div class="quote-a" id="jokeWho"></div>
+</div>
+<div class="btn-row"><button class="btn-sec" onclick="newJoke()">A different kind &#8635;</button></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(2,'skip');flowNext(2)">Skip</button><button class="btn-go" onclick="mark(2,'done');flowNext(2)">Continue</button></div></div>
 </div>
 
 <!-- 3 STORY -->
 <div class="scr" id="s3">
-<div class="nav"><button class="nav-btn" onclick="flowBack(3)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav3"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p3"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(3)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav3"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p3"></div><div class="prog-cap" id="cap3"></div>
 <div class="main">
 <div class="h1 disp" id="storyTitle"></div>
 <div class="p" id="storyRead" style="font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)"></div>
@@ -686,8 +719,8 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 4 BREATHE -->
 <div class="scr" id="s4">
-<div class="nav"><button class="nav-btn" onclick="flowBack(4)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav4"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p4"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(4)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav4"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p4"></div><div class="prog-cap" id="cap4"></div>
 <div class="main">
 <div class="h1 disp">Breathe</div>
 <div class="p">Be where you are. Life is right now.</div>
@@ -717,8 +750,8 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 5 SOFTWARE -->
 <div class="scr" id="s5">
-<div class="nav"><button class="nav-btn" onclick="flowBack(5)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav5"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p5"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(5)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav5"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p5"></div><div class="prog-cap" id="cap5"></div>
 <div class="main">
 <div class="h1 disp">Load the Software</div>
 <div class="p">The operating system you already wrote. One line today &mdash; read it like you mean it.</div>
@@ -737,14 +770,14 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 6 TODAY — THE THREE P'S -->
 <div class="scr" id="s6">
-<div class="nav"><button class="nav-btn" onclick="flowBack(6)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav6"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p6"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(6)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav6"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p6"></div><div class="prog-cap" id="cap6"></div>
 <div class="main">
 
 <div class="pp">
-<button class="pp-step" id="pp1" onclick="ppGo(1)"><i>P1</i><span>Purge</span></button>
-<button class="pp-step" id="pp2" onclick="ppGo(2)"><i>P2</i><span>Prioritise</span></button>
-<button class="pp-step" id="pp3" onclick="ppGo(3)"><i>P3</i><span>Put into action</span></button>
+<button class="pp-step" id="pp1" onclick="ppGo(1)"><i>Part 1</i><span>Brain dump</span></button>
+<button class="pp-step" id="pp2" onclick="ppGo(2)"><i>Part 2</i><span>Pick three</span></button>
+<button class="pp-step" id="pp3" onclick="ppGo(3)"><i>Part 3</i><span>Pick the one</span></button>
 </div>
 
 <div class="stage" id="stage1">
@@ -778,8 +811,8 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 7 MINI CROSSWORD -->
 <div class="scr" id="s7">
-<div class="nav"><button class="nav-btn" onclick="flowBack(7)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav7"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p7"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(7)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav7"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p7"></div><div class="prog-cap" id="cap7"></div>
 <div class="main">
 <div class="h1 disp">The Mini</div>
 <div class="p">Wake the brain up. A new one every day &mdash; and a bigger one at the weekend.</div>
@@ -811,7 +844,7 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 8 LAUNCH -->
 <div class="scr" id="s8">
-<div class="nav"><button class="nav-btn" onclick="go(7)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Launch</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="wrapBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Wrap-up</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
 <div class="main">
 <div class="h1 disp">Locked in.</div>
 <div class="p" id="launchLine">Here's your day at a glance.</div>
@@ -821,12 +854,12 @@ color:var(--ink3);cursor:pointer}
 <div class="p" id="yestNote" style="margin-top:14px;font-size:13px"></div>
 <div class="btn-row"><button class="btn-sec" onclick="openJournal(todayKey(),8)">Read today&#8217;s page &#8594;</button></div>
 </div>
-<div class="foot"><div class="foot-row"><button class="btn-go" onclick="finishDay()">Launch the day</button></div></div>
+<div class="foot"><div class="foot-row"><button class="btn-go" onclick="finishDay()">Done &mdash; go start the day</button></div></div>
 </div>
 
 <!-- 9 SETTINGS -->
 <div class="scr" id="s9">
-<div class="nav"><button class="nav-btn" onclick="navBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Settings</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="navBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Settings</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
 <div class="main">
 <div class="h1 disp">Make it yours</div>
 <div class="p">One per line. Format: <b>Category | Line</b> for reminders, <b>Quote | Author</b> for quotes.</div>
@@ -879,7 +912,7 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 11 LOOK BACK -->
 <div class="scr" id="s11">
-<div class="nav"><button class="nav-btn" onclick="go(0)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Look back</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="go(0)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Past days</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
 <div class="main">
 <div class="h1 disp">Look back</div>
 <div class="p">Every morning you showed up. Tap any day to read the whole page.</div>
@@ -889,7 +922,7 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 12 THE JOURNAL — one day, in full -->
 <div class="scr" id="s12">
-<div class="nav"><button class="nav-btn" onclick="go(jrFrom)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">The journal</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="go(jrFrom)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Journal</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
 <div class="main"><div id="jrBody"></div></div>
 <div class="foot"><div class="foot-row" style="justify-content:space-between">
 <button class="btn-sec" id="jrPrev" onclick="jrStep(1)">&#8592; Earlier</button>
@@ -899,7 +932,7 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 13 ONBOARDING — build your own morning -->
 <div class="scr" id="s13">
-<div class="nav"><button class="nav-btn" id="obBack" onclick="obPrev()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="obNav">Your morning</div><button class="nav-btn" onclick="obQuit()" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn nav-back" id="obBack" onclick="obPrev()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="obNav">Your morning</div><button class="nav-btn nav-home" onclick="obQuit()" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
 <div class="main">
 <div class="ob-step" id="obStep"></div>
 <div class="h1 disp" id="obTitle"></div>
@@ -911,8 +944,8 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 14 THE STRETCH -->
 <div class="scr" id="s14">
-<div class="nav"><button class="nav-btn" onclick="flowBack(14)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step" id="nav14"></div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
-<div class="prog" id="p14"></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(14)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav14"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p14"></div><div class="prog-cap" id="cap14"></div>
 <div class="main">
 <div class="h1 disp">The Stretch</div>
 <div class="p">Loosen the hinges. Gentle range of motion &mdash; ease off if anything hurts.</div>
@@ -934,7 +967,7 @@ color:var(--ink3);cursor:pointer}
 
 <!-- 10 EVENING -->
 <div class="scr" id="s10">
-<div class="nav"><button class="nav-btn" onclick="navBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg></button><div class="nav-step">Evening · Close-out</div><button class="nav-btn" onclick="go(0)" aria-label="Close"><svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div>
+<div class="nav"><button class="nav-btn nav-back" onclick="navBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Evening check-in</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
 <div class="main">
 <div class="h1 disp">Close the loop.</div>
 <div class="p">Fifteen seconds. Then put the day down.</div>
@@ -1577,108 +1610,140 @@ const STORY_NOTES={
 };
 
 const JOKES=[
-"I told my doctor I broke my arm in two places. He told me to stop going to those places.",
-"My therapist says I have a preoccupation with vengeance. We'll see about that.",
-"I used to think I was indecisive. Now I'm not so sure.",
-"My bed and I are perfect for each other, but my alarm clock keeps trying to break us up.",
-"I finally decided to take control of my life. My life immediately requested a manager.",
-"A clean desk is a sign of a cluttered desk drawer.",
-"Hard work never killed anybody, but why take the chance?",
-"I named my dog 'Five Miles' so I can tell people I walk Five Miles every day.",
-"Experience is what you get when you didn't get what you wanted.",
-"I don't trip over things. I do random gravity checks.",
-"Opportunity knocks once. Temptation leans on the doorbell.",
-"Inside me there's a morning person. He's asleep.",
-"I told my wife she should embrace her mistakes. She hugged me.",
-"I used to do drugs. I still do, but I used to, too. | Mitch Hedberg",
-"I'm against picketing, but I don't know how to show it. | Mitch Hedberg",
-"I haven't slept for ten days, because that would be too long. | Mitch Hedberg",
-"My fake plants died because I did not pretend to water them. | Mitch Hedberg",
-"I think Bigfoot is blurry, that's the problem. It's not the photographer's fault. | Mitch Hedberg",
-"I like rice. Rice is great when you're hungry and you want two thousand of something. | Mitch Hedberg",
-"I don't have a girlfriend. But I do know a woman who'd be mad at me for saying that. | Mitch Hedberg",
-"I intend to live forever. So far, so good. | Steven Wright",
-"Borrow money from pessimists \u2014 they don't expect it back. | Steven Wright",
-"Right now I'm having amnesia and d\u00e9j\u00e0 vu at the same time. I think I've forgotten this before. | Steven Wright",
-"I bought some powdered water, but I didn't know what to add. | Steven Wright",
-"Everywhere is within walking distance if you have the time. | Steven Wright",
-"I put instant coffee in a microwave oven and almost went back in time. | Steven Wright",
-"If you're not part of the solution, you're part of the precipitate. | Steven Wright",
-"The worst time to have a heart attack is during a game of charades. | Demetri Martin",
-"I like the word accordion, mostly because it has the word cord in it. And also the word ion. | Demetri Martin",
-"Employee of the month is a good example of how somebody can be both a winner and a loser at the same time. | Demetri Martin",
-"I told my dentist my teeth are going yellow. He told me to wear a brown tie. | Rodney Dangerfield",
-"My psychiatrist told me I was crazy and I said I want a second opinion. He said okay, you're ugly too. | Rodney Dangerfield",
-"I looked up my family tree and found out I was the sap. | Rodney Dangerfield",
-"Some cause happiness wherever they go; others whenever they go. | Oscar Wilde",
-"I never forget a face, but in your case I'll be glad to make an exception. | Groucho Marx",
-"Outside of a dog, a book is a man's best friend. Inside of a dog it's too dark to read. | Groucho Marx",
-"I'd like to have a kid, but I'm not sure I'm ready to spend ten years of my life constantly asking someone where their shoes are. | Damien Fahey",
-"This is not a novel to be tossed aside lightly. It should be thrown with great force. | Dorothy Parker",
-"I have never let my schooling interfere with my education. | Mark Twain",
-"Giving up smoking is the easiest thing in the world. I know because I've done it thousands of times. | Mark Twain",
-"Always forgive your enemies \u2014 nothing annoys them so much. | Oscar Wilde",
-"A committee is a group that keeps minutes and loses hours. | Milton Berle",
-"The trouble with having an open mind is that people keep coming along and sticking things into it. | Terry Pratchett",
-"Wisdom comes from experience. Experience is often a result of lack of wisdom. | Terry Pratchett",
-"I love deadlines. I love the whooshing noise they make as they go by. | Douglas Adams",
-"Before you criticise a man, walk a mile in his shoes. That way, when you do criticise him, you're a mile away and you have his shoes. | Jack Handey",
-"If you think nobody cares if you're alive, try missing a couple of car payments. | Earl Wilson",
-"The only mystery in life is why the kamikaze pilots wore helmets. | Al McGuire",
-"There are two kinds of people: those who finish what they start.",
-"I've reached the age where I take a nap to prepare for going to bed.",
-"I have excellent judgment. It's the follow-through that's under review.",
-"If you ever drop your keys into a river of molten lava, let 'em go, because man, they're gone. | Jack Handey",
-"The face of a child can say it all, especially the mouth part of the face. | Jack Handey",
-"It's easy to sit there and say you'd like to have more money. And I guess that's what I like about it. | Jack Handey",
-"I hope life isn't a big joke, because I don't get it. | Jack Handey",
-"If a kid asks where rain comes from, it's cute to say God is crying. Cuter still is to say it's because God is crying. | Jack Handey",
-"To me, boxing is like a ballet, except there's no music, no choreography, and the dancers hit each other. | Jack Handey",
-"Instead of trying to build newer and bigger weapons, we should be thinking about getting more use out of the ones we have. | Jack Handey",
-"If you're robbing a bank and your pants fall down, I think it's okay to laugh and let the hostages laugh too. | Jack Handey",
-"Whenever I see an old lady slip on ice, my first instinct is to laugh. But then I think, what if I was an ant? | Jack Handey",
-"Dad always thought laughter was the best medicine, which I guess is why several of us died of tuberculosis. | Jack Handey",
-"Broken promises don't upset me. I just think, why did they believe me? | Jack Handey",
-"The crows seemed to be calling his name, thought Caw. | Jack Handey",
-"I have a rock collection. Sometimes I look at it and it looks back.",
-"My imaginary friend moved out. He left a note. He didn't have to do that.",
-"I keep a spare key under the mat, in case I'm ever locked out and also somebody else.",
-"I taught my dog to play dead. Now he does it in restaurants and I have to explain.",
-"A neighbour asked to borrow my ladder. I said sure. He hasn't come down since.",
-"I bought a self-help book. It didn't. So now we're even.",
-"If cows could fly, I'd need a different hat, and probably a different life.",
-"I've never trusted stairs. They're always up to something, and also down to something.",
-"The horizon has never once let me catch up. At some point that's on me.",
-"My r\u00e9sum\u00e9 is a list of things I've stopped doing, arranged by how long it took.",
-"I asked for a raise. He asked for a reason. Neither of us had one ready.",
-"I don't have a temper. I have a very short reflective period.",
-"The doctor said I need more exercise. I said the same thing to myself. He charged me.",
-"I'm not superstitious. I'm just a little stitious. | Michael Scott",
-"I have a lot of growing up to do. I realised that the other day inside my fort. | Zach Galifianakis",
-"I used to be indecisive, but now I'm not sure. Actually I've already said that.",
-"My greatest strength is honesty. My greatest weakness is also honesty, apparently.",
-"I'm reading a book on the history of glue. Can't put it down, obviously.",
-"I used to be a banker but I lost interest.",
-"I told my carpenter I wanted a wooden floor. He said board.",
-"Time flies like an arrow. Fruit flies like a banana. | Groucho Marx",
-"I once worked at a calendar factory. I got fired for taking a couple of days off.",
-"My friend collects clocks. It's about time somebody did.",
-"Velcro. What a rip-off.",
-"I stayed up all night wondering where the sun went. Then it dawned on me.",
-"A backwards poet writes inverse.",
-"I want to die peacefully in my sleep like my grandfather. Not screaming, like his passengers.",
-"They say you can't take it with you. Then why am I packing?",
-"My plan is to live forever. So far the reviews are good.",
-"I've made peace with mortality. Mortality has not returned my calls.",
-"Everyone dies eventually, which is why I never finish anything urgent.",
-"I told the fortune teller I'd like a refund. She said she knew I'd say that, and left.",
-"On the whole I'd rather be here than there, but there keeps moving.",
-"I set three alarms. They have formed a union.",
-"My to-do list has achieved sentience and is now managing me.",
-"I made a five-year plan. Year one was making the plan. It's going great.",
-"I have excellent instincts. They just arrive late and out of breath.",
-"The early bird can have the worm. Worms are disgusting and it's five in the morning.",
-"The early bird gets the worm, but the second mouse gets the cheese."
+{"k": "dad", "q": "Why don't skeletons fight each other?", "a": "They don't have the guts."},
+{"k": "dad", "q": "I'm reading a book about anti-gravity.", "a": "It's impossible to put down."},
+{"k": "dad", "q": "What do you call a fake noodle?", "a": "An impasta."},
+{"k": "dad", "q": "Why did the scarecrow win an award?", "a": "He was outstanding in his field."},
+{"k": "dad", "q": "What do you call a fish with no eyes?", "a": "A fsh."},
+{"k": "dad", "q": "What did the ocean say to the beach?", "a": "Nothing. It just waved."},
+{"k": "dad", "q": "Why can't you hear a pterodactyl go to the bathroom?", "a": "Because the P is silent."},
+{"k": "dad", "q": "Did you hear about the claustrophobic astronaut?", "a": "He just needed a little space."},
+{"k": "dad", "q": "Why do cows wear bells?", "a": "Because their horns don't work."},
+{"k": "dad", "q": "What's brown and sticky?", "a": "A stick."},
+{"k": "dad", "q": "I used to hate facial hair.", "a": "But then it grew on me."},
+{"k": "dad", "q": "What do you call a man with a rubber toe?", "a": "Roberto."},
+{"k": "dad", "q": "Why did the math book look so sad?", "a": "It had too many problems."},
+{"k": "dad", "q": "What do you call cheese that isn't yours?", "a": "Nacho cheese."},
+{"k": "dad", "q": "Why don't eggs tell jokes?", "a": "They'd crack each other up."},
+{"k": "dad", "q": "I'd tell you a joke about construction.", "a": "But I'm still working on it."},
+{"k": "dad", "q": "What do you call a dinosaur with a huge vocabulary?", "a": "A thesaurus."},
+{"k": "dad", "q": "Why did the bicycle fall over?", "a": "It was two tired."},
+{"k": "dad", "q": "How do you organise a space party?", "a": "You planet."},
+{"k": "dad", "q": "What's the best thing about Switzerland?", "a": "I don't know, but the flag is a big plus."},
+{"k": "dad", "q": "Did you get a haircut?", "a": "No, I got them all cut."},
+{"k": "dad", "q": "I'm worried about the calendar.", "a": "Its days are numbered."},
+{"k": "dad", "q": "Why couldn't the leopard play hide and seek?", "a": "Because he was always spotted."},
+{"k": "dad", "q": "What did the janitor say when he jumped out of the closet?", "a": "Supplies!"},
+{"k": "dad", "q": "Why do seagulls fly over the sea?", "a": "If they flew over the bay, they'd be bagels."},
+{"k": "dad", "q": "What did the grape do when it got stepped on?", "a": "It let out a little wine."},
+{"k": "dad", "q": "Where do you learn to make ice cream?", "a": "Sundae school."},
+{"k": "dad", "q": "I asked my dog what two minus two is.", "a": "He said nothing."},
+{"k": "dad", "q": "Want to hear a joke about paper?", "a": "Never mind. It's tearable."},
+{"k": "dad", "q": "What do you call a belt made of watches?", "a": "A waist of time."},
+{"k": "dad", "q": "Why did the coffee file a police report?", "a": "It got mugged."},
+{"k": "dad", "q": "What do you call an alligator in a vest?", "a": "An investigator."},
+{"k": "dad", "q": "What time did the man go to the dentist?", "a": "Tooth hurty."},
+{"k": "dad", "q": "Why are elevator jokes so good?", "a": "They work on so many levels."},
+{"k": "dad", "q": "What do you call a bear with no teeth?", "a": "A gummy bear."},
+{"k": "dad", "q": "How does a penguin build its house?", "a": "Igloos it together."},
+{"k": "dad", "q": "What do you call a factory that makes okay products?", "a": "A satisfactory."},
+{"k": "dad", "q": "Why did the golfer bring two pairs of trousers?", "a": "In case he got a hole in one."},
+{"k": "dad", "q": "I only know 25 letters of the alphabet.", "a": "I don't know y."},
+{"k": "dad", "q": "What did the buffalo say when his son left for college?", "a": "Bison."},
+{"k": "pun", "a": "I'm on a seafood diet. I see food and I eat it."},
+{"k": "pun", "a": "I used to be a banker, but I lost interest."},
+{"k": "pun", "a": "I stayed up all night wondering where the sun went. Then it dawned on me."},
+{"k": "pun", "a": "Never trust atoms. They make up everything."},
+{"k": "pun", "a": "I wondered why the frisbee kept getting bigger. Then it hit me."},
+{"k": "pun", "a": "I got fired from the orange juice factory. Couldn't concentrate."},
+{"k": "pun", "a": "The person who invented the knock-knock joke should get a no-bell prize."},
+{"k": "pun", "a": "I'm terrified of elevators, so I'm taking steps to avoid them."},
+{"k": "pun", "a": "Two antennas got married. The ceremony was dull, but the reception was excellent."},
+{"k": "pun", "a": "I was going to tell a time-travel joke, but you didn't like it."},
+{"k": "pun", "a": "A cross-eyed teacher lost her job because she couldn't control her pupils."},
+{"k": "pun", "a": "I lost my job at the bank on day one. A woman asked me to check her balance, so I pushed her over."},
+{"k": "pun", "a": "The rotation of the earth really makes my day."},
+{"k": "pun", "a": "I've started a band called 999 Megabytes. We haven't gotten a gig yet."},
+{"k": "dry", "a": "Inside me there's a morning person. He's asleep."},
+{"k": "dry", "a": "I finally decided to take control of my life. My life immediately asked for a manager."},
+{"k": "dry", "a": "My bed and I are perfect for each other. My alarm clock keeps trying to break us up."},
+{"k": "dry", "a": "I used to think I was indecisive. Now I'm not so sure."},
+{"k": "dry", "a": "My therapist says I have a preoccupation with vengeance. We'll see about that."},
+{"k": "dry", "a": "I named my dog Five Miles so I can tell people I walk Five Miles every day."},
+{"k": "dry", "a": "I don't trip over things. I do random gravity checks."},
+{"k": "dry", "a": "Nothing is impossible. I've been doing nothing for years."},
+{"k": "dry", "a": "My favourite exercise is a cross between a lunge and a crunch. I call it lunch."},
+{"k": "dry", "a": "I have a joke about unemployment, but it doesn't work."},
+{"k": "dry", "a": "My doctor told me to watch my drinking. Now I drink in front of a mirror."},
+{"k": "dry", "a": "I asked the librarian for books on paranoia. She whispered, \"They're right behind you.\""},
+{"k": "dry", "a": "I bought the world's worst thesaurus. Not only is it terrible, it's terrible."},
+{"k": "dry", "a": "I'm great at multitasking. I can waste time, be unproductive and procrastinate all at once."},
+{"k": "dry", "a": "I told my suitcases there's no holiday this year. Now I'm dealing with emotional baggage."},
+{"k": "dry", "a": "I'm not lazy. I'm on energy-saving mode."},
+{"k": "dry", "a": "Hard work never killed anybody, but why take the chance?"},
+{"k": "dry", "a": "A clean desk is a sign of a cluttered desk drawer."},
+{"k": "anti", "q": "What's red and bad for your teeth?", "a": "A brick."},
+{"k": "anti", "q": "What's green and has wheels?", "a": "Grass. I lied about the wheels."},
+{"k": "anti", "q": "What do you call a boomerang that doesn't come back?", "a": "A stick."},
+{"k": "anti", "q": "Why did the chicken cross the road?", "a": "To get to the other side. That's it. That's been the whole joke for two hundred years."},
+{"k": "anti", "q": "A horse walks into a bar.", "a": "Several people get up and leave, sensing danger."},
+{"k": "anti", "q": "Two muffins are in an oven. One says, \"Is it hot in here?\"", "a": "The other says, \"Aah! A talking muffin!\""},
+{"k": "anti", "q": "What's orange and sounds like a parrot?", "a": "A carrot."},
+{"k": "anti", "q": "Why was six afraid of seven?", "a": "It wasn't. Numbers can't feel fear."},
+{"k": "anti", "q": "A man walks into a bar.", "a": "He orders a drink, pays for it and leaves. He was thirsty."},
+{"k": "anti", "q": "Knock knock. Who's there? Interrupting cow. Interrupting c\u2014", "a": "MOO."},
+{"k": "life", "a": "Nothing makes you feel more like an adult than being excited about a new sponge."},
+{"k": "life", "a": "My back goes out more than I do."},
+{"k": "life", "a": "My email inbox is a to-do list that other people write for me."},
+{"k": "life", "a": "The fastest way to find something you've lost is to buy a replacement."},
+{"k": "life", "a": "Nothing ruins a Friday like realising it's Tuesday."},
+{"k": "life", "a": "I got a week's worth of cardio walking into a spider web."},
+{"k": "life", "a": "Adulthood is mostly saying \"after this week it'll calm down\" until you die."},
+{"k": "life", "a": "I know the name of the woman who delivers my packages, but not my neighbour's."},
+{"k": "life", "a": "I tried to become a morning person once. It didn't take."},
+{"k": "life", "a": "The only running I do is running late."},
+{"k": "life", "a": "My pillow gives me a new hairstyle every morning, free of charge."},
+{"k": "life", "a": "Being an adult is just googling how to do stuff."},
+{"k": "life", "a": "I love a meeting that could have been an email. Said nobody, ever."},
+{"k": "pro", "a": "I used to do drugs. I still do, but I used to, too.", "by": "Mitch Hedberg"},
+{"k": "pro", "a": "I haven't slept for ten days, because that would be too long.", "by": "Mitch Hedberg"},
+{"k": "pro", "a": "My fake plants died because I did not pretend to water them.", "by": "Mitch Hedberg"},
+{"k": "pro", "a": "I like rice. Rice is great when you're hungry and you want two thousand of something.", "by": "Mitch Hedberg"},
+{"k": "pro", "a": "An escalator can never break. It can only become stairs.", "by": "Mitch Hedberg"},
+{"k": "pro", "a": "I'm sick of following my dreams. I'm just going to ask them where they're going and hook up with them later.", "by": "Mitch Hedberg"},
+{"k": "pro", "a": "I intend to live forever. So far, so good.", "by": "Steven Wright"},
+{"k": "pro", "a": "Borrow money from pessimists \u2014 they don't expect it back.", "by": "Steven Wright"},
+{"k": "pro", "a": "I'm having amnesia and d\u00e9j\u00e0 vu at the same time. I think I've forgotten this before.", "by": "Steven Wright"},
+{"k": "pro", "a": "Everywhere is within walking distance if you have the time.", "by": "Steven Wright"},
+{"k": "pro", "a": "I put instant coffee in a microwave and almost went back in time.", "by": "Steven Wright"},
+{"k": "pro", "a": "The worst time to have a heart attack is during a game of charades.", "by": "Demetri Martin"},
+{"k": "pro", "a": "Employee of the month is a good example of how someone can be a winner and a loser at the same time.", "by": "Demetri Martin"},
+{"k": "pro", "a": "I told my dentist my teeth are going yellow. He told me to wear a brown tie.", "by": "Rodney Dangerfield"},
+{"k": "pro", "a": "I looked up my family tree and found out I was the sap.", "by": "Rodney Dangerfield"},
+{"k": "pro", "a": "I told the doctor I broke my arm in two places. He told me to stop going to those places.", "by": "Henny Youngman"},
+{"k": "pro", "a": "I went to the doctor and said, \"It hurts when I do this.\" He said, \"Well, don't do that.\"", "by": "Tommy Cooper"},
+{"k": "pro", "a": "I never forget a face, but in your case I'll be glad to make an exception.", "by": "Groucho Marx"},
+{"k": "pro", "a": "Outside of a dog, a book is a man's best friend. Inside of a dog it's too dark to read.", "by": "Groucho Marx"},
+{"k": "pro", "a": "This is not a novel to be tossed aside lightly. It should be thrown with great force.", "by": "Dorothy Parker"},
+{"k": "pro", "a": "Some cause happiness wherever they go; others whenever they go.", "by": "Oscar Wilde"},
+{"k": "pro", "a": "I love deadlines. I love the whooshing noise they make as they go by.", "by": "Douglas Adams"},
+{"k": "pro", "a": "The trouble with having an open mind is that people keep coming along and sticking things in it.", "by": "Terry Pratchett"},
+{"k": "pro", "a": "Weather forecast for tonight: dark.", "by": "George Carlin"},
+{"k": "pro", "a": "I love being married. It's so great to find that one special person you want to annoy for the rest of your life.", "by": "Rita Rudner"},
+{"k": "pro", "a": "Best way to get rid of kitchen odours: eat out.", "by": "Phyllis Diller"},
+{"k": "pro", "a": "Cleaning your house while your kids are still growing is like shovelling the walk before it stops snowing.", "by": "Phyllis Diller"},
+{"k": "pro", "a": "Never go to a doctor whose office plants have died.", "by": "Erma Bombeck"},
+{"k": "pro", "a": "I always wanted to be somebody, but now I realise I should have been more specific.", "by": "Lily Tomlin"},
+{"k": "pro", "a": "I used to think the brain was the most wonderful organ in my body. Then I realised who was telling me this.", "by": "Emo Philips"},
+{"k": "pro", "a": "As a kid I was made to walk the plank. We couldn't afford a dog.", "by": "Gary Delaney"},
+{"k": "pro", "a": "I was going to buy a book on phobias, but I was afraid it wouldn't help me.", "by": "Tim Vine"},
+{"k": "pro", "a": "Velcro. What a rip-off.", "by": "Tim Vine"},
+{"k": "pro", "a": "Exit signs. They're on the way out.", "by": "Tim Vine"},
+{"k": "pro", "a": "If you ever drop your keys into a river of molten lava, let 'em go, because man, they're gone.", "by": "Jack Handey"},
+{"k": "pro", "a": "Before you criticise someone, walk a mile in their shoes. That way, when you criticise them, you're a mile away and you have their shoes.", "by": "Jack Handey"},
+{"k": "pro", "a": "I hope life isn't a big joke, because I don't get it.", "by": "Jack Handey"},
+{"k": "pro", "a": "I'm not superstitious. I'm just a little stitious.", "by": "Michael Scott, The Office"},
+{"k": "pro", "a": "I have a lot of growing up to do. I realised that the other day inside my fort.", "by": "Zach Galifianakis"}
 ];
 
 const STORIES=[
@@ -2137,30 +2202,33 @@ function mark(n,st){
 function stClass(j,cur){const st=statusOf(j);if(j===cur)return' now';if(st==='done')return' done';if(st==='skip')return' skip';return''}
 function prog(step){Object.keys(STEPS).forEach(i=>{const el=$('p'+i);if(!el)return;el.innerHTML='';
   FLOW.forEach(j=>{const d=document.createElement('div');d.className='prog-bar'+stClass(j,step);
-  d.title=stepName(j);d.onclick=()=>go(j);el.appendChild(d)})})}
+  d.title=plainName(j);d.setAttribute('role','button');d.setAttribute('aria-label','Go to '+plainName(j));
+  d.onclick=()=>go(j);el.appendChild(d)})})}
 /* One registry per module, keyed by step id. Step ids are PERMANENT — they key
    DAY.status on every day ever saved — so a module is added by giving it a new
    id, never by renumbering. `blurb` is the one-liner shown when choosing. */
 const STEPS={
-  1 :{name:'Spark',   t:'The Spark',   s:'One idea to carry',
+  1 :{name:'Spark',   plain:'Quote',     t:'The Spark',   s:'A quote to carry into the day',
       blurb:'A quote to carry into the day, with a written explanation.'},
-  2 :{name:'Laugh',   t:'The Laugh',   s:'Loosen up',
+  2 :{name:'Laugh',   plain:'Joke',      t:'The Laugh',   s:'A joke on the way out',
       blurb:'One good line. Life is not that serious.'},
-  3 :{name:'Story',   t:'The Story',   s:'A fable to chew on',
+  3 :{name:'Story',   plain:'Story',     t:'The Story',   s:'A short fable, about two minutes',
       blurb:'A short fable that ends on an earned takeaway.'},
-  4 :{name:'Breathe', t:'Breathe',     s:'Two minutes, or ten',
+  4 :{name:'Breathe', plain:'Breathing', t:'Breathe',     s:'A guided breathing timer',
       blurb:'A timer and a breathing circle. Calm, box, or 4-7-8.'},
-  5 :{name:'Software',t:'The Software',s:'Your own operating principles',
+  5 :{name:'Software',plain:'Reminder',  t:'The Software',s:'One of your own principles',
       blurb:'Your own reminders, one card at a time.'},
-  6 :{name:'Today',   t:'Today',       s:'Purge, prioritise, name the win',
+  6 :{name:'Today',   plain:'Plan',      t:'Today',       s:'Brain dump, pick three, pick the one',
       blurb:'Empty your head, pick three, name the one that matters.',
       core:true},
-  7 :{name:'Mini',    t:'The Mini',    s:'Five by five',
+  7 :{name:'Mini',    plain:'Crossword', t:'The Mini',    s:'A daily mini crossword',
       blurb:'A crossword to switch the brain on. Bigger at the weekend.'},
-  14:{name:'Stretch', t:'The Stretch', s:'Loosen the hinges',
+  14:{name:'Stretch', plain:'Stretch',   t:'The Stretch', s:'A few guided stretches',
       blurb:'A few gentle mobility moves, guided on a timer.'}
 };
 const stepName=n=>(STEPS[n]||{}).name||('Step '+n);
+/* What a stranger would call it. The titles stay; the chrome speaks plainly. */
+const plainName=n=>(STEPS[n]||{}).plain||stepName(n);
 /* Kept as a name so older reads still work; derived, not maintained. */
 const STEP_NAMES=Object.keys(STEPS).map(Number).sort((a,b)=>a-b).map(n=>STEPS[n].name);
 
@@ -2177,19 +2245,85 @@ function setFlow(f){FLOW=validFlow(f);S.flow=FLOW.slice();saveS()}
 const flowPos=n=>FLOW.indexOf(n);  // 0-based position of a step
 function flowNext(n){const i=flowPos(n);return go(i<0||i>=FLOW.length-1?8:FLOW[i+1])}
 function flowBack(n){const i=flowPos(n);return go(i<=0?0:FLOW[i-1])}
+/* The step's plain name, and where it sits in your morning. A module opened
+   on its own (Stretch, when it isn't in your flow) has no "of 7" to claim. */
 function paintNav(n){
   const el=$('nav'+n);if(!el)return;
   const i=flowPos(n);
-  el.textContent=stepName(n)+' · '+(i+1)+' of '+FLOW.length;
+  el.innerHTML=esc(plainName(n))+(i>=0?'<small>Step '+(i+1)+' of '+FLOW.length+'</small>':'');
 }
+function wrapBack(){go(FLOW.length?FLOW[FLOW.length-1]:0)}
+
+/* Where Back goes from each screen, as data — so the label on the button and
+   the place it takes you are computed from the same answer and can't drift. */
+const SCREEN_NAMES={0:'Home',8:'Wrap-up',9:'Settings',10:'Evening',11:'Past days',12:'Journal'};
+function backDest(n){
+  if(STEPS[n]){const i=flowPos(n);return i<=0?0:FLOW[i-1]}
+  if(n===8)return FLOW.length?FLOW[FLOW.length-1]:0;
+  if(n===12)return (typeof jrFrom==='number')?jrFrom:11;
+  if(n===13)return null;                 // setup pages manage their own Back
+  return 0;
+}
+function screenName(n){return STEPS[n]?plainName(n):(SCREEN_NAMES[n]||'Back')}
+function paintChrome(n){
+  const scr=$('s'+n);if(!scr)return;
+  const back=scr.querySelector('.nav-back'),home=scr.querySelector('.nav-home');
+  const d=backDest(n);
+  if(back&&d!==null){
+    const l=back.querySelector('.nav-lbl');if(l)l.textContent=screenName(d);
+    back.setAttribute('aria-label','Back to '+screenName(d));
+  }
+  /* When Back already goes home, a second Home button is two exits that do the
+     same thing — which is exactly the kind of choice that made people stop. */
+  if(home)home.style.visibility=(d===0)?'hidden':'';
+  if(STEPS[n]){
+    const pr=$('p'+n);if(pr)pr.style.display=flowPos(n)<0?'none':'';
+    const cap=$('cap'+n);
+    if(cap){const i=flowPos(n),nx=(i>=0&&i<FLOW.length-1)?FLOW[i+1]:null;
+      cap.innerHTML=nx?'Up next: <b>'+esc(plainName(nx))+'</b>':(i>=0?'Last one &mdash; then you&rsquo;re done':'')}
+    const btn=scr.querySelector('.foot .btn-go');
+    if(btn&&n!==6)btn.textContent=nextLabel(n);
+    const sk=scr.querySelector('.foot .btn-skip');if(sk)sk.textContent='Skip this';
+  }
+}
+/* The main button always says where it goes. "Finish" on step three of seven
+   read like the end of the whole morning. */
+function nextLabel(n){
+  const i=flowPos(n);
+  if(i<0)return 'Done';
+  if(i>=FLOW.length-1)return 'Finish my morning →';
+  return 'Next: '+plainName(FLOW[i+1])+' →';
+}
+
+/* Phones have their own back — the edge swipe on iPhone, the button or gesture
+   on Android. With no history entries it simply left the app. One entry is held
+   whenever you're off the home screen; the system back then presses the same
+   on-screen Back, and re-arms if that lands somewhere other than home. */
+let histArmed=false,histSkip=false;
+function armHist(){if(histArmed)return;try{window.history.pushState({fl:1},'');histArmed=true}catch(e){}}
+function disarmHist(){
+  if(!histArmed)return;histArmed=false;histSkip=true;
+  try{window.history.back()}catch(e){histSkip=false}
+}
+addEventListener('popstate',()=>{
+  if(histSkip){histSkip=false;return}
+  histArmed=false;
+  const on=document.querySelector('.scr.on');
+  if(!on||on.id==='s0')return;           // on the home screen, back leaves as normal
+  const b=on.querySelector('.nav-back');
+  if(b)b.click();else go(0);
+});
+
 function go(n){
   saveDay();
   const dir=(n===0||n<curScr)?-1:1;curScr=n;
   haptic(7);                                 // touch feedback yes, sound no
+  if(n===0)disarmHist();else armHist();
   if(n===0){syncDash();show('s0',dir);sizeBand();return}
+  paintChrome(n);
   if(n===10){renderEvening();show('s10',dir);return}
   if(n===11){renderLook();show('s11',dir);return}
-  if(n===12){renderJournal();show('s12',dir);return}
+  if(n===12){renderJournal();paintChrome(12);show('s12',dir);return}
   if(n===13){renderOnboard();show('s13',dir);return}
   if(STEPS[n]){prog(n);paintNav(n)}
   show('s'+n,dir);
@@ -2265,9 +2399,9 @@ function syncDash(){
   const started=FLOW.some(n=>statusOf(n)!=='todo');
   const nextRow=rows.find(c=>c.n===nextUp);
   $('beginBtn').textContent=
-    nextUp===undefined ? 'Review the day' :
-    started            ? 'Continue — '+(nextRow?nextRow.t:'the sequence') :
-                         'Begin the sequence';
+    nextUp===undefined ? 'Review my morning' :
+    started            ? 'Continue: '+(nextRow?plainName(nextRow.n):'my morning')+' \u2192' :
+                         'Start my morning \u2192';
   rows.forEach(c=>{
     const st=statusOf(c.n);
     const r=document.createElement('div');
@@ -2276,7 +2410,7 @@ function syncDash(){
     r.onclick=()=>go(c.n);
     let sub=c.s;
     if(c.n===3&&storyI!==null&&st==='done')sub=STORIES[storyI].t;
-    if(c.n===7)sub=cwIsWeekend()?'Seven by seven':'Five by five';   // the weekend puzzle is bigger
+    if(c.n===7)sub=cwIsWeekend()?'The bigger weekend crossword':'A daily mini crossword';   // the weekend puzzle is bigger
     if(c.n===7&&DAY.cwSolved)sub='Solved';
     if(c.n===6&&(DAY.win||'').trim())sub=DAY.win;
     if(justDone===c.n)r.classList.add('pop');
@@ -2303,7 +2437,7 @@ function syncDash(){
 /* the streak as a shape, not just a number */
 function renderMonth(){
   const box=$('month');if(!box)return;
-  const h=history(),now=new Date();
+  const h=dayHistory(),now=new Date();
   const y=now.getFullYear(),m=now.getMonth();
   $('monthName').textContent=now.toLocaleDateString(undefined,{month:'long'});
   const first=new Date(y,m,1),days=new Date(y,m+1,0).getDate();
@@ -2327,7 +2461,7 @@ function renderMonth(){
 }
 
 function renderLook(){
-  const h=history();
+  const h=dayHistory();
   const keys=Object.keys(h).sort().reverse().slice(0,60);
   const box=$('lookList');box.innerHTML='';
   if(!keys.length){box.innerHTML='<div class="p" style="margin-top:26px">Nothing yet. Finish a morning and it starts here.</div>';return}
@@ -2356,7 +2490,7 @@ function renderLook(){
    a section whose data is missing is left out entirely rather than shown
    as a bare heading, because most old days predate half of these fields. */
 let jrKey=null;
-/* Today isn't in history() until you launch the day, but you can already open
+/* Today isn't in dayHistory() until you launch the day, but you can already open
    its page from the recap — so include it as soon as a record exists. */
 /* Is there anything on this day worth turning a page to? saveDay() writes a
    record on any navigation, so merely having one proves nothing. */
@@ -2368,7 +2502,7 @@ function dayHasContent(d){
     e.grateful||e.win||e.hit);
 }
 function jrDays(){
-  const keys=Object.keys(history());
+  const keys=Object.keys(dayHistory());
   const t=todayKey();
   if(keys.indexOf(t)<0&&dayHasContent(readJSON('flDay-'+t,null)))keys.push(t);
   return keys.sort().reverse();
@@ -2540,15 +2674,41 @@ function paintSpark(){const [q,a]=splitLine(S.quotes[sparkI]);
   if(DAY.quote!==S.quotes[sparkI]){DAY.quote=S.quotes[sparkI];saveDay()}
   paintNote('spark');poolNote('quote')}
 function newSpark(){sparkI=pick('quote',sparkI);paintSpark()}
+/* Six kinds of joke, because one register gets old by Wednesday. Jokes with a
+   setup hold the punchline back for a tap — timing is most of a dad joke. */
+const JOKE_KINDS={dad:'Dad joke',pun:'Wordplay',dry:'Deadpan',anti:'Anti-joke',life:'Grown-up life',pro:'Stand-up'};
+let jokeShown=false,jokeRecent=[];
+const jokeStr=j=>(j.q?j.q+' ':'')+j.a+(j.by?' | '+j.by:'');
 function paintJoke(){
-  /* Jokes carry an optional "| Name" the same way quotes do. Ours are
-     unattributed and render with nothing underneath. */
-  const [line,who]=splitLine(JOKES[jokeI]);
-  $('jokeText').textContent=line;
-  const w=$('jokeWho');if(w)w.textContent=who;
-  if(DAY.joke!==JOKES[jokeI]){DAY.joke=JOKES[jokeI];saveDay()}}
-function renderJoke(){jokeI=Math.floor(Math.random()*JOKES.length);paintJoke()}
-function newJoke(){jokeI=(jokeI+1+Math.floor(Math.random()*(JOKES.length-1)))%JOKES.length;paintJoke()}
+  const j=JOKES[jokeI];if(!j)return;
+  $('jokeKind').textContent=JOKE_KINDS[j.k]||'';
+  jokeShown=!j.q;
+  $('jokeText').textContent=j.q||j.a;
+  const pa=$('jokeA');pa.textContent=j.q?j.a:'';pa.classList.remove('on');
+  $('jokeTell').style.display=j.q?'':'none';
+  $('jokeWho').textContent=j.by||'';
+  jokeRecent.push(jokeI);if(jokeRecent.length>30)jokeRecent.shift();
+  const s=jokeStr(j);if(DAY.joke!==s){DAY.joke=s;saveDay()}
+}
+function jokeReveal(){
+  if(jokeShown)return;jokeShown=true;
+  $('jokeA').classList.add('on');$('jokeTell').style.display='none';haptic(12);
+}
+/* Today's joke stays today's joke if you step back and forth. */
+function renderJoke(){
+  if(jokeI===null){
+    const k=JOKES.findIndex(j=>jokeStr(j)===DAY.joke);
+    jokeI=k>=0?k:Math.floor(Math.random()*JOKES.length);
+  }
+  paintJoke();
+}
+/* "Another" changes the kind as well as the joke, and doesn't repeat itself. */
+function newJoke(){
+  const cur=JOKES[jokeI]?JOKES[jokeI].k:'';
+  let pool=JOKES.map((j,i)=>i).filter(i=>JOKES[i].k!==cur&&jokeRecent.indexOf(i)<0);
+  if(!pool.length)pool=JOKES.map((j,i)=>i).filter(i=>i!==jokeI);
+  jokeI=pool[Math.floor(Math.random()*pool.length)];paintJoke();
+}
 function paintStory(){const st=STORIES[storyI];
   $('storyTitle').textContent=st.t;$('storyRead').textContent=st.r;
   $('storyText').textContent=st.s;$('storyMoral').textContent=st.m;
@@ -2774,7 +2934,7 @@ function ppPaint(){
   });
   if(!picks.length)wb.innerHTML='<div class="p">Pick your three first.</div>';
   $('winNote').textContent=DAY.winId?'That’s your WIN. It rides the dashboard all day.':'';
-  $('ppBtn').textContent=ppStage===3?(DAY.winId?'Locked in':'Continue'):'Next';
+  $('ppBtn').textContent=ppStage===1?'Next: pick your top three':ppStage===2?'Next: pick the one':nextLabel(6);
 }
 function ppToggle(id){
   let p=ppPicks();const i=p.indexOf(id);
@@ -3299,7 +3459,7 @@ function cwClear(){
 
 /* ==================== FIRST RUN, NUDGES, DURABILITY ==================== */
 /* Day one explains itself in place, then gets out of the way for good. */
-const isFirstRun=()=>!localStorage.getItem('flDone')&&!Object.keys(history()).length;
+const isFirstRun=()=>!localStorage.getItem('flDone')&&!Object.keys(dayHistory()).length;
 
 /* Nobody configures a thing they have not tried. The setup wizard used to open
    on arrival, which asked a stranger to rank eight modules before they had read
@@ -3321,7 +3481,7 @@ function markSeen(){
    someone who pokes around twice without finishing still gets asked. */
 function offerSetup(){
   if(S.onboarded)return false;
-  return Object.keys(history()).length>0||seenDays().length>=2;
+  return Object.keys(dayHistory()).length>0||seenDays().length>=2;
 }
 
 /* Installed means the storage survives; in a tab on iOS it does not. */
@@ -3367,7 +3527,7 @@ function dismissNudge(id){
 /* One at a time, in the order that matters. A stack of three banners is how a
    dashboard stops being glanceable. */
 function currentNudge(){
-  const days=Object.keys(history()).length;
+  const days=Object.keys(dayHistory()).length;
   if(offerSetup()&&!nudgeOff('setup'))return{
     id:'setup',
     text:'You have seen how it runs. Want to build your own version — which modules, in what order, and what kind of quotes and fables?',
@@ -3433,8 +3593,10 @@ function renderRecap(){
   add('Top 3',[DAY.t1,DAY.t2,DAY.t3].filter(Boolean).map((x,i)=>(i+1)+'. '+x).join('\n'));
   const rest=liveItems().filter(i=>ppPicks().indexOf(i.id)<0);
   add('Also on the list',rest.map(i=>'· '+i.text).join('\n'));
-  $('recapBox').innerHTML=(open.length?'<div class="open-warn">Still open — '+open.join(', ')+
-    ' — tap the bar up top to jump back.</div>':'')+
+  const openIds=FLOW.filter(i=>statusOf(i)!=='done');
+  $('recapBox').innerHTML=(openIds.length?'<div class="open-warn">Not done yet &mdash; tap one to go back to it.'+
+    '<div class="open-chips">'+openIds.map(i=>'<button class="open-chip" onclick="go('+i+')">'+
+    esc(plainName(i))+'</button>').join('')+'</div></div>':'')+
     (rows.length?rows.join(''):'<div class="p">Nothing entered yet — go back and fill in your plan.</div>');
   const y=new Date();y.setDate(y.getDate()-1);
   const yd=readJSON('flDay-'+dateKey(y),{});
@@ -3445,7 +3607,9 @@ function renderRecap(){
 }
 /* Completed mornings, so the month grid and Look Back have something to
    read. Backfilled once from existing day records. */
-function history(){return readJSON('flHistory',null)||backfillHistory()}
+/* Named dayHistory, not history: a global function called history() replaces
+   window.history, and every pushState the back gesture depends on silently threw. */
+function dayHistory(){return readJSON('flHistory',null)||backfillHistory()}
 function backfillHistory(){
   const h={};
   for(let i=0;i<localStorage.length;i++){
@@ -3460,7 +3624,7 @@ function backfillHistory(){
   return h;
 }
 function recordDay(k){
-  const h=history();h[k]=1;
+  const h=dayHistory();h[k]=1;
   try{localStorage.setItem('flHistory',JSON.stringify(h))}catch(e){}
 }
 const dayBefore=(k,n)=>{const d=new Date(k+'T12:00:00');d.setDate(d.getDate()-(n||1));return dateKey(d)};
@@ -3710,7 +3874,7 @@ document.addEventListener('visibilitychange',()=>{
   openedOn=todayKey();                       // midnight rolled over while the app was open
   DAY=readJSON('flDay-'+openedOn,{});
   FIELDS.forEach(k=>{const el=$(k);if(el)el.value=DAY[k]||''});
-  sparkI=null;storyI=null;
+  sparkI=null;storyI=null;jokeI=null;
   if($('s0').classList.contains('on'))syncDash();
 });
 </script>

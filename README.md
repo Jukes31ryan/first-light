@@ -73,7 +73,7 @@ keeps **Rebuild my morning** for whenever you change your mind.
 | **Breathe** | A 2/5/10-minute timer with a breathing circle and a soft chime |
 | **The Stretch** | Gentle mobility, guided on a timer, with a figure that shows the movement |
 | **Today** | Purge the clutter, set your Top 3, name the one **WIN** |
-| **Laugh** | A one-liner on the way out, because life isn't that serious |
+| **Laugh** | A joke on the way out — dad jokes, deadpan, wordplay, anti-jokes and stand-up classics, with the punchline held for a tap |
 
 The default order is brain first, planning once it's running, and out the door
 laughing — but it's yours to rearrange.
@@ -90,11 +90,12 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
 
 ## ✨ Features
 
+* **Always know where you are** — every screen names itself in plain words ("Crossword · Step 3 of 7"), Back says where it goes ("‹ Story"), the main button says what's next ("Next: Reminder →"), and your phone's own back gesture steps back through the morning instead of closing the app.
 * **Dashboard of tiles** — glanceable and color-coded. Your WIN and Top 3 stay on screen all day.
 * **A lot of content, no repetition:**
   * 141 quotes — strategists (Sun Tzu, Musashi, Marcus Aurelius, Seneca, Epictetus), philosophers (Plato, Aristotle, Socrates, Lao Tzu, Confucius, Nietzsche, Camus, Jung, Frankl), Americans (Kennedy, Lincoln, Douglass, Thoreau, the Roosevelts, King, Ali, Twain), scientists (Einstein, Feynman, Sagan, Curie) and poets (Rumi, Whitman, Oliver, Rilke, Frost, Angelou, Kipling, Emerson)
   * 50 full-length fables, each with a takeaway — Zen, Sufi, Aesop, Stoic and folk
-  * 102 one-liners, credited where they belong to someone — Jack Handey, Hedberg, Steven Wright, Demetri Martin, Dangerfield, Groucho, Dorothy Parker, Pratchett, Adams
+  * 134 jokes in six kinds — dad jokes, wordplay, deadpan, anti-jokes, grown-up life, and stand-up lines credited to the people who wrote them (Hedberg, Steven Wright, Jack Handey, Phyllis Diller, Rita Rudner, Tim Vine, Carlin, Dangerfield and more). "A different kind" changes the kind as well as the joke.
   * 53 hand-built mini crosswords — 38 weekday 5x5 across five grid shapes, 15 weekend 7x7, 710 clues. Weekends are deliberately harder.
 * **"What does this mean?"** — every quote and every fable has a written explanation: what it means, where it came from, and a question to sit with. Written into the app, so it opens instantly and works with no signal.
 * **The month grid** — every morning you showed up, filled in. The streak as a shape, not just a number.
