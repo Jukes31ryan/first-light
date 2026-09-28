@@ -126,6 +126,29 @@ All content is embedded, so nothing breaks when a third-party API goes down. Eve
 
 Clone the repo and serve the folder (`python3 -m http.server`), then open it. Opening `index.html` straight off the disk works too — you just don't get the service worker, since browsers only register those over http/https.
 
+### Tests
+
+Browser tests drive the real app in headless Chromium through Playwright
+(`npm i -D playwright`, then `npx playwright install chromium`).
+
+```
+tests/run.sh             # serves the app, runs everything, stops the server
+tests/run.sh nav joke    # just those suites
+```
+
+| Suite | Covers |
+|-------|--------|
+| `nav` | Every screen names itself, Back names where it goes, the main button names what's next, and the phone's back gesture steps back instead of leaving |
+| `firstrun` | A stranger lands in the app rather than a setup wizard; setup is offered once, after a finished morning |
+| `durable` | Persistent storage, the iPhone home-screen nudge, the backup nudge, export/import round-trip |
+| `joke` | The mix of kinds, tap-to-reveal punchlines, "a different kind", and the journal record |
+| `soft` | One reminder card a day, rotating through the set |
+| `crossword` | All 53 grids, every clue present and none that only make sense inside this app |
+| `regress` | Content integrity, the modular order, carry-over across a gap, the journal, settings, flavours, the streak and grace day, the evening, and every screen in both themes |
+
+Screenshots land in `tests/out/`, which is ignored by git. Set `PORT`, or
+`PLAYWRIGHT=/path/to/playwright/index.mjs` if it isn't installed locally.
+
 ---
 
 ## 📄 License
