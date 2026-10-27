@@ -44,7 +44,7 @@ const fold=await p.evaluate(()=>({
 chk('Begin is still above the fold',fold.begin<fold.h,Math.round(fold.begin)+'/'+fold.h);
 chk('and the sequence still starts on screen',fold.seq<fold.h,Math.round(fold.seq)+'/'+fold.h);
 chk('running the default sequence',
-  await p.evaluate(()=>JSON.stringify(FLOW))==='[1,3,7,5,4,6,2]',
+  await p.evaluate(()=>JSON.stringify(FLOW))==='[15,5,6]',
   await p.evaluate(()=>JSON.stringify(FLOW)));
 chk('with the neutral cards, not one person’s',
   await p.evaluate(()=>S.affirms.length===DEF_AFFIRMS.length&&S.affirms[0]===DEF_AFFIRMS[0]));

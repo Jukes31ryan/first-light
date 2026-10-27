@@ -4,8 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
 <title>Calibrate</title>
-<meta name="description" content="A personal morning launcher — a boot sequence for the brain.">
-<meta name="theme-color" content="#e8dfd0">
+<meta name="description" content="A launcher for the start of your day, whenever it starts — a boot sequence for the brain.">
+<meta name="theme-color" content="#86add2">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -21,25 +21,27 @@
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--spring:cubic-bezier(.34,1.56,.64,1);--ease:cubic-bezier(.22,.61,.36,1)}
 
-/* ── DAWN ─────────────────────────────────────────────────────────
-   Oat paper, ink, one burnt accent. Printed-page palette, not screen. */
+/* ── SKY (stored as "dawn") ─────────────────────────────────────────
+   Dimmed sky blue, white cloud, a little sun. Frosted-glass tiles over it.
+   Never glaring white: the brightest thing is a 46% white sheet. */
 :root,body[data-theme="dawn"]{
---paper:#e8dfd0;--sheet:#f2ebe0;--sheet2:#ded3c1;
---ink:#241d16;--ink2:#5a4f42;--ink3:#6a5f52;
---rule:rgba(36,29,22,0.16);--rule2:rgba(36,29,22,0.30);
---accent:#9f4417;--accent-q:rgba(159,68,23,0.09);
---done:#5d6b45;--skip:#8d6f2f;
---chrome:rgba(232,223,208,0.94);
---btn-text:#f2ebe0;
---bggrad:#e8dfd0;
---sun1:rgba(206,142,64,0.22);--sun2:rgba(226,178,104,0.26);
---cloud:rgba(255,252,244,0.42);--fx-op:0.8;
---cell:#f7f2e9;--cell-hl:rgba(159,68,23,0.13);--grain:0.055;
---cool:#3b6672;
---s1:#785c1c;--s2:#a54218;--s3:#4f5f92;--s4:#296b62;--s5:#844d89;--s6:#58663d;--s7:#935125;
---band:linear-gradient(180deg,#f7c98d 0%,#f4d5a5 34%,#eddcc3 68%,#e8dfd0 100%);
---band-h:rgba(36,29,22,0.14);
---theme-meta:#e8dfd0;
+--paper:#c9dcee;--sheet:rgba(255,255,255,0.46);--sheet2:rgba(255,255,255,0.30);
+--ink:#0f2236;--ink2:#2c4560;--ink3:#3d5269;
+--rule:rgba(15,34,54,0.13);--rule2:rgba(15,34,54,0.28);
+--accent:#a24c0c;--accent-q:rgba(214,120,40,0.15);
+--done:#2b6647;--skip:#85600f;
+--chrome:rgba(176,204,230,0.84);
+--btn-text:#f4f8fc;
+--bggrad:linear-gradient(180deg,#86add2 0%,#9dbedf 36%,#b7d0e7 70%,#c9dcee 100%);
+--sun1:rgba(255,186,84,0.34);--sun2:rgba(255,214,140,0.40);
+--cloud:rgba(255,255,255,0.60);--fx-op:0.95;
+--cell:rgba(255,255,255,0.72);--cell-hl:rgba(214,120,40,0.20);--grain:0;
+--cool:#143a5c;
+--s1:#7a5a10;--s2:#a8430f;--s3:#3e4f8c;--s4:#1f6b60;--s5:#7c3f83;--s6:#4a5d2c;--s7:#8e4a17;--s15:#a24c0c;
+--band:linear-gradient(180deg,rgba(255,206,130,0.55) 0%,rgba(255,232,190,0.22) 34%,rgba(255,255,255,0) 72%);
+--band-h:rgba(15,34,54,0);
+--glass:rgba(255,255,255,0.40);--glass-b:rgba(255,255,255,0.62);
+--theme-meta:#86add2;
 }
 /* ── DUSK ───────────────────────────────────────────────────────── */
 body[data-theme="dusk"]{
@@ -58,6 +60,8 @@ body[data-theme="dusk"]{
 --s1:#cf9f30;--s2:#df5920;--s3:#6d7eb0;--s4:#46b9aa;--s5:#a76cac;--s6:#8a9f60;--s7:#cc7033;
 --band:linear-gradient(180deg,#3d2a1c 0%,#2e2118 42%,#221a13 74%,#17130f 100%);
 --band-h:rgba(239,231,218,0.16);
+--s15:#e0a24e;
+--glass:rgba(255,244,230,0.035);--glass-b:rgba(239,231,218,0.11);
 --theme-meta:#17130f;
 }
 
@@ -591,6 +595,43 @@ color:var(--ink3);cursor:pointer}
 .set-lbl{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin:34px 0 12px}
 .set-note{font-size:12px;color:var(--ink3);line-height:1.6;margin-top:12px}
 .divider{height:1px;background:var(--rule);margin:34px 0 0}
+
+/* ── v2: glass tiles, anchors, shelf, warm-up, extras ── */
+.page .sect{background:var(--glass);border:1px solid var(--glass-b);border-top:1px solid var(--glass-b);
+border-radius:16px;padding:20px 18px 18px;margin-top:14px;
+backdrop-filter:blur(14px) saturate(1.1);-webkit-backdrop-filter:blur(14px) saturate(1.1)}
+body[data-theme="dawn"] .sheet{border-color:var(--glass-b);border-radius:14px;
+backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+body[data-theme="dawn"] .begin{border-radius:12px}
+body[data-theme="dawn"] .btn-go{border-radius:12px}
+.page .idx-row.next{margin-left:-18px;padding-left:16px}
+.left-note{margin-top:12px;font-size:20px;line-height:1.35;letter-spacing:-.01em}
+.anc{display:flex;gap:14px;align-items:baseline;padding:11px 0;border-bottom:1px solid var(--rule)}
+.anc:last-child{border-bottom:none}
+.anc-t{flex:0 0 68px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink2)}
+.anc-l{flex:1;font-size:16px;line-height:1.35;min-width:0}
+.anc-m{flex:0 0 auto;font-size:10px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.anc.past{opacity:.45}
+.anc.next .anc-t,.anc.next .anc-l{color:var(--accent)}
+.anc-empty{margin-top:10px;font-size:13px;line-height:1.55;color:var(--ink2)}
+.shelf-sum{margin-top:12px;font-size:20px;line-height:1.3;letter-spacing:-.01em}
+.shelf-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--rule)}
+.shelf-n{flex:1;min-width:0;font-size:17px;line-height:1.3;overflow-wrap:anywhere}
+.shelf-st{flex:0 0 auto;min-height:40px;padding:6px 12px;border-radius:20px;border:1px solid var(--rule2);background:none;
+font-family:inherit;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;color:var(--ink2)}
+.shelf-st.building{color:var(--accent);border-color:var(--accent)}
+.shelf-st.shipped{color:var(--done);border-color:var(--done)}
+.shelf-x{flex:0 0 44px;background:none;border:none;color:var(--ink3);font-size:22px;min-height:44px;cursor:pointer}
+.shelf-h{font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin:28px 0 2px}
+.shelf-warn{margin-top:16px;padding-left:14px;border-left:2px solid var(--skip);font-size:13px;line-height:1.55;color:var(--ink2)}
+.warm-story{font-size:17.5px;line-height:1.72;letter-spacing:-.004em;color:var(--ink);white-space:pre-line;margin-top:22px}
+.warm-why{margin-top:22px}
+.warm-why summary{cursor:pointer;font-size:14px;font-weight:500;color:var(--ink);list-style:none;
+min-height:44px;display:flex;align-items:center;text-decoration:underline;text-underline-offset:4px;text-decoration-color:var(--rule2)}
+.warm-why summary::-webkit-details-marker{display:none}
+.warm-why[open] summary{color:var(--ink3)}
+.extra-sub{font-size:12px;color:var(--ink3);margin-top:6px}
+#s16 .main{padding-top:26px}
 </style>
 </head>
 <body data-theme="dawn">
@@ -612,7 +653,7 @@ color:var(--ink3);cursor:pointer}
 </div>
 
 <div class="mark" aria-hidden="true"><svg viewBox="0 0 200 26"><path d="M2 22h78"/><path d="M120 22h78"/><path d="M89 22a11 11 0 0 1 22 0"/><path d="M100 3v5"/><path d="M83 8l3 3.5"/><path d="M117 8l-3 3.5"/></svg></div>
-<div class="p" id="firstRun" style="display:none;margin-top:22px;font-size:13px;padding-left:14px;border-left:2px solid var(--accent)">You go to sleep and wake up having forgotten where you were headed. This points you back. Five minutes top to bottom, or tap any one step on its own &mdash; skip whatever you like, it keeps your place.</div>
+<div class="p" id="firstRun" style="display:none;margin-top:22px;font-size:13px;padding-left:14px;border-left:2px solid var(--accent)">You go to sleep and wake up having forgotten where you were headed. This points you back. Two minutes top to bottom, or tap any one step on its own &mdash; skip whatever you like, it keeps your place.</div>
 <div id="nudge" style="display:none"></div>
 
 <!-- The call to action and the sequence come first, above the fold on every
@@ -620,8 +661,18 @@ color:var(--ink3);cursor:pointer}
      once you know what the app is for. -->
 <button class="begin" id="beginBtn" onclick="beginAction()">Start my morning</button>
 
+<div class="sect" id="leftSect" style="display:none">
+<div class="sect-l"><span>You left yourself a note</span></div>
+<div class="left-note disp" id="leftNote"></div>
+</div>
+
+<div class="sect" id="ancSect">
+<div class="sect-l"><span>Today&#8217;s anchors</span><span id="ancCount"></span></div>
+<div id="ancList"></div>
+</div>
+
 <div class="sect">
-<div class="sect-l"><span>Your morning</span><span id="seqCount"></span></div>
+<div class="sect-l"><span id="seqL">Your morning</span><span id="seqCount"></span></div>
 <div class="seq-rule" id="seqRule"></div>
 <div class="idx" id="idx"></div>
 </div>
@@ -633,6 +684,18 @@ color:var(--ink3);cursor:pointer}
 <div class="win-t disp" id="winT"></div>
 </div>
 <div class="win-list" id="winList"></div>
+</div>
+
+<div class="sect" id="shelfSect" onclick="go(16)">
+<div class="sect-l"><span>Project shelf</span><span id="shelfCount"></span></div>
+<div class="shelf-sum disp" id="shelfSum"></div>
+<div class="p" id="shelfSub" style="margin-top:6px;font-size:13px"></div>
+</div>
+
+<div class="sect" id="extraSect">
+<div class="sect-l"><span>Extras</span></div>
+<div class="extra-sub">Not in your daily run. Open one whenever you have the time.</div>
+<div class="open-chips" id="extraChips"></div>
 </div>
 
 <div class="sect hero" onclick="go(1)">
@@ -867,6 +930,17 @@ color:var(--ink3);cursor:pointer}
 <div class="btn-row" style="margin-top:10px"><button class="btn-sec" onclick="openOnboard()">Rebuild my morning &#8594;</button></div>
 <div class="set-note">Which modules, in what order, and what kind of quotes and fables.</div>
 <div class="divider"></div>
+<div class="set-lbl">When your day starts</div>
+<div class="chips" style="margin-top:0">
+<button class="chip day-chip" data-h="0" onclick="pickDayStart(0)">Days</button>
+<button class="chip day-chip" data-h="12" onclick="pickDayStart(12)">Nights</button>
+</div>
+<div class="set-note">Nights starts each day at noon, so a check-in at the end of an overnight shift still counts toward the day that began when you woke up.</div>
+<div class="set-lbl">Anchors &mdash; the fixed points of your day</div>
+<div class="btn-row" style="justify-content:flex-start;margin-bottom:10px"><button class="btn-sec" onclick="loadAnchors()">Load the night-shift starter</button></div>
+<textarea class="input" id="setAnchors" rows="7" spellcheck="false" placeholder="5:00pm | Workout | daily&#10;7:00pm | Family meeting | Wed"></textarea>
+<div class="set-note">One per line: <b>time | what | days</b>. Days can be daily, weekdays, weekends, or a list like Mon Wed Fri. They show on your home screen, next one highlighted.</div>
+<div class="divider"></div>
 <div class="set-lbl">Your Software — Daily Reminders</div>
 <div class="btn-row" style="justify-content:flex-start;margin-bottom:10px">
 <button class="btn-sec" onclick="loadCards('sharp')">Load the operating rules</button>
@@ -887,10 +961,10 @@ color:var(--ink3);cursor:pointer}
 <div class="divider"></div>
 <div class="set-lbl">Look</div>
 <div class="chips" style="margin-top:0">
-<button class="chip theme-chip" data-t="dawn" onclick="setTheme('dawn')">Dawn</button>
-<button class="chip theme-chip" data-t="dusk" onclick="setTheme('dusk')">Dusk</button>
+<button class="chip theme-chip" data-t="dawn" onclick="setTheme('dawn')">Sky</button>
+<button class="chip theme-chip" data-t="dusk" onclick="setTheme('dusk')">Night</button>
 </div>
-<div class="set-note">Dawn is the daylight look. Dusk is easier on the eyes if you're up before the sun.</div>
+<div class="set-note">Sky is the daylight look. Night is easier on the eyes in the dark.</div>
 <div class="divider"></div>
 <div class="set-lbl">Backup</div>
 <div class="p" style="font-size:13px">Everything lives on this device. Export it now and then so a cleared browser can't take it.</div>
@@ -965,6 +1039,37 @@ color:var(--ink3);cursor:pointer}
 <div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(14,'skip');flowNext(14)">Skip</button><button class="btn-go" onclick="mark(14,'done');flowNext(14)">Continue</button></div></div>
 </div>
 
+<!-- 15 WARM-UP — one of quote / joke / story, rotating by day -->
+<div class="scr" id="s15">
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(15)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav15"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p15"></div><div class="prog-cap" id="cap15"></div>
+<div class="main">
+<div class="h1 disp" id="warmH">The Warm-up</div>
+<div class="p" id="warmLead"></div>
+<div id="warmBody"></div>
+<div class="btn-row">
+<button class="btn-sec" onclick="warmAnother()">Another &#8635;</button>
+<button class="btn-sec" id="warmSwitchBtn" onclick="warmSwitch()">Something else</button>
+</div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(15,'skip');flowNext(15)">Skip</button><button class="btn-go" onclick="mark(15,'done');flowNext(15)">Continue</button></div></div>
+</div>
+
+<!-- 16 PROJECT SHELF -->
+<div class="scr" id="s16">
+<div class="nav"><button class="nav-btn nav-back" onclick="go(0)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Project shelf</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="main">
+<div class="h1 disp">Finish before you start.</div>
+<div class="p">Everything you&#8217;re building, in one place. Tap a status to change it. The rule: ship one before you add one.</div>
+<div class="add-row">
+<input class="input" id="shelfInput" placeholder="Add a project" autocomplete="off" enterkeyhint="done">
+<button class="add-btn" onclick="shelfAdd()">Add</button>
+</div>
+<div class="shelf-warn" id="shelfWarn" style="display:none"></div>
+<div id="shelfList"></div>
+</div>
+</div>
+
 <!-- 10 EVENING -->
 <div class="scr" id="s10">
 <div class="nav"><button class="nav-btn nav-back" onclick="navBack()" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Evening check-in</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
@@ -984,6 +1089,8 @@ color:var(--ink3);cursor:pointer}
 <input class="input" id="eveGrateful" placeholder="One line is enough">
 <div class="lbl">One win from today</div>
 <input class="input" id="eveWinNote" placeholder="Anything that went right — small counts">
+<div class="lbl">One line for when you wake up</div>
+<input class="input" id="eveNext" placeholder="What should you start with next time?">
 <div class="p" id="eveYest" style="margin-top:18px;font-size:13px"></div>
 </div>
 <div class="foot"><div class="foot-row"><button class="btn-go" onclick="saveEvening()">Close the day</button></div></div>
@@ -2010,7 +2117,13 @@ const PUZZLES7=[
 const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const dateKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-const todayKey=()=>dateKey(new Date());
+/* A "day" starts at S.dayStart o'clock: 0 is midnight, 12 is noon for night
+   shifts. Shifting the clock rather than the keys means a 7am end-of-shift
+   check-in lands on the same record as the 3pm wake-up that started it. */
+function appNow(){let h=0;try{h=+(S.dayStart||0)||0}catch(e){}return new Date(Date.now()-h*3600e3)}
+const todayKey=()=>dateKey(appNow());
+function nightMode(){try{return +(S.dayStart||0)>=10}catch(e){return false}}
+const dayWord=()=>nightMode()?'wake-up':'morning';
 function dayOfYear(){const d=new Date();return Math.floor((d-new Date(d.getFullYear(),0,0))/864e5)}
 function parsePair(s){const i=s.indexOf('|');return i<0?['',s.trim()]:[s.slice(0,i).trim(),s.slice(i+1).trim()]}
 /* parsePair puts an unpaired string in the SECOND slot, which is what the note
@@ -2090,7 +2203,7 @@ function applyTheme(t){
   const MOON='<svg viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>';
   const btn=$('themeBtn');if(btn)btn.innerHTML=(t==='dawn'?MOON:SUN);
   const meta=document.querySelector('meta[name=theme-color]');
-  if(meta)meta.setAttribute('content',t==='dawn'?'#e8dfd0':'#17130f');
+  if(meta)meta.setAttribute('content',t==='dawn'?'#86add2':'#17130f');
   document.querySelectorAll('.theme-chip').forEach(c=>c.classList.toggle('on',c.dataset.t===t));
 }
 function toggleTheme(){
@@ -2224,7 +2337,9 @@ const STEPS={
   7 :{name:'Mini',    plain:'Crossword', t:'The Mini',    s:'A daily mini crossword',
       blurb:'A crossword to switch the brain on. Bigger at the weekend.'},
   14:{name:'Stretch', plain:'Stretch',   t:'The Stretch', s:'A few guided stretches',
-      blurb:'A few gentle mobility moves, guided on a timer.'}
+      blurb:'A few gentle mobility moves, guided on a timer.'},
+  15:{name:'Warm-up', plain:'Warm-up',   t:'The Warm-up', s:'A quote, a joke or a story \u2014 one a day',
+      blurb:'One thing to switch the brain on. It rotates: a quote, a joke or a short story.'}
 };
 const stepName=n=>(STEPS[n]||{}).name||('Step '+n);
 /* What a stranger would call it. The titles stay; the chrome speaks plainly. */
@@ -2234,7 +2349,8 @@ const STEP_NAMES=Object.keys(STEPS).map(Number).sort((a,b)=>a-b).map(n=>STEPS[n]
 
 /* The running order, and which modules are in it at all. It belongs to the
    user now: DEFAULT_FLOW is only the starting point. */
-const DEFAULT_FLOW=[1,3,7,5,4,6,2];   // Spark, Story, Mini, Software, Breathe, Today, Laugh
+/* Two minutes, not twenty. Everything else waits under Extras. */
+const DEFAULT_FLOW=[15,5,6];   // Warm-up, Software, Today
 let FLOW=DEFAULT_FLOW.slice();
 function validFlow(f){
   const seen=[];
@@ -2256,7 +2372,7 @@ function wrapBack(){go(FLOW.length?FLOW[FLOW.length-1]:0)}
 
 /* Where Back goes from each screen, as data — so the label on the button and
    the place it takes you are computed from the same answer and can't drift. */
-const SCREEN_NAMES={0:'Home',8:'Wrap-up',9:'Settings',10:'Evening',11:'Past days',12:'Journal'};
+const SCREEN_NAMES={0:'Home',8:'Wrap-up',9:'Settings',10:'Evening',11:'Past days',12:'Journal',16:'Projects'};
 function backDest(n){
   if(STEPS[n]){const i=flowPos(n);return i<=0?0:FLOW[i-1]}
   if(n===8)return FLOW.length?FLOW[FLOW.length-1]:0;
@@ -2264,7 +2380,8 @@ function backDest(n){
   if(n===13)return null;                 // setup pages manage their own Back
   return 0;
 }
-function screenName(n){return STEPS[n]?plainName(n):(SCREEN_NAMES[n]||'Back')}
+function screenName(n){if(n===10)return closeName(true);return STEPS[n]?plainName(n):(SCREEN_NAMES[n]||'Back')}
+function closeName(short){return nightMode()?(short?'Shift\u2019s end':'Shift\u2019s end'):(short?'Evening':'The Evening')}
 function paintChrome(n){
   const scr=$('s'+n);if(!scr)return;
   const back=scr.querySelector('.nav-back'),home=scr.querySelector('.nav-home');
@@ -2325,6 +2442,7 @@ function go(n){
   if(n===11){renderLook();show('s11',dir);return}
   if(n===12){renderJournal();paintChrome(12);show('s12',dir);return}
   if(n===13){renderOnboard();show('s13',dir);return}
+  if(n===16){renderShelf();show('s16',dir);return}
   if(STEPS[n]){prog(n);paintNav(n)}
   show('s'+n,dir);
   if(n===1)renderSpark();
@@ -2335,6 +2453,7 @@ function go(n){
   if(n===6)ppOpen();
   if(n===7)cwOpen();
   if(n===14)strOpen();
+  if(n===15)renderWarm();
   if(n===8)renderRecap();
 }
 
@@ -2349,7 +2468,7 @@ function syncDash(){
   const streak=+localStorage.getItem('flStreak')||0;
   const info=streakInfo();
   const savedTxt=info.saved?' · '+info.saved+' saved':'';
-  const dateTxt=now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+  const dateTxt=appNow().toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
   if(streak&&pendingStreak){
     $('dashDate').innerHTML=dateTxt+'  ·  Day <span id="streakN">'+(streak-1)+'</span>'+savedTxt;
     pendingStreak=false;
@@ -2399,9 +2518,10 @@ function syncDash(){
   const started=FLOW.some(n=>statusOf(n)!=='todo');
   const nextRow=rows.find(c=>c.n===nextUp);
   $('beginBtn').textContent=
-    nextUp===undefined ? 'Review my morning' :
-    started            ? 'Continue: '+(nextRow?plainName(nextRow.n):'my morning')+' \u2192' :
-                         'Start my morning \u2192';
+    nextUp===undefined ? 'Review my '+dayWord() :
+    started            ? 'Continue: '+(nextRow?plainName(nextRow.n):'my '+dayWord())+' \u2192' :
+                         'Start my '+dayWord()+' \u2192';
+  $('seqL').textContent='Your '+dayWord();
   rows.forEach(c=>{
     const st=statusOf(c.n);
     const r=document.createElement('div');
@@ -2413,6 +2533,7 @@ function syncDash(){
     if(c.n===7)sub=cwIsWeekend()?'The bigger weekend crossword':'A daily mini crossword';   // the weekend puzzle is bigger
     if(c.n===7&&DAY.cwSolved)sub='Solved';
     if(c.n===6&&(DAY.win||'').trim())sub=DAY.win;
+    if(c.n===15)sub=WARM_SUB[warmToday()];
     if(justDone===c.n)r.classList.add('pop');
     r.innerHTML='<div class="idx-n">'+String(flowPos(c.n)+1).padStart(2,'0')+'</div>'+
       '<div class="idx-b"><div class="idx-t disp">'+c.t+'</div><div class="idx-s">'+esc(sub)+'</div></div>'+
@@ -2422,16 +2543,17 @@ function syncDash(){
 
   // evening sits below the rule, as its own entry
   const eveDone=!!(DAY.eve&&DAY.eve.saved);
-  const due=now.getHours()>=17;
+  const due=appNow().getHours()>=17;
   const e=document.createElement('div');
   e.className='idx-row '+(eveDone?'done':'');
   e.onclick=()=>go(10);
   e.innerHTML='<div class="idx-n">&#8212;</div>'+
-    '<div class="idx-b"><div class="idx-t disp">The Evening</div><div class="idx-s">'+
-    (eveDone?'Closed out':(due?'Fifteen seconds. Close the loop.':'Waits for sundown'))+'</div></div>'+
+    '<div class="idx-b"><div class="idx-t disp">'+closeName()+'</div><div class="idx-s">'+
+    (eveDone?'Closed out':(due?'Fifteen seconds. Close the loop.':(nightMode()?'Waits for the end of your shift':'Waits for sundown')))+'</div></div>'+
     '<div class="idx-mark">'+(eveDone?'Done':'')+'</div>'+CHEV;
   idx.appendChild(e);
   justDone=null;
+  renderLeftNote();renderAnchors();renderShelfSum();renderExtras();
 }
 
 /* the streak as a shape, not just a number */
@@ -3037,7 +3159,7 @@ function obFinish(){
   S.tags=obTags.slice();
   S.affirms=obCards.length?obCards.slice():DEF_AFFIRMS.slice();
   S.onboarded=true;
-  saveS();
+  saveS();answeredNudge();
   sparkI=null;storyI=null;softI=0;
   burst();haptic([16,36,20]);
   setTimeout(()=>go(0),420);
@@ -3258,7 +3380,7 @@ function strOpen(){strKey=ROUTINES[S.stretch]?S.stretch:'wake';strChips();strRes
    5x5 on weekdays, 7x7 at the weekend. Grid size is read from the puzzle,
    so nothing below is hardcoded to a width. */
 let CW=null,cwTimer=null,cwStart=0,cwElapsed=0;
-function cwIsWeekend(){const d=new Date().getDay();return d===0||d===6}
+function cwIsWeekend(){const d=appNow().getDay();return d===0||d===6}
 function cwPuzzle(){
   const bank=cwIsWeekend()?PUZZLES7:PUZZLES;
   return bank[dayOfYear()%bank.length];
@@ -3514,10 +3636,13 @@ function daysSince(k){
   return isFinite(d)?Math.round(d):1e4;
 }
 
+/* One offer a day. Answer one, yes or no, and the slot stays quiet until tomorrow. */
+function answeredNudge(){try{localStorage.setItem('flNudgeDay',todayKey())}catch(e){}}
 function nudgeOff(id){const d=readJSON('flNudge',{});return !!(d&&d[id])}
 function dismissNudge(id){
   const d=readJSON('flNudge',{})||{};d[id]=todayKey();
   try{localStorage.setItem('flNudge',JSON.stringify(d))}catch(e){}
+  answeredNudge();
   /* Saying no to the wizard is an answer, not a postponement. Settings keeps
      "Rebuild my morning" for whenever they change their mind. */
   if(id==='setup'){S.onboarded=true;saveS()}
@@ -3528,6 +3653,12 @@ function dismissNudge(id){
    dashboard stops being glanceable. */
 function currentNudge(){
   const days=Object.keys(dayHistory()).length;
+  if(localStorage.getItem('flNudgeDay')===todayKey())return null;
+  if(Array.isArray(S.flow)&&S.flow.indexOf(15)<0&&!nudgeOff('short'))return{
+    id:'short',
+    text:'New: the two-minute version. One warm-up, one line of your software, then pick the WIN. Breathing, stretch and the crossword move to Extras.',
+    cta:'Switch to it',
+    act:'useShort()'};
   if(offerSetup()&&!nudgeOff('setup'))return{
     id:'setup',
     text:'You have seen how it runs. Want to build your own version — which modules, in what order, and what kind of quotes and fables?',
@@ -3543,6 +3674,11 @@ function currentNudge(){
     text:days+' mornings live in this browser and nowhere else. One tap saves a copy you can keep.',
     cta:'Save a backup',
     act:"quickBackup()"};
+  if(days>=1&&!S.dayStart&&!nudgeOff('nights'))return{
+    id:'nights',
+    text:'Work nights? Start each day at noon, so your end-of-shift check-in counts toward the day that began when you woke up.',
+    cta:'Yes, I work nights',
+    act:'useNights()'};
   return null;
 }
 function quickBackup(){exportData();dismissNudge('backup')}
@@ -3598,8 +3734,7 @@ function renderRecap(){
     '<div class="open-chips">'+openIds.map(i=>'<button class="open-chip" onclick="go('+i+')">'+
     esc(plainName(i))+'</button>').join('')+'</div></div>':'')+
     (rows.length?rows.join(''):'<div class="p">Nothing entered yet — go back and fill in your plan.</div>');
-  const y=new Date();y.setDate(y.getDate()-1);
-  const yd=readJSON('flDay-'+dateKey(y),{});
+  const yd=readJSON('flDay-'+dayBefore(todayKey()),{});
   const bits=[];
   if(yd.note)bits.push("Yesterday's note: "+yd.note);
   if(yd.eve&&yd.eve.grateful)bits.push('Yesterday you were grateful for: '+yd.eve.grateful);
@@ -3670,15 +3805,17 @@ function finishDay(){
 /* ============================= EVENING BOOKEND ============================= */
 function renderEvening(){
   DAY.eve=DAY.eve||{};
-  $('eveWin').textContent=DAY.win?('This morning you said: '+DAY.win):'No WIN was set this morning.';
+  $('eveWin').textContent=DAY.win?((nightMode()?'When you woke up you said: ':'This morning you said: ')+DAY.win):
+    (nightMode()?'No WIN was set when you woke up.':'No WIN was set this morning.');
+  const ns=$('s10').querySelector('.nav-step');if(ns)ns.textContent=nightMode()?'Shift\u2019s end':'Evening check-in';
+  $('eveNext').value=DAY.eve.next||'';
   document.querySelectorAll('#eveSeg button').forEach(b=>b.classList.remove('on'));
   const map={yes:0,almost:1,no:2};
   if(DAY.eve.hit!=null&&map[DAY.eve.hit]!=null)
     document.querySelectorAll('#eveSeg button')[map[DAY.eve.hit]].classList.add('on');
   $('eveGrateful').value=DAY.eve.grateful||'';
   $('eveWinNote').value=DAY.eve.win||'';
-  const y=new Date();y.setDate(y.getDate()-1);
-  const yd=readJSON('flDay-'+dateKey(y),{});
+  const yd=readJSON('flDay-'+dayBefore(todayKey()),{});
   $('eveYest').textContent=(yd.eve&&yd.eve.grateful)?('Last night you were grateful for: '+yd.eve.grateful):'';
 }
 function eveHit(v,btn){
@@ -3690,6 +3827,7 @@ function saveEvening(){
   DAY.eve=DAY.eve||{};
   DAY.eve.grateful=$('eveGrateful').value.trim();
   DAY.eve.win=$('eveWinNote').value.trim();
+  DAY.eve.next=$('eveNext').value.trim();
   DAY.eve.saved=true;DAY.eve.at=new Date().toISOString();
   saveDay();
   try{localStorage.setItem('flEve',todayKey())}catch(e){}
@@ -3715,6 +3853,8 @@ function openSettings(){
   applyTheme(document.body.getAttribute('data-theme'));
   paintFeel();
   $('verLine').textContent='Calibrate · '+APP_VERSION;
+  $('setAnchors').value=(S.anchors||[]).join('\n');
+  pendingDayStart=+(S.dayStart||0);paintDayChips();
   show('s9');
 }
 function saveSettings(){
@@ -3722,7 +3862,11 @@ function saveSettings(){
   const q=$('setQuotes').value.split('\n').map(x=>x.trim()).filter(Boolean);
   S.affirms=a.length?a:DEF_AFFIRMS.slice();
   S.quotes=q.length?q:DEF_QUOTES.slice();
+  S.anchors=$('setAnchors').value.split('\n').map(x=>x.trim()).filter(Boolean);
+  const dayChanged=+(S.dayStart||0)!==pendingDayStart;
+  S.dayStart=pendingDayStart;
   saveS();
+  if(dayChanged)reloadDay();
   sparkI=null;softI=0;
   go(0);
 }
@@ -3786,7 +3930,7 @@ function applyImport(text){
 }
 
 /* ============================= PWA ============================= */
-const APP_VERSION='v1.5 · 2026-08-25';
+const APP_VERSION='v2.0 · 2026-10-27';
 let deferredPrompt=null,swReg=null;
 /* a stuck install should never need devtools to escape */
 function checkUpdates(){
@@ -3849,6 +3993,204 @@ function showUpdate(){
   };
 }
 
+
+/* ============================= v2: THE LOOP ============================= */
+let pendingDayStart=0;
+function paintDayChips(){document.querySelectorAll('.day-chip').forEach(c=>c.classList.toggle('on',+c.dataset.h===pendingDayStart))}
+function pickDayStart(h){pendingDayStart=h;paintDayChips();haptic(8)}
+/* After the day boundary moves, "today" may be a different record. */
+function reloadDay(){
+  DAY=readJSON('flDay-'+todayKey(),{});
+  try{openedOn=todayKey()}catch(e){}
+  FIELDS.forEach(k=>{const el=$(k);if(el)el.value=DAY[k]||''});
+  migrateItems();carryOver();
+  sparkI=null;storyI=null;jokeI=null;
+}
+function useShort(){setFlow(DEFAULT_FLOW);dismissNudge('short');syncDash();burst();haptic([14,26,20])}
+function useNights(){S.dayStart=12;saveS();reloadDay();dismissNudge('nights');syncDash();haptic([14,26,20])}
+
+/* What you told yourself at the end of the last day, waiting at the start of this one. */
+function renderLeftNote(){
+  const sect=$('leftSect');if(!sect)return;
+  const yd=readJSON('flDay-'+dayBefore(todayKey()),{});
+  const t=(yd.eve&&yd.eve.next||'').trim();
+  sect.style.display=t?'':'none';
+  if(t)$('leftNote').textContent=t;
+}
+
+/* ── anchors: the fixed points of the day ── */
+const NIGHT_ANCHORS=[
+"3:00pm | Wake up, open Calibrate | daily",
+"5:00pm | Workout | daily",
+"8:30pm | Get ready for shift | daily",
+"7:30am | Call window: businesses are open | weekdays",
+"7:00pm | Family meeting | Wed",
+"7:00pm | Weekly sweep of the to-do list | Sun"
+];
+function loadAnchors(){$('setAnchors').value=NIGHT_ANCHORS.join('\n');
+  $('backupMsg').textContent='Loaded a starter. Change the times to fit, then press Save.';haptic(8)}
+function parseTime(s){
+  const m=String(s).trim().toLowerCase().replace(/\s+/g,'').match(/^(\d{1,2})(?::(\d{2}))?(am|pm|a|p)?$/);
+  if(!m)return null;
+  let h=+m[1],mi=+(m[2]||0);const ap=m[3];
+  if(h>23||mi>59)return null;
+  if(ap){if(h<1||h>12)return null;if(ap[0]==='p'&&h<12)h+=12;if(ap[0]==='a'&&h===12)h=0}
+  return h*60+mi;
+}
+const DOW=['sun','mon','tue','wed','thu','fri','sat'];
+function dayMatch(spec,dow){
+  const s=String(spec||'').toLowerCase().trim();
+  if(!s||s==='daily'||s==='every day'||s==='everyday'||s==='all')return true;
+  if(s==='weekdays'||s==='weekday')return dow>=1&&dow<=5;
+  if(s==='weekends'||s==='weekend')return dow===0||dow===6;
+  return s.split(/[\s,\/]+/).some(t=>t.slice(0,3)===DOW[dow]);
+}
+function fmtClock(min){const h=Math.floor(min/60),m=min%60;
+  return ((h%12)||12)+':'+String(m).padStart(2,'0')+(h<12?'am':'pm')}
+/* Each anchor's real moment inside the current day. With a noon start, a 7am
+   anchor belongs to tomorrow's calendar date but today's run. */
+function anchorsToday(){
+  const start=+(S.dayStart||0)*60;
+  const base=appNow();base.setHours(0,0,0,0);
+  const out=[];
+  (S.anchors||[]).forEach(line=>{
+    const p=String(line).split('|').map(x=>x.trim());
+    const min=parseTime(p[0]);if(min===null||!p[1])return;
+    const at=new Date(base);if(min<start)at.setDate(at.getDate()+1);
+    at.setHours(Math.floor(min/60),min%60,0,0);
+    if(!dayMatch(p[2],at.getDay()))return;
+    out.push({at:at,label:p[1],t:fmtClock(min)});
+  });
+  return out.sort((a,b)=>a.at-b.at);
+}
+function renderAnchors(){
+  const box=$('ancList');if(!box)return;
+  const list=anchorsToday(),now=Date.now();
+  if(!list.length){
+    $('ancCount').textContent='';
+    box.innerHTML='<div class="anc-empty">The fixed points of your day: workout, leaving for work, the hour you can make calls. '+
+      '<button class="btn-sec" onclick="event.stopPropagation();openSettings()">Add your anchors</button></div>';
+    return;
+  }
+  const nx=list.findIndex(a=>a.at>=now);
+  $('ancCount').textContent=nx<0?'All done':(list.length-nx)+' to go';
+  box.innerHTML=list.map((a,i)=>'<div class="anc'+(i===nx?' next':(a.at<now?' past':''))+'">'+
+    '<div class="anc-t">'+a.t+'</div><div class="anc-l">'+esc(a.label)+'</div>'+
+    (i===nx?'<div class="anc-m">Next</div>':'')+'</div>').join('');
+}
+
+/* ── extras: modules that aren't in the daily run ── */
+function renderExtras(){
+  const box=$('extraChips');if(!box)return;
+  const ex=Object.keys(STEPS).map(Number).filter(n=>FLOW.indexOf(n)<0);
+  $('extraSect').style.display=ex.length?'':'none';
+  box.innerHTML=ex.map(n=>'<button class="open-chip" onclick="go('+n+')">'+esc(plainName(n))+'</button>').join('');
+}
+
+/* ── warm-up: one of three, rotating by day ── */
+const WARM_KINDS=['quote','joke','story'];
+const WARM_SUB={quote:'Today: a quote',joke:'Today: a joke',story:'Today: a short story'};
+let warmKind=null;
+function warmToday(){return WARM_KINDS.indexOf(DAY.warmKind)>=0?DAY.warmKind:WARM_KINDS[dayOfYear()%3]}
+function renderWarm(){warmKind=warmToday();paintWarm()}
+function why(n){return n?'<details class="warm-why"><summary>What does this mean?</summary><div class="note-in">'+
+  '<div class="note-m disp">'+esc(n.m)+'</div><div class="note-q disp"><div class="note-ql">Sit with it</div>'+esc(n.q)+'</div></div></details>':''}
+function paintWarm(){
+  const box=$('warmBody'),h=$('warmH'),lead=$('warmLead');
+  if(warmKind==='quote'){
+    if(sparkI===null||!S.quotes[sparkI])sparkI=pick('quote',null);
+    const [q,a]=splitLine(S.quotes[sparkI]);
+    h.textContent='The Spark';lead.textContent='One idea to carry into the day.';
+    const n=QUOTE_NOTES[parsePair(S.quotes[sparkI])[0]];
+    box.innerHTML='<div class="sheet"><div class="quote disp">\u201C'+esc(q)+'\u201D</div><div class="quote-a">'+esc(a)+'</div></div>'+
+      (n?why(n):'<div class="tip"><div class="tip-l">Sit with it</div><div class="tip-t">What would today look like if this were true?</div></div>');
+    if(DAY.quote!==S.quotes[sparkI]){DAY.quote=S.quotes[sparkI];saveDay()}
+  }else if(warmKind==='joke'){
+    if(jokeI===null){const k=JOKES.findIndex(j=>jokeStr(j)===DAY.joke);jokeI=k>=0?k:Math.floor(Math.random()*JOKES.length)}
+    const j=JOKES[jokeI];
+    h.textContent='The Laugh';lead.textContent='Life isn\u2019t that serious. Proof:';
+    box.innerHTML='<div class="sheet joke-card" onclick="warmReveal()"><div class="joke-kind">'+esc(JOKE_KINDS[j.k]||'')+'</div>'+
+      '<div class="quote disp joke-q">'+esc(j.q||j.a)+'</div>'+
+      (j.q?'<div class="quote disp joke-a" id="warmA" aria-live="polite">'+esc(j.a)+'</div><button class="joke-tell" id="warmTell" type="button">Tell me</button>':'')+
+      '<div class="quote-a">'+esc(j.by||'')+'</div></div>';
+    jokeRecent.push(jokeI);if(jokeRecent.length>30)jokeRecent.shift();
+    const s=jokeStr(j);if(DAY.joke!==s){DAY.joke=s;saveDay()}
+  }else{
+    if(storyI===null||!STORIES[storyI])storyI=pick('story',null);
+    const st=STORIES[storyI];
+    h.textContent=st.t;lead.textContent=st.r;
+    box.innerHTML='<div class="disp warm-story">'+esc(st.s)+'</div><div class="rule"></div>'+
+      '<div class="tip-l">The point</div><div class="tip-t disp" style="font-size:17px;line-height:1.55;color:var(--ink)">'+esc(st.m)+'</div>'+
+      why(STORY_NOTES[st.t]);
+    if(DAY.story!==st.t){DAY.story=st.t;saveDay()}
+  }
+  const next=WARM_KINDS[(WARM_KINDS.indexOf(warmKind)+1)%3];
+  $('warmSwitchBtn').textContent={quote:'A quote instead',joke:'A joke instead',story:'A story instead'}[next];
+}
+function warmReveal(){const a=$('warmA');if(!a||a.classList.contains('on'))return;
+  a.classList.add('on');const t=$('warmTell');if(t)t.style.display='none';haptic(12)}
+function warmAnother(){
+  if(warmKind==='quote')sparkI=pick('quote',sparkI);
+  else if(warmKind==='story')storyI=pick('story',storyI);
+  else{
+    const cur=JOKES[jokeI]?JOKES[jokeI].k:'';
+    let pool=JOKES.map((j,i)=>i).filter(i=>JOKES[i].k!==cur&&jokeRecent.indexOf(i)<0);
+    if(!pool.length)pool=JOKES.map((j,i)=>i).filter(i=>i!==jokeI);
+    jokeI=pool[Math.floor(Math.random()*pool.length)];
+  }
+  paintWarm();$('s15').scrollTop=0;haptic(8);
+}
+function warmSwitch(){warmKind=WARM_KINDS[(WARM_KINDS.indexOf(warmKind)+1)%3];DAY.warmKind=warmKind;saveDay();
+  paintWarm();$('s15').scrollTop=0;haptic(8)}
+
+/* ── project shelf: finish before you start ── */
+const SHELF_ST=['building','shipped','parked'];
+const SHELF_LBL={building:'Building',shipped:'Shipped',parked:'Parked'};
+function shelf(){return Array.isArray(S.projects)?S.projects:[]}
+function saveShelf(p){S.projects=p;saveS()}
+function shelfAdd(){
+  const el=$('shelfInput'),n=cleanItem(el.value);if(!n)return;
+  const p=shelf().slice(),busy=p.filter(x=>x.st==='building').length;
+  const st=busy>=3?'parked':'building';
+  p.push({id:uid(),n:n,st:st,at:todayKey()});saveShelf(p);el.value='';
+  const w=$('shelfWarn');
+  w.style.display=busy>=3?'':'none';
+  if(busy>=3)w.textContent='You already have '+busy+' in progress, so this one went on the shelf as Parked. Ship one, then move it up.';
+  renderShelf();haptic(10);
+}
+function shelfCycle(id){
+  const p=shelf().map(x=>x.id!==id?x:Object.assign({},x,{st:SHELF_ST[(SHELF_ST.indexOf(x.st)+1)%3],
+    shipped:SHELF_ST[(SHELF_ST.indexOf(x.st)+1)%3]==='shipped'?todayKey():x.shipped}));
+  saveShelf(p);
+  if((p.find(x=>x.id===id)||{}).st==='shipped'){burst();chime();haptic([16,36,20])}else haptic(8);
+  renderShelf();
+}
+function shelfRemove(id){const it=shelf().find(x=>x.id===id);if(!it)return;
+  if(!confirm('Remove "'+it.n+'" from the shelf?'))return;
+  saveShelf(shelf().filter(x=>x.id!==id));renderShelf()}
+function renderShelf(){
+  const box=$('shelfList');if(!box)return;
+  const p=shelf();
+  if(!p.length){box.innerHTML='<div class="p" style="margin-top:22px">Nothing here yet. Add the things you&#8217;re building &mdash; apps, books, side projects &mdash; so none of them get lost.</div>';return}
+  box.innerHTML=SHELF_ST.map(st=>{
+    const rows=p.filter(x=>x.st===st);if(!rows.length)return'';
+    return '<div class="shelf-h">'+SHELF_LBL[st]+' &middot; '+rows.length+'</div>'+rows.map(x=>
+      '<div class="shelf-row"><div class="shelf-n disp">'+esc(x.n)+'</div>'+
+      '<button class="shelf-st '+x.st+'" onclick="shelfCycle(\''+x.id+'\')" aria-label="Status: '+SHELF_LBL[x.st]+'. Tap to change">'+SHELF_LBL[x.st]+'</button>'+
+      '<button class="shelf-x" onclick="shelfRemove(\''+x.id+'\')" aria-label="Remove '+esc(x.n)+'">&times;</button></div>').join('');
+  }).join('');
+}
+function renderShelfSum(){
+  if(!$('shelfSum'))return;
+  const p=shelf(),b=p.filter(x=>x.st==='building'),s=p.filter(x=>x.st==='shipped');
+  $('shelfCount').textContent=p.length?b.length+' building':'';
+  if(!p.length){$('shelfSum').textContent='Keep track of what you\u2019re building.';
+    $('shelfSub').textContent='Add your projects so a finished one never gets forgotten and a new one never jumps the line.';return}
+  $('shelfSum').textContent=b.length?'Next to ship: '+b[0].n:'Nothing in progress. Pick one off the shelf.';
+  $('shelfSub').textContent=b.length>=2?b.length+' in progress, '+s.length+' shipped. Finish one before you start another.':
+    s.length+' shipped so far.';
+}
+
 /* ============================= BOOT ============================= */
 FIELDS.forEach(k=>{const el=$(k);if(el)el.addEventListener('input',()=>{DAY[k]=el.value;saveDay()})});
 loadDayFields();
@@ -3861,6 +4203,10 @@ setPat(localStorage.getItem('flPattern')||'calm');
 (function(){
   const el=$('itemInput');if(!el)return;
   el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();addItem()}});
+})();
+(function(){
+  const el=$('shelfInput');if(!el)return;
+  el.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();shelfAdd()}});
 })();
 markSeen();      // before applyEmptyState: the second visit is what triggers the offer
 askPersist();    // ask the browser not to evict us, where that is a thing you can ask

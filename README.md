@@ -1,6 +1,6 @@
 # 🌅 Calibrate
 
-> Point the day. You go to sleep and wake up having forgotten where you were headed — your instruments drift overnight. This is the five minutes that set them back: warm up, center, reload your operating principles, and pick the direction you actually want. No accounts, no ads, no network required.
+> Point the day. You go to sleep and wake up having forgotten where you were headed — your instruments drift overnight. This is the two minutes that set them back: warm up, center, reload your operating principles, and pick the direction you actually want. No accounts, no ads, no network required.
 
 [![Website](https://img.shields.io/badge/Website-Live-e8a06c?style=for-the-badge&logo=googlechrome&logoColor=white)](https://jukes31ryan.github.io/first-light/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
@@ -13,7 +13,7 @@ You knew what mattered yesterday. Then you slept, and this morning it's gone —
 not the facts, the *heading*. Instruments drift overnight and nobody hands you a
 correction.
 
-This is the correction. It takes about five minutes. Open it, tap through, get
+This is the correction. It takes about two minutes. Open it, tap through, get
 on with your life.
 
 The honest competition isn't another productivity app — it's picking up your
@@ -56,35 +56,28 @@ Screen matters there.
 
 ---
 
-## ☀️ The Morning Sequence
+## ☀️ The Wake-up — two minutes, not twenty
 
-**You build your own — after you've seen it.** Day one runs on sensible defaults
-so there is nothing to configure before you know what any of it is. Once you've
-been through a morning, the app offers to let you pick the modules, the order and
-the kind of quotes and fables you want. Say no and it never asks again; Settings
-keeps **Rebuild my morning** for whenever you change your mind.
+Your day starts when you wake up, whether that's 6am or 3pm. The default run is three steps:
 
-| Module | What happens |
-|--------|--------------|
-| **Spark** | A quote to carry into the day, with a written explanation |
-| **Story** | A full-length fable that ends on an earned takeaway |
-| **The Mini** | A crossword to switch the brain on — new puzzle daily, 7x7 at the weekend |
-| **Software** | One of your own reminders each morning, rotating through the set, so it gets read instead of skimmed |
-| **Breathe** | A 2/5/10-minute timer with a breathing circle and a soft chime |
-| **The Stretch** | Gentle mobility, guided on a timer, with a figure that shows the movement |
-| **Today** | Purge the clutter, set your Top 3, name the one **WIN** |
-| **Laugh** | A joke on the way out — dad jokes, deadpan, wordplay, anti-jokes and stand-up classics, with the punchline held for a tap |
+| Step | What happens |
+|------|--------------|
+| **Warm-up** | One thing to switch the brain on. It rotates by day: a quote, a joke, or a short story. "Something else" swaps it. |
+| **Software** | One of your own reminders, rotating through the set, so it gets read instead of skimmed |
+| **Today** | Purge the clutter, pick your Top 3, name the one **WIN** |
 
-The default order is brain first, planning once it's running, and out the door
-laughing — but it's yours to rearrange.
+Everything else (the crossword, breathing, stretch, and the full quote, joke and story screens) lives under **Extras** on the home screen, one tap away whenever you have the time. Rebuild the run any way you like in Settings.
 
-Then **Launch** recaps the day and ticks the streak.
+## 🔁 The loop
 
-Every step is skippable and they work in any order. Skipped ones flag gold on the dashboard so you can come back.
+* **Close the day** (called *Shift's end* on nights): did you hit the WIN, one thing you're grateful for, and **one line for when you wake up**. That line is waiting at the top of the home screen next time.
+* **Unfinished items carry forward** automatically, tagged with how old they are.
+* **Nights mode.** Settings → *When your day starts* → Nights starts each day at noon, so a 7am end-of-shift check-in counts toward the day that began at 3pm.
 
-## 🌙 The Evening Bookend
+## ⚓ Anchors and 📚 the Project Shelf
 
-Fifteen seconds at night closes the loop: did you hit your WIN, what are you grateful for, one win from today. Tomorrow morning, yesterday's gratitude is waiting for you.
+* **Anchors** are the fixed points of your day (`5:00pm | Workout | daily`, `7:00pm | Family meeting | Wed`). The home screen shows today's, with the next one highlighted.
+* **The Project Shelf** keeps everything you're building in one place: Building, Shipped, Parked. Home shows the next one to ship. A fourth project in progress goes on the shelf as Parked: finish one before you start another.
 
 ---
 
@@ -104,7 +97,7 @@ Fifteen seconds at night closes the loop: did you hit your WIN, what are you gra
 * **The three P's** — Purge (type it once), Prioritise (tap three), Put into action (tap one). Nothing is written twice, and unfinished items carry forward from whenever you last opened the app — not just from yesterday — tagged with how old they are.
 * **Built to touch** — springs on press, haptics, a real breathing circle, and a sunrise burst when you finish. All of it toggleable, and it respects reduced-motion.
 * **Zero network requests** — fonts embedded, everything local. It works the same in a tunnel as at your kitchen table.
-* **Two looks** — **Dawn**, oat paper and ink for daylight, and **Dusk** for the hours before sunrise. Set in Fraunces over Inter.
+* **Two looks** — **Sky**, dimmed blue with frosted-glass tiles, and **Night** for the dark. Set in Fraunces over Inter.
 * **Your software is yours** — reminders and quotes are edited in Settings, never in the code. Start from a ready-made set (**Operating rules**, eight rules that each name a situation and what to do in it, or a broader nine-card starter), pick from a library of 40 written cards, or write your own.
 * **Flavours** — tag what you want more of (Strategy, Stoic, Mindfulness, Poetry, Grit, Reflection) and the quotes and fables follow. A narrow pick widens itself rather than repeating on you.
 * **Export / import** — one tap dumps everything to a JSON file, and restores from one. Insurance against a cleared browser.
@@ -144,6 +137,7 @@ tests/run.sh nav joke    # just those suites
 | `joke` | The mix of kinds, tap-to-reveal punchlines, "a different kind", and the journal record |
 | `soft` | One reminder card a day, rotating through the set |
 | `crossword` | All 53 grids, every clue present and none that only make sense inside this app |
+| `v2` | The two-minute run, nights mode, anchors, the shelf, the wake-up note, and the one-offer-a-day rule |
 | `regress` | Content integrity, the modular order, carry-over across a gap, the journal, settings, flavours, the streak and grace day, the evening, and every screen in both themes |
 
 Screenshots land in `tests/out/`, which is ignored by git. Set `PORT`, or

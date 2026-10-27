@@ -1,16 +1,31 @@
 {
   "name": "Calibrate",
   "short_name": "Calibrate",
-  "description": "A personal morning launcher — a boot sequence for the brain.",
+  "description": "A launcher for the start of your day, whenever it starts — a boot sequence for the brain.",
   "start_url": ".",
   "scope": ".",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#1c1917",
-  "theme_color": "#1c1917",
+  "background_color": "#86add2",
+  "theme_color": "#86add2",
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
