@@ -686,6 +686,11 @@ min-height:44px;display:flex;align-items:center;text-decoration:underline;text-u
 <div class="win-list" id="winList"></div>
 </div>
 
+<div class="sect" id="listSect" style="display:none">
+<div class="sect-l"><span>Today&#8217;s list</span><span id="listCount"></span></div>
+<div class="items" id="todayList"></div>
+</div>
+
 <div class="sect" id="shelfSect" onclick="go(16)">
 <div class="sect-l"><span>Project shelf</span><span id="shelfCount"></span></div>
 <div class="shelf-sum disp" id="shelfSum"></div>
@@ -2536,9 +2541,13 @@ function syncDash(){
     if(!win&&fs.previousElementSibling&&fs.previousElementSibling.id!=='idx'){const seq=$('idx').parentNode;seq.parentNode.insertBefore(fs,seq.nextSibling)} }
   $('focusMark').textContent=(statusOf(6)==='done'||statusOf(18)==='done')?'Set':'';
   $('focusMark').style.color='var(--done)';
-  const rest3=t3.filter(x=>x!==win);       // the WIN is already the headline; don't list it twice
+  /* Picks that are live items show, checkable, in Today's list below; only
+     legacy text-only picks still need listing here. */
+  const liveTexts=liveItems().map(i=>i.text);
+  const rest3=t3.filter(x=>x!==win&&liveTexts.indexOf(x)<0);
   $('winList').innerHTML=rest3.map((x,i)=>'<div class="win-item"><i>'+(i+2)+'</i><span>'+esc(x)+'</span></div>').join('')+
     (DAY.fam?'<div class="win-item"><i>&#9829;</i><span>'+esc(DAY.fam)+'</span></div>':'');
+  paintTodayList();
 
   /* The sunrise band ends just under the call to action. It used to be anchored
      to the hero quote, which now sits far down the page — following it there
@@ -2752,7 +2761,7 @@ function renderJournal(){
   if(d.joke){const [jl,jw]=splitLine(d.joke);
     facts.push('<div class="jr-fact"><b>The laugh</b>'+esc(jl)+(jw?' \u2014 '+esc(jw):'')+'</div>')}
   if(d.cwSolved)facts.push('<div class="jr-fact"><b>The mini</b>Solved'+(d.cwTime?' in '+fmt(d.cwTime):'')+'</div>');
-  if(d.med)facts.push('<div class="jr-fact"><b>Breathe</b>You sat with it.</div>');
+  if(d.med)facts.push('<div class="jr-fact"><b>Breathe</b>'+(d.medMin?d.medMin+' min. ':'')+'You sat with it.</div>');
   if(facts.length)out.push(sect('The morning','',facts.join('')));
 
   if(out.length===1)out.push('<div class="jr-empty">Nothing was recorded for this day.</div>');
@@ -2951,7 +2960,9 @@ function medToggle(){
     if(medLeft<=0){medStopTimers();medRun=false;
       $('medCircle').classList.remove('inhale');
       $('medPhase').textContent='Complete';$('medBtn').textContent='Start';
-      chime();haptic([14,40,20]);DAY.med=true;saveDay()}},1000)}
+      chime();haptic([14,40,20]);DAY.med=true;
+      DAY.medMin=(DAY.medMin||0)+Math.round(medDur/60);saveDay();
+      $('medPhase').textContent='Complete — '+DAY.medMin+' min logged today'}},1000)}
 function medStopTimers(){clearInterval(medTimer);clearInterval(medBreath);clearTimeout(medPhaseT)}
 function medReset(){medStopTimers();medRun=false;medLeft=medDur;
   $('medTime').textContent=fmt(medLeft);$('medPhase').textContent='Press start when ready';
@@ -3037,6 +3048,27 @@ function toggleItemDone(id){
   it.done=!it.done;
   if(it.done){DAY.picks=ppPicks().filter(x=>x!==id);if(DAY.winId===id)DAY.winId=''}
   ppSetPicks(DAY.picks||[]);haptic(it.done?[12,24,14]:8);if(it.done)tick(720);ppPaint();
+}
+/* Purge lines become today's list: everything still open (except the WIN,
+   which already heads the page) lives on the home screen, so crossing one off
+   mid-day is one tap, not a trip back through the morning. */
+function paintTodayList(){
+  const box=$('todayList'),sect=$('listSect');if(!box||!sect)return;
+  const picks=ppPicks();
+  const open=liveItems().filter(i=>i.id!==DAY.winId)
+    .sort((a,b)=>{const x=picks.indexOf(a.id),y=picks.indexOf(b.id);return (x<0?9:x)-(y<0?9:y)});
+  const doneN=ppItems().filter(i=>i.done).length;
+  sect.style.display=(open.length||doneN)?'':'none';
+  $('listCount').textContent=open.length?(open.length+' open'+(doneN?', '+doneN+' done':'')):(doneN?'All done':'');
+  box.innerHTML='';
+  open.forEach(it=>{
+    const r=document.createElement('div');r.className='item';
+    r.innerHTML='<button class="item-check" aria-label="Mark done"><svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></button>'+
+      '<div class="item-t">'+esc(it.text)+'</div>'+
+      (picks.indexOf(it.id)>=0?'<span class="item-tag">Top 3</span>':(it.carried?'<span class="item-tag">'+esc(carriedAge(it.from))+'</span>':''));
+    r.querySelector('.item-check').onclick=e=>{e.stopPropagation();toggleItemDone(it.id);syncDash()};
+    box.appendChild(r);
+  });
 }
 function renderItems(){
   const box=$('itemList');box.innerHTML='';
