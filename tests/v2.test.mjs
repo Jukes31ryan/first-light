@@ -22,10 +22,10 @@ console.log('— a stranger gets the two-minute run —');
 {
   const p=await page({});
   const flow=await p.evaluate(()=>FLOW.slice());
-  chk('default run is warm-up, software, today',flow.join()==='15,5,6',flow.join());
+  chk('default run is warm-up, WIN, home team',flow.join()==='15,18,17',flow.join());
   chk('button says morning by default',/Start my morning/.test(await p.textContent('#beginBtn')));
   const ex=await p.$$eval('#extraChips button',bs=>bs.map(x=>x.textContent));
-  chk('everything else waits under Extras',ex.length===6,ex.join(', '));
+  chk('everything else waits under Extras',ex.length===8,ex.join(', '));
   await p.click('#beginBtn');
   chk('first step is the warm-up',await p.isVisible('#s15'));
   const h=await p.textContent('#warmH');
@@ -33,7 +33,7 @@ console.log('— a stranger gets the two-minute run —');
   await p.click('#warmSwitchBtn');await p.click('#warmSwitchBtn');await p.click('#warmSwitchBtn');
   chk('switching cycles back round',(await p.textContent('#warmH'))===h||true);
   await p.click('#s15 .btn-go');
-  chk('then your software',await p.isVisible('#s5'));
+  chk('then your WIN',await p.isVisible('#s18'));
   await p.close();
 }
 
@@ -90,7 +90,7 @@ console.log('\n— existing users are offered, not forced —');
   chk('old run kept',(await p.evaluate(()=>FLOW.join()))==='1,3,7,5,4,6,2');
   chk('offered the two-minute version',/two-minute/.test(await p.textContent('#nudge')));
   await p.click('#nudge .btn-sec');
-  chk('one tap switches',(await p.evaluate(()=>FLOW.join()))==='15,5,6');
+  chk('one tap switches',(await p.evaluate(()=>FLOW.join()))==='15,18,17');
   chk('and nothing else pops up today',(await p.evaluate(()=>currentNudge()))===null);
   await p.evaluate(()=>{localStorage.setItem('flNudgeDay','2000-01-01');syncDash()});
   chk('next day: offered nights',/Work nights/.test(await p.textContent('#nudge')));

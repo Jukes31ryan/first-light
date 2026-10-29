@@ -59,9 +59,9 @@ await boot({flSettings:{onboarded:true,flow:[6,2]}});
 chk('a two-module morning is honoured',await p.evaluate(()=>JSON.stringify(FLOW))==='[6,2]');
 chk('the count reflects it',(await p.textContent('#seqCount')).indexOf('/2')>0);
 await p.evaluate(()=>{go(6);mark(6,'done')});await p.waitForTimeout(250);
-chk('the last module hands off to Launch',
+chk('the last module finishes the day and lands home',
   await p.evaluate(async()=>{flowNext(2);await new Promise(r=>setTimeout(r,250));
-    return document.querySelector('.scr.on').id==='s8'}));
+    await new Promise(r=>setTimeout(r,800));return document.querySelector('.scr.on').id==='s0'}));
 await boot({flSettings:{onboarded:true,flow:[]}});
 chk('an empty flow falls back rather than shipping a blank app',
   await p.evaluate(()=>FLOW.length>0));

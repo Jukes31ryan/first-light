@@ -855,7 +855,7 @@ min-height:44px;display:flex;align-items:center;text-decoration:underline;text-u
 </div>
 
 <div class="stage" id="stage2" style="display:none">
-<div class="h1 disp">Prioritise</div>
+<div class="h1 disp">Prioritize</div>
 <div class="p">Of everything you just dumped, tap the three that actually matter today.</div>
 <div class="picks" id="pickChips"></div>
 <div class="p" id="pickCount" style="margin-top:22px;font-size:12px"></div>
@@ -1055,6 +1055,39 @@ min-height:44px;display:flex;align-items:center;text-decoration:underline;text-u
 <div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(15,'skip');flowNext(15)">Skip</button><button class="btn-go" onclick="mark(15,'done');flowNext(15)">Continue</button></div></div>
 </div>
 
+<!-- 18 WIN: one thing -->
+<div class="scr" id="s18">
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(18)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav18"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p18"></div><div class="prog-cap" id="cap18"></div>
+<div class="main">
+<div class="h1 disp">One thing.</div>
+<div class="p">If only one thing got done today, which one makes it a win?</div>
+<input class="input" id="winInput" placeholder="Today is a win if I&hellip;" autocomplete="off" enterkeyhint="next">
+<div class="lbl" id="winPickL" style="margin-top:20px">Or tap one already on your list</div>
+<div class="picks" id="winPick" style="flex-direction:column;align-items:stretch"></div>
+<div class="p" id="winNow" style="margin-top:18px;font-size:13px"></div>
+<div class="btn-row"><button class="btn-sec" onclick="go(6)">Head too full? Empty it first &#8594;</button></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(18,'skip');flowNext(18)">Skip</button><button class="btn-go" onclick="winDone()">Continue</button></div></div>
+</div>
+
+<!-- 17 FAMILY: one small touch -->
+<div class="scr" id="s17">
+<div class="nav"><button class="nav-btn nav-back" onclick="flowBack(17)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step" id="nav17"></div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
+<div class="prog" id="p17"></div><div class="prog-cap" id="cap17"></div>
+<div class="main">
+<div class="h1 disp">Home team.</div>
+<div class="p">One small thing for the people at home. Do it before you leave for work.</div>
+<div class="sheet" style="text-align:center;padding:26px 20px">
+<div class="lbl" id="famWho" style="margin-bottom:10px"></div>
+<div class="disp" id="famTxt" style="font-size:24px;line-height:1.25"></div>
+</div>
+<div class="btn-row"><button class="btn-sec" onclick="famAnother()">Another &#8635;</button></div>
+<div class="p" id="famNote" style="margin-top:14px;font-size:13px"></div>
+</div>
+<div class="foot"><div class="foot-row"><button class="btn-skip" onclick="mark(17,'skip');flowNext(17)">Later</button><button class="btn-go" onclick="famDone()">I&#8217;ll do it</button></div></div>
+</div>
+
 <!-- 16 PROJECT SHELF -->
 <div class="scr" id="s16">
 <div class="nav"><button class="nav-btn nav-back" onclick="go(0)" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg><span class="nav-lbl">Back</span></button><div class="nav-step">Project shelf</div><button class="nav-btn nav-home" onclick="go(0)" aria-label="Home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6.5 8 6.5"/><path d="M6 9.5V20h12V9.5"/></svg><span class="nav-lbl">Home</span></button></div>
@@ -1124,7 +1157,7 @@ const CARD_LIBRARY=[
 "Health | Drink the water. It's almost always the water.",
 "Health | Sleep is not a reward for finishing. It's the thing that lets you finish.",
 "Health | Go outside. Ten minutes changes the whole day.",
-"Relationships | Be the first to apologise. It costs less than being right.",
+"Relationships | Be the first to apologize. It costs less than being right.",
 "Relationships | Ask one real question and then be quiet.",
 "Relationships | People remember how you made them feel, not what you said.",
 "Relationships | Give more than you take. Keep no ledger.",
@@ -1274,7 +1307,7 @@ const DEF_QUOTES=[
 "You miss 100% of the shots you don't take. | Wayne Gretzky",
 "Hard choices, easy life. Easy choices, hard life. | Jerzy Gregorek",
 "Between stimulus and response there is a space. In that space is our power to choose our response. | Viktor Frankl",
-"A ship in harbour is safe, but that is not what ships are built for. | John A. Shedd",
+"A ship in harbor is safe, but that is not what ships are built for. | John A. Shedd",
 "Tell me and I forget. Teach me and I remember. Involve me and I learn. | Benjamin Franklin",
 
 /* --- Americans, Greeks, scientists and writers --- */
@@ -1321,7 +1354,7 @@ const DEF_QUOTES=[
 "Now that you don't have to be perfect, you can be good. | John Steinbeck",
 ];
 
-/* Flavour tags, so someone can ask for the kind of thing they want.
+/* Flavor tags, so someone can ask for the kind of thing they want.
    Keyed by text and title, exactly as the notes are. */
 const TAG_NAMES={strategy:"Strategy",stoic:"Stoic",mindful:"Mindfulness",poetry:"Poetry & wonder",grit:"Grit & action",reflect:"Reflection"};
 const QUOTE_TAGS={
@@ -1423,7 +1456,7 @@ const QUOTE_TAGS={
 "You miss 100% of the shots you don't take.":["grit"],
 "Hard choices, easy life. Easy choices, hard life.":["grit"],
 "Between stimulus and response there is a space. In that space is our power to choose our response.":["stoic","reflect"],
-"A ship in harbour is safe, but that is not what ships are built for.":["grit"],
+"A ship in harbor is safe, but that is not what ships are built for.":["grit"],
 "Tell me and I forget. Teach me and I remember. Involve me and I learn.":["reflect"],
 "Ask not what your country can do for you \u2014 ask what you can do for your country.":["grit"],
 "We choose to go to the Moon in this decade and do the other things, not because they are easy, but because they are hard.":["grit"],
@@ -1539,7 +1572,7 @@ const QUOTE_NOTES={
 "It isn't the mountains ahead to climb that wear you out; it's the pebble in your shoe.":{m:"Big challenges get respect, preparation and adrenaline. Small persistent irritations get tolerated for years, and they're what actually grind people down \u2014 precisely because each one seems too minor to stop and fix.",q:"What's the pebble you've been walking on for months?"},
 "Never let the future disturb you. You will meet it, if you have to, with the same weapons of reason which today arm you against the present.":{m:"The anxiety is about facing tomorrow *without* tomorrow's resources \u2014 but you'll arrive with everything you have now, plus whatever the intervening time teaches you. You are never as unequipped as the worry assumes.",q:"What future problem are you rehearsing with today's resources and today's fear?"},
 "The two most important days in your life are the day you are born and the day you find out why.":{m:"The second one is not guaranteed, which is the quiet threat in the sentence. It can arrive at nineteen or sixty, and it arrives from doing things, not from thinking about them.",q:"Have you had the second day yet \u2014 and if not, what would move it closer?"},
-"A goal is not always meant to be reached; it often serves simply as something to aim at.":{m:"Reframes a missed target as a functioning one. The aim organised your effort, corrected your direction and told you what to practise \u2014 all of which happened whether or not you arrived.",q:"Which goal has been useful to you even though you haven't reached it?"},
+"A goal is not always meant to be reached; it often serves simply as something to aim at.":{m:"Reframes a missed target as a functioning one. The aim organized your effort, corrected your direction and told you what to practise \u2014 all of which happened whether or not you arrived.",q:"Which goal has been useful to you even though you haven't reached it?"},
 "The beginning is the most important part of the work.":{m:"Plato is talking about how things are founded \u2014 the first assumptions set what everything afterwards can become. It applies to a day exactly as it applies to a state: the first hour writes the rules the rest obeys.",q:"What did the beginning of today already decide about the rest of it?"},
 "Courage is knowing what not to fear.":{m:"A definition by subtraction. Courage isn't the absence of fear or a surplus of nerve \u2014 it's accurate assessment. Most of what frightens people isn't dangerous, and mistaking one for the other wastes the nerve you'll actually need.",q:"What are you afraid of today that isn't actually dangerous?"},
 "The first and greatest victory is to conquer yourself.":{m:"Plato ranks it first because every other victory depends on it \u2014 you cannot govern a city, or a company, or a family, from inside an ungoverned mind. It's also the only fight with no spectators and no medal.",q:"What in you needs governing before anything outside you will hold?"},
@@ -1553,7 +1586,7 @@ const QUOTE_NOTES={
 "Life is like riding a bicycle. To keep your balance, you must keep moving.":{m:"From a letter to his son in 1930. The physics is honest \u2014 a bicycle is unstable at rest and stable in motion \u2014 and so is the analogy: some kinds of steadiness are only available while you're going somewhere.",q:"Where are you trying to find your balance while standing still?"},
 "It's not that I'm so smart, it's just that I stay with problems longer.":{m:"From the most famous mind of the century, and worth taking literally rather than as modesty. Most problems aren't solved by superior intelligence but by refusing to leave \u2014 and leaving early feels perfectly reasonable at the time.",q:"Which problem did you leave too early?"},
 "A person who never made a mistake never tried anything new.":{m:"The clean logical contrapositive: a spotless record is evidence of caution, not competence. Anyone with no failures to point at has been operating well inside what they already knew.",q:"What's your most recent real mistake \u2014 and if there isn't one, what does that say?"},
-"The first principle is that you must not fool yourself \u2014 and you are the easiest person to fool.":{m:"The closing line of his 1974 Caltech address on scientific integrity. The second clause is what makes it useful: self-deception isn't a character flaw you might have, it's the default condition, and it requires active defence.",q:"What have you decided is true because you'd prefer it to be?"},
+"The first principle is that you must not fool yourself \u2014 and you are the easiest person to fool.":{m:"The closing line of his 1974 Caltech address on scientific integrity. The second clause is what makes it useful: self-deception isn't a character flaw you might have, it's the default condition, and it requires active defense.",q:"What have you decided is true because you'd prefer it to be?"},
 "I would rather have questions that can't be answered than answers that can't be questioned.":{m:"A preference for live uncertainty over dead certainty. An unanswerable question keeps you working; an unquestionable answer stops you, and eventually stops being true without telling you.",q:"Which of your certainties haven't you allowed to be questioned in years?"},
 "Somewhere, something incredible is waiting to be known.":{m:"Sagan spent his life on the argument that wonder is a discipline rather than a mood. The sentence is aimed at the moment when the world starts feeling fully catalogued \u2014 which is always a failure of attention, never of the world.",q:"When did the world last surprise you, and when did you last let it?"},
 "Nothing in life is to be feared, it is only to be understood. Now is the time to understand more, so that we may fear less.":{m:"Written by a woman who worked with materials that eventually killed her, so she is not underestimating danger. The claim is about the *ratio* \u2014 that understanding is the only thing that reliably converts fear into something workable.",q:"What are you afraid of mostly because you haven't looked at it closely?"},
@@ -1591,20 +1624,20 @@ const QUOTE_NOTES={
 "You miss 100% of the shots you don't take.":{m:"The most quoted line in sport, and worth taking literally: the unattempted has a guaranteed outcome, while the attempted merely has odds. Gretzky scored more than anyone and also missed more than almost anyone.",q:"What shot are you not taking, and what's the actual cost of missing it?"},
 "Hard choices, easy life. Easy choices, hard life.":{m:"From a Polish weightlifting champion turned coach. Difficulty is conserved \u2014 you pay now in a hard conversation or a hard training block, or you pay later with interest. The choice isn't whether it's hard, only when.",q:"What hard choice are you deferring, and what's the interest rate on it?"},
 "Between stimulus and response there is a space. In that space is our power to choose our response.":{m:"Frankl survived three years in the camps and built a psychology on what he observed there: everything can be taken except the choice of attitude in a given set of circumstances. The space is small and real, and widening it is most of the work.",q:"How wide is your space today \u2014 and what usually narrows it?"},
-"A ship in harbour is safe, but that is not what ships are built for.":{m:"Safety is real and so is its cost: a purpose unfulfilled. The line doesn't pretend the sea isn't dangerous. It just points out that avoiding the danger entirely means being a thing that never does what it's for.",q:"Where are you in harbour at the moment?"},
+"A ship in harbor is safe, but that is not what ships are built for.":{m:"Safety is real and so is its cost: a purpose unfulfilled. The line doesn't pretend the sea isn't dangerous. It just points out that avoiding the danger entirely means being a thing that never does what it's for.",q:"Where are you in harbor at the moment?"},
 "Tell me and I forget. Teach me and I remember. Involve me and I learn.":{m:"A ladder of depth, and it applies to yourself as much as to teaching anyone else. You don't learn a thing by reading about it; you learn it by being implicated in it, with something at stake.",q:"What are you reading about that you should be doing instead?"},
 "Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.":{m:"The battle is decided before anyone draws a sword \u2014 by preparation, position, and picking fights you can actually win. The loser improvises under pressure and calls it courage. Sun Tzu wrote for generals in the Warring States period, where one bad campaign ended a dynasty, so \u201cwin first\u201d was literal accounting: count the ground, the supplies, the odds, and don't march if the numbers say no.",q:"Which of today's hard things have you already won on paper \u2014 and which are you planning to improvise?"},
 "In the midst of chaos, there is also opportunity.":{m:"Disorder isn't only a threat; it's the moment when positions come unfixed and things can actually move. When everything is settled, the advantage is locked up by whoever already holds it. Sun Tzu's read is unsentimental \u2014 chaos is a condition to be used, not merely survived.",q:"Where is something unsettled right now that you could actually move?"},
 "Opportunities multiply as they are seized.":{m:"Acting on one opening creates the next; chances compound rather than queueing up to wait for you. The corollary is harsher \u2014 an opportunity you skip doesn't just expire, it never produces the ones that would have followed it.",q:"What opening in front of you today would create another one by being taken?"},
 "He will win who knows when to fight and when not to fight.":{m:"Judgment about which battles to enter matters more than fighting well. Most losses come from engaging at the wrong moment, not from poor execution. Sun Tzu rates restraint as a weapon, not as caution.",q:"What are you about to engage with today that you'd be better off leaving alone?"},
 "The supreme art of war is to subdue the enemy without fighting.":{m:"The best outcome costs nothing, because the problem dissolves \u2014 you arranged things so the fight became unnecessary. Sun Tzu treats the fight itself as evidence of an earlier failure of positioning.",q:"Which conflict on your plate could be dissolved rather than won?"},
-"Do not act as your opponent expects. Move where he is not.":{m:"Predictability is the vulnerability. Advantage lives where nobody has prepared a defence, which usually means the unglamorous, unattended thing rather than the obvious frontal push.",q:"Where is the unattended ground in the problem you're stuck on?"},
+"Do not act as your opponent expects. Move where he is not.":{m:"Predictability is the vulnerability. Advantage lives where nobody has prepared a defense, which usually means the unglamorous, unattended thing rather than the obvious frontal push.",q:"Where is the unattended ground in the problem you're stuck on?"},
 "Think lightly of yourself and deeply of the world.":{m:"Hold your own importance loosely and give your full attention outward. Not self-hatred \u2014 self-forgetting, which is what lets you see clearly. Musashi wrote this near the end of his life, living in a cave, after some sixty duels he never lost. A man with every reason for ego concluded it was dead weight.",q:"Where is your attention on yourself today when it should be on the work?"},
 "Do nothing which is of no use.":{m:"The most brutally simple of Musashi's rules. Every action either serves the aim or dilutes it. This isn't about being busy \u2014 it's about removing motions that feel like effort and produce nothing.",q:"What will you do today purely out of habit that produces nothing?"},
 "Perceive that which cannot be seen with the eye.":{m:"Read the situation underneath the visible one \u2014 intent, rhythm, what someone isn't saying. In a duel the visible sword is the least useful information. Musashi trained perception as a skill rather than treating it as a gift.",q:"In the conversation you're dreading today, what's actually going on underneath it?"},
 "You must understand that there is more than one path to the top of the mountain.":{m:"The goal is fixed; the route isn't. People fail by fusing the two \u2014 deciding an aim is impossible when really one approach failed. Musashi worked across painting, calligraphy and sculpture and treated them all as the same study.",q:"Which blocked route have you mistaken for a blocked goal?"},
 "Today is victory over yourself of yesterday; tomorrow is your victory over lesser men.":{m:"The only opponent that counts is who you were. Comparison with other people is noise \u2014 either flattering or crushing, and useless either way. Musashi's ladder puts self-improvement first and superiority over others a distant second.",q:"What did yesterday's version of you do that today's doesn't have to?"},
-"Get beyond love and grief: exist for the good of man.":{m:"Not a rejection of feeling, but of being governed by it. Musashi argues for a life organised around usefulness rather than around the swings of your own emotional weather \u2014 steadiness as a service to other people.",q:"What would you do today if your mood weren't a factor in the decision?"},
+"Get beyond love and grief: exist for the good of man.":{m:"Not a rejection of feeling, but of being governed by it. Musashi argues for a life organized around usefulness rather than around the swings of your own emotional weather \u2014 steadiness as a service to other people.",q:"What would you do today if your mood weren't a factor in the decision?"},
 "You have power over your mind \u2014 not outside events. Realize this, and you will find strength.":{m:"The load-bearing idea of Stoicism: split the world into what you control \u2014 your judgment, your response \u2014 and what you don't, then spend your energy only on the first. Marcus wrote this to himself at night, in a tent on the Danube frontier, while running an empire and losing children to plague. It was maintenance, not theory.",q:"What are you carrying today that was never actually yours to carry?"},
 "The impediment to action advances action. What stands in the way becomes the way.":{m:"The obstacle isn't in the way of the work; handled properly it becomes the work. A blocked road forces a better route; a difficult person teaches a patience you couldn't get otherwise. Marcus is describing a conversion, not a consolation.",q:"What's blocking you today, and what would it teach if you stopped resenting it?"},
 "Waste no more time arguing what a good man should be. Be one.":{m:"The debate is a sophisticated form of avoidance \u2014 you can spend a life refining a definition of virtue and never practise any of it. Marcus wrote it as a rebuke to himself, a philosopher-king with every excuse to theorise instead.",q:"What have you been deciding about instead of doing?"},
@@ -1683,7 +1716,7 @@ const STORY_NOTES={
 "The Milkmaid's Pail":{m:"The toss of the head is the detail that makes this more than a warning about optimism. She doesn't fail through bad luck \u2014 she fails because she began physically acting out a future that didn't exist yet, and the acting-out is what cost her the present. Planning is fine right up until it starts moving your body.",q:"What imagined outcome are you already behaving as though you have?"},
 "The Lion and the Mouse":{m:"The story is usually read as a lesson about kindness returning, but the sharper half is the lion's error of scale. He spares the mouse because the offer is absurd, and the offer was absurd only under his own assumptions about what strength is. Rope needs teeth, not power, and he had no way to know that in advance.",q:"Who have you been discounting because they can't obviously help you?"},
 "The Bundle of Sticks":{m:"The demonstration is physical because the argument isn't persuasive: the sons had presumably been told to get along a thousand times. What changes is that they feel the resistance in their own arms. The sticks themselves are identical in both halves; only the binding differs, which is a statement about what a family actually is.",q:"Who is in your bundle, and what have you done lately to hold it together?"},
-"Stone Soup":{m:"Nobody is really deceived \u2014 the soldiers never claim the stone has flavour, they just create a container and let contribution become visible. Each villager was willing to give one thing and unwilling to give everything, and the trick is that no one had ever asked for one thing before.",q:"What could you start today that would make it easy for other people to add to it?"},
+"Stone Soup":{m:"Nobody is really deceived \u2014 the soldiers never claim the stone has flavor, they just create a container and let contribution become visible. Each villager was willing to give one thing and unwilling to give everything, and the trick is that no one had ever asked for one thing before.",q:"What could you start today that would make it easy for other people to add to it?"},
 "The Two Wolves":{m:"The word doing the work is feed \u2014 not choose, not defeat. Neither wolf is ever killed and the fight doesn't end; the outcome is settled by a long accumulation of small feedings, most of them unremarkable. That's a more demanding claim than it first sounds, because it puts the decision in every hour rather than in one act of will.",q:"Which wolf have you been feeding this week, and what have you been feeding it with?"},
 "The Starfish":{m:"The man's objection is arithmetically correct, and the story doesn't refute it \u2014 it changes the unit of measurement. He's counting the beach; she's counting the starfish in her hand. Scale-paralysis nearly always comes from choosing the first denominator, and the second one is equally true.",q:"What have you not started because the whole beach is impossible?"},
 "The Boulder in the Road":{m:"Everyone who went around was right that it wasn't their job \u2014 the story concedes that, and it doesn't matter. The merchant, the courtier and the soldiers all had more resources than the peasant; what they lacked was the assumption that it was theirs to fix. Ownership is the scarce thing, not capability.",q:"What obstacle have you been going around because it isn't technically yours?"},
@@ -1703,7 +1736,7 @@ const STORY_NOTES={
 "Knowing Where to Tap":{m:"The invoice is the whole story. The market pays for the tap, but the value was the decades that told him where. Experienced people routinely undercharge \u2014 for money, for credit, for their own sense of worth \u2014 because the visible work looks small.",q:"What do you do quickly that took you years to learn to do quickly?"},
 "Salt in the Water":{m:"The master doesn't reduce the apprentice's pain or argue that it's unjustified. He changes the container. That's the honest version of perspective \u2014 not pretending the salt isn't there, but refusing to stay a glass.",q:"What's the salt today, and what would enlarge the container?"},
 "The Strawberry":{m:"The tigers don't leave. There's no rescue in this story and no lesson about escaping \u2014 the vine is still being gnawed at the end. The only move available is attention, and he spends it on the one good thing within reach.",q:"What's the strawberry today, and will you actually taste it?"},
-"Diogenes and the Emperor":{m:"Alexander could offer anything, which means he had leverage over everyone \u2014 except a man who wanted nothing. That's why Alexander's line at the end isn't a joke. He recognised the one person in the empire he couldn't buy.",q:"What do you want badly enough that it gives someone else leverage over you?"},
+"Diogenes and the Emperor":{m:"Alexander could offer anything, which means he had leverage over everyone \u2014 except a man who wanted nothing. That's why Alexander's line at the end isn't a joke. He recognized the one person in the empire he couldn't buy.",q:"What do you want badly enough that it gives someone else leverage over you?"},
 "The Jar of Rocks":{m:"The demonstration only works in one order, and that's the entire teaching. It isn't about doing more; it's about sequence. Sand is not the enemy \u2014 sand poured first is. Your Top 3 exists to be the rocks.",q:"Did the rocks go in first this morning, or are you already pouring sand?"},
 "The Two Arrows":{m:"The first arrow is honest pain and needs no defending. The second is the story you tell about it \u2014 what it means about you, why it always happens to you. Worth noticing that the second is the one that keeps you awake.",q:"What second arrow are you loading right now?"},
 "The Trouble Tree":{m:"The carpenter doesn't suppress the bad day or pretend it away \u2014 he gives it a place and a time that isn't his kitchen. The detail that makes the story true is the last one: the troubles shrink overnight, unattended.",q:"Where does your bad day currently get put down \u2014 and who absorbs it if it doesn't?"},
@@ -1712,7 +1745,7 @@ const STORY_NOTES={
 "This Too Shall Pass":{m:"The ring works in both directions, and the humbling half is the one people forget. In the good stretch it stops you building a life on weather; in the bad one it's the only handhold. Same six words, opposite jobs.",q:"Which direction do you need it pointing this morning?"},
 "Sharpening the Axe":{m:"The young man's error isn't laziness, it's that his effort was visible and continuous, which felt like virtue. The older man's rest was indistinguishable from slacking right up until the count. Recovery only looks like waste from outside.",q:"What's your axe, and when did you last stop long enough to sharpen it?"},
 "The Farmer's Horse":{m:"Four times the village is certain, and four times they're early. The farmer isn't being wise or detached \u2014 he's being accurate. He genuinely doesn't know yet, and neither do they, and neither do you about this week.",q:"What did you judge too quickly this week that hasn't finished happening?"},
-"The Cracked Pot":{m:"The bearer knew about the crack the whole time and planted around it. He didn't fix the flaw or forgive it \u2014 he built a use for it. Two years of shame over something that was already accounted for.",q:"What do you keep apologising for that the people around you have long since planned around?"},
+"The Cracked Pot":{m:"The bearer knew about the crack the whole time and planted around it. He didn't fix the flaw or forgive it \u2014 he built a use for it. Two years of shame over something that was already accounted for.",q:"What do you keep apologizing for that the people around you have long since planned around?"},
 "Two Rabbits":{m:"The story refuses you a twist on purpose. There's no clever resolution where the hunter gets both, because there isn't one. He runs as hard as the man who eats and goes home hungry anyway.",q:"Which rabbit are you actually chasing today \u2014 and what's the second one you haven't admitted to?"}
 };
 
@@ -1735,7 +1768,7 @@ const JOKES=[
 {"k": "dad", "q": "I'd tell you a joke about construction.", "a": "But I'm still working on it."},
 {"k": "dad", "q": "What do you call a dinosaur with a huge vocabulary?", "a": "A thesaurus."},
 {"k": "dad", "q": "Why did the bicycle fall over?", "a": "It was two tired."},
-{"k": "dad", "q": "How do you organise a space party?", "a": "You planet."},
+{"k": "dad", "q": "How do you organize a space party?", "a": "You planet."},
 {"k": "dad", "q": "What's the best thing about Switzerland?", "a": "I don't know, but the flag is a big plus."},
 {"k": "dad", "q": "Did you get a haircut?", "a": "No, I got them all cut."},
 {"k": "dad", "q": "I'm worried about the calendar.", "a": "Its days are numbered."},
@@ -1803,10 +1836,10 @@ const JOKES=[
 {"k": "life", "a": "My back goes out more than I do."},
 {"k": "life", "a": "My email inbox is a to-do list that other people write for me."},
 {"k": "life", "a": "The fastest way to find something you've lost is to buy a replacement."},
-{"k": "life", "a": "Nothing ruins a Friday like realising it's Tuesday."},
+{"k": "life", "a": "Nothing ruins a Friday like realizing it's Tuesday."},
 {"k": "life", "a": "I got a week's worth of cardio walking into a spider web."},
 {"k": "life", "a": "Adulthood is mostly saying \"after this week it'll calm down\" until you die."},
-{"k": "life", "a": "I know the name of the woman who delivers my packages, but not my neighbour's."},
+{"k": "life", "a": "I know the name of the woman who delivers my packages, but not my neighbor's."},
 {"k": "life", "a": "I tried to become a morning person once. It didn't take."},
 {"k": "life", "a": "The only running I do is running late."},
 {"k": "life", "a": "My pillow gives me a new hairstyle every morning, free of charge."},
@@ -1840,17 +1873,17 @@ const JOKES=[
 {"k": "pro", "a": "Best way to get rid of kitchen odours: eat out.", "by": "Phyllis Diller"},
 {"k": "pro", "a": "Cleaning your house while your kids are still growing is like shovelling the walk before it stops snowing.", "by": "Phyllis Diller"},
 {"k": "pro", "a": "Never go to a doctor whose office plants have died.", "by": "Erma Bombeck"},
-{"k": "pro", "a": "I always wanted to be somebody, but now I realise I should have been more specific.", "by": "Lily Tomlin"},
-{"k": "pro", "a": "I used to think the brain was the most wonderful organ in my body. Then I realised who was telling me this.", "by": "Emo Philips"},
+{"k": "pro", "a": "I always wanted to be somebody, but now I realize I should have been more specific.", "by": "Lily Tomlin"},
+{"k": "pro", "a": "I used to think the brain was the most wonderful organ in my body. Then I realized who was telling me this.", "by": "Emo Philips"},
 {"k": "pro", "a": "As a kid I was made to walk the plank. We couldn't afford a dog.", "by": "Gary Delaney"},
 {"k": "pro", "a": "I was going to buy a book on phobias, but I was afraid it wouldn't help me.", "by": "Tim Vine"},
 {"k": "pro", "a": "Velcro. What a rip-off.", "by": "Tim Vine"},
 {"k": "pro", "a": "Exit signs. They're on the way out.", "by": "Tim Vine"},
 {"k": "pro", "a": "If you ever drop your keys into a river of molten lava, let 'em go, because man, they're gone.", "by": "Jack Handey"},
-{"k": "pro", "a": "Before you criticise someone, walk a mile in their shoes. That way, when you criticise them, you're a mile away and you have their shoes.", "by": "Jack Handey"},
+{"k": "pro", "a": "Before you criticize someone, walk a mile in their shoes. That way, when you criticize them, you're a mile away and you have their shoes.", "by": "Jack Handey"},
 {"k": "pro", "a": "I hope life isn't a big joke, because I don't get it.", "by": "Jack Handey"},
 {"k": "pro", "a": "I'm not superstitious. I'm just a little stitious.", "by": "Michael Scott, The Office"},
-{"k": "pro", "a": "I have a lot of growing up to do. I realised that the other day inside my fort.", "by": "Zach Galifianakis"}
+{"k": "pro", "a": "I have a lot of growing up to do. I realized that the other day inside my fort.", "by": "Zach Galifianakis"}
 ];
 
 const STORIES=[
@@ -1927,7 +1960,7 @@ s:"There is an old hunting proverb short enough to carve on the handle of a knif
 m:"Pick the one rabbit. That is precisely why today has exactly one WIN and not five."},
 
 {t:"Is That So?",r:"1 min read",
-s:"A Zen master named Hakuin lived in a village where he was respected by everyone. People came to him for advice and left calmer than they arrived.\n\nOne day a girl in the village became pregnant. Her furious parents demanded to know the father's name. She would not say. Pressed for weeks, frightened, she finally named Hakuin.\n\nThe parents went to him in a rage and accused him in front of the whole village.\n\n\u201cIs that so?\u201d was all he said.\n\nHis reputation was gone by nightfall. People who had trusted him for twenty years stopped coming. When the baby was born, the parents brought the infant to Hakuin and left it with him. He took the child in. He begged milk from the neighbours who now despised him, and food, and clothing. Some spat. He raised the child anyway, through a year of it.\n\nAfter that year, the girl could not stand it any longer. She told her parents the truth: the father was a young man who worked at the fish market.\n\nHer parents went straight to Hakuin, prostrated themselves, apologised at great length, begged his forgiveness, and asked for the child back.\n\nHakuin handed the baby over gently and made sure the blanket was tucked in.\n\n\u201cIs that so?\u201d he said.",
+s:"A Zen master named Hakuin lived in a village where he was respected by everyone. People came to him for advice and left calmer than they arrived.\n\nOne day a girl in the village became pregnant. Her furious parents demanded to know the father's name. She would not say. Pressed for weeks, frightened, she finally named Hakuin.\n\nThe parents went to him in a rage and accused him in front of the whole village.\n\n\u201cIs that so?\u201d was all he said.\n\nHis reputation was gone by nightfall. People who had trusted him for twenty years stopped coming. When the baby was born, the parents brought the infant to Hakuin and left it with him. He took the child in. He begged milk from the neighbors who now despised him, and food, and clothing. Some spat. He raised the child anyway, through a year of it.\n\nAfter that year, the girl could not stand it any longer. She told her parents the truth: the father was a young man who worked at the fish market.\n\nHer parents went straight to Hakuin, prostrated themselves, apologized at great length, begged his forgiveness, and asked for the child back.\n\nHakuin handed the baby over gently and made sure the blanket was tucked in.\n\n\u201cIs that so?\u201d he said.",
 m:"Your reputation is other people's business. Your conduct is yours. Hold the first loosely enough that it cannot make you abandon the second."},
 
 {t:"The Gift of Insults",r:"1 min read",
@@ -1939,7 +1972,7 @@ s:"A man was crossing a river in his small boat when he saw another boat coming 
 m:"Most of what happens to you today will be an empty boat. The traffic, the delay, the short reply. Nobody is steering it at you."},
 
 {t:"The Useless Tree",r:"45 sec read",
-s:"A carpenter travelling with his apprentice passed an enormous oak beside a village shrine. It was old enough that a hundred men could not have circled it. Its shade could cover a herd of oxen.\n\nThe apprentice stopped and stared. He had never seen timber like it. But his master walked straight past without slowing.\n\n\u201cSince I took up my axe,\u201d the apprentice said, catching up, \u201cI have never seen a tree like that. Why won't you even look at it?\u201d\n\n\u201cIt is worthless,\u201d the carpenter said. \u201cMake a boat of it and the boat sinks. Make a coffin and it rots at once. Make a door and it weeps sap. Make a pillar and the worms take it. It is a tree of no quality. That is why it has lived so long.\u201d\n\nThat night the oak appeared to the carpenter in a dream.\n\n\u201cWhat are you comparing me to?\u201d it asked. \u201cThe pear, the orange, the useful fruiting trees? They are torn apart the moment their fruit is ripe. Their branches are broken, their limbs stripped. Their own usefulness makes their lives miserable, and they do not last out their natural years.\n\n\u201cI have spent a long time learning to be of no use. And now, old as I am, it is of great use \u2014 to me. If I had been useful, would I ever have grown this large?\u201d",
+s:"A carpenter traveling with his apprentice passed an enormous oak beside a village shrine. It was old enough that a hundred men could not have circled it. Its shade could cover a herd of oxen.\n\nThe apprentice stopped and stared. He had never seen timber like it. But his master walked straight past without slowing.\n\n\u201cSince I took up my axe,\u201d the apprentice said, catching up, \u201cI have never seen a tree like that. Why won't you even look at it?\u201d\n\n\u201cIt is worthless,\u201d the carpenter said. \u201cMake a boat of it and the boat sinks. Make a coffin and it rots at once. Make a door and it weeps sap. Make a pillar and the worms take it. It is a tree of no quality. That is why it has lived so long.\u201d\n\nThat night the oak appeared to the carpenter in a dream.\n\n\u201cWhat are you comparing me to?\u201d it asked. \u201cThe pear, the orange, the useful fruiting trees? They are torn apart the moment their fruit is ripe. Their branches are broken, their limbs stripped. Their own usefulness makes their lives miserable, and they do not last out their natural years.\n\n\u201cI have spent a long time learning to be of no use. And now, old as I am, it is of great use \u2014 to me. If I had been useful, would I ever have grown this large?\u201d",
 m:"Not everything about you has to be productive. The parts of your life with no obvious use are often what let the rest of it stand."},
 
 {t:"The Monkey's Fist",r:"45 sec read",
@@ -1951,7 +1984,7 @@ s:"A king in an old Indian story grew tired of his scholars arguing about the na
 m:"The person disagreeing with you today may be reporting the tail honestly. Ask what they are touching before you decide they are wrong."},
 
 {t:"Nasrudin's Key",r:"30 sec read",
-s:"A neighbour came upon Nasrudin on his hands and knees under a streetlamp, sweeping his palms across the dust.\n\n\u201cWhat have you lost, Mulla?\u201d\n\n\u201cMy key,\u201d said Nasrudin. \u201cI've dropped my key.\u201d\n\nSo the neighbour got down beside him, and the two of them searched the circle of light. They went over it once, then again, more carefully. Nothing. Other neighbours came out and joined in. Soon half the street was on its knees under the lamp.\n\nAfter an hour someone finally asked the obvious question.\n\n\u201cMulla \u2014 where exactly were you when you dropped it?\u201d\n\n\u201cIn my house,\u201d said Nasrudin.\n\n\u201cThen why on earth are we looking here?\u201d\n\n\u201cThere is more light here.\u201d",
+s:"A neighbor came upon Nasrudin on his hands and knees under a streetlamp, sweeping his palms across the dust.\n\n\u201cWhat have you lost, Mulla?\u201d\n\n\u201cMy key,\u201d said Nasrudin. \u201cI've dropped my key.\u201d\n\nSo the neighbor got down beside him, and the two of them searched the circle of light. They went over it once, then again, more carefully. Nothing. Other neighbors came out and joined in. Soon half the street was on its knees under the lamp.\n\nAfter an hour someone finally asked the obvious question.\n\n\u201cMulla \u2014 where exactly were you when you dropped it?\u201d\n\n\u201cIn my house,\u201d said Nasrudin.\n\n\u201cThen why on earth are we looking here?\u201d\n\n\u201cThere is more light here.\u201d",
 m:"Notice where you're searching. Comfortable ground is not the same as the right ground, and an hour spent on the wrong one is still an hour."},
 
 {t:"The Smuggler",r:"30 sec read",
@@ -1975,7 +2008,7 @@ s:"Odysseus knew what was coming. The witch Circe had warned him: the ship's rou
 m:"Decide now, while you're clear-headed, what future-you isn't allowed to renegotiate. Then make it hard to undo."},
 
 {t:"The Choice of Heracles",r:"1 min read",
-s:"The story is Prodicus's, told by Xenophon, and it finds Heracles as a young man at the age when a life starts to take shape.\n\nHe went out alone to a quiet place to think about which way to go, and while he sat there, two women came to him.\n\nThe first was striking and heavily made up, dressed to be looked at, and she kept glancing at her own shadow to check the effect. She got there first and spoke quickly.\n\n\u201cHeracles, I see you can't decide. Come with me and I'll take you by the easiest road. You'll taste every pleasure and never touch a hardship. You won't think about wars or business. You'll think about what you'd like to eat and drink, what would be pleasant to see and hear and smell and touch, which company would delight you most, and how you might sleep most softly and get all of it with the least effort.\u201d\n\n\u201cWhat is your name?\u201d\n\n\u201cMy friends call me Happiness,\u201d she said. \u201cMy enemies call me Vice.\u201d\n\nThe second woman came forward then. She was plainly dressed and her expression was steady.\n\n\u201cI come to you too, Heracles, and I will not deceive you with promises of pleasure. I will tell you the truth of how the gods have ordered things.\n\n\u201cOf all that is good and fair, the gods give nothing to men without effort and labour. If you want the favour of the gods, worship them. If you want to be loved by your friends, do good to them. If you want a city to honour you, be of service to it. If you want the earth to yield you fruit, you must farm it. If you want a body that obeys you, you must train it, and train it with sweat.\u201d\n\nHer name was Virtue. Heracles went with her.",
+s:"The story is Prodicus's, told by Xenophon, and it finds Heracles as a young man at the age when a life starts to take shape.\n\nHe went out alone to a quiet place to think about which way to go, and while he sat there, two women came to him.\n\nThe first was striking and heavily made up, dressed to be looked at, and she kept glancing at her own shadow to check the effect. She got there first and spoke quickly.\n\n\u201cHeracles, I see you can't decide. Come with me and I'll take you by the easiest road. You'll taste every pleasure and never touch a hardship. You won't think about wars or business. You'll think about what you'd like to eat and drink, what would be pleasant to see and hear and smell and touch, which company would delight you most, and how you might sleep most softly and get all of it with the least effort.\u201d\n\n\u201cWhat is your name?\u201d\n\n\u201cMy friends call me Happiness,\u201d she said. \u201cMy enemies call me Vice.\u201d\n\nThe second woman came forward then. She was plainly dressed and her expression was steady.\n\n\u201cI come to you too, Heracles, and I will not deceive you with promises of pleasure. I will tell you the truth of how the gods have ordered things.\n\n\u201cOf all that is good and fair, the gods give nothing to men without effort and labor. If you want the favor of the gods, worship them. If you want to be loved by your friends, do good to them. If you want a city to honor you, be of service to it. If you want the earth to yield you fruit, you must farm it. If you want a body that obeys you, you must train it, and train it with sweat.\u201d\n\nHer name was Virtue. Heracles went with her.",
 m:"The easy road advertises itself and gets there first. The other one tells you the price up front, which is how you know it's honest."},
 
 {t:"The Crow and the Pitcher",r:"30 sec read",
@@ -1987,7 +2020,7 @@ s:"A cottager and his wife had a goose that laid a golden egg every morning.\n\n
 m:"Whatever produces value for you \u2014 a relationship, your sleep, your attention \u2014 you can strip-mine it once or harvest it for years. Choose today."},
 
 {t:"The North Wind and the Sun",r:"30 sec read",
-s:"The North Wind and the Sun had an argument about which of them was stronger, and it went on long enough that they decided to settle it.\n\nA traveller was coming along the road below, wrapped in a heavy cloak. They agreed that whichever of them could make him take the cloak off would be judged the more powerful.\n\nThe North Wind went first. He gathered himself and blew \u2014 a hard, cold, tearing blast, the kind that strips leaves off trees. The traveller staggered.\n\nAnd he pulled his cloak tighter.\n\nThe Wind blew harder. He howled. He drove rain sideways into the man's face. The traveller bent forward, gripped the cloak with both hands, and wrapped it closer around himself than before. In the end the Wind gave up, exhausted, having achieved precisely the opposite of what he intended.\n\nThen the Sun came out from behind the clouds. He did nothing dramatic. He simply shone, mildly at first, and then with a gentle steady warmth.\n\nThe traveller straightened up. After a few minutes he loosened the cloak at his throat. A little further on he took it off entirely and carried it over his arm.",
+s:"The North Wind and the Sun had an argument about which of them was stronger, and it went on long enough that they decided to settle it.\n\nA traveler was coming along the road below, wrapped in a heavy cloak. They agreed that whichever of them could make him take the cloak off would be judged the more powerful.\n\nThe North Wind went first. He gathered himself and blew \u2014 a hard, cold, tearing blast, the kind that strips leaves off trees. The traveler staggered.\n\nAnd he pulled his cloak tighter.\n\nThe Wind blew harder. He howled. He drove rain sideways into the man's face. The traveler bent forward, gripped the cloak with both hands, and wrapped it closer around himself than before. In the end the Wind gave up, exhausted, having achieved precisely the opposite of what he intended.\n\nThen the Sun came out from behind the clouds. He did nothing dramatic. He simply shone, mildly at first, and then with a gentle steady warmth.\n\nThe traveler straightened up. After a few minutes he loosened the cloak at his throat. A little further on he took it off entirely and carried it over his arm.",
 m:"Force makes people grip tighter. If you need someone to open up today, be warmth, not wind."},
 
 {t:"The Milkmaid's Pail",r:"30 sec read",
@@ -1995,7 +2028,7 @@ s:"A farmer's daughter was carrying a pail of milk on her head, walking the long
 m:"The plan is not the milk. Get today's actual pail to market before you spend what it might become."},
 
 {t:"The Lion and the Mouse",r:"30 sec read",
-s:"A lion was asleep in the sun when a mouse ran across his face and woke him.\n\nHe pinned it under one paw and opened his mouth. The mouse begged: it had not meant to, it would never do it again, and if the lion spared it, perhaps one day it might repay the kindness.\n\nThe idea that a mouse could ever do anything for a lion was so funny that he let it go.\n\nSome weeks later, hunters caught the lion in a net of heavy rope and lashed it to a tree while they went to fetch a wagon to carry him alive to the king. He roared until the forest rang, and the ropes did not give at all.\n\nThe mouse heard him, and came, and recognised the voice.\n\nIt began to gnaw. It worked at one rope until the strands parted, then the next, then the next, taking hours, until the net came apart and the lion stepped free.\n\n\u201cYou laughed when I said I might repay you,\u201d said the mouse. \u201cNow you know that even a mouse can help a lion.\u201d",
+s:"A lion was asleep in the sun when a mouse ran across his face and woke him.\n\nHe pinned it under one paw and opened his mouth. The mouse begged: it had not meant to, it would never do it again, and if the lion spared it, perhaps one day it might repay the kindness.\n\nThe idea that a mouse could ever do anything for a lion was so funny that he let it go.\n\nSome weeks later, hunters caught the lion in a net of heavy rope and lashed it to a tree while they went to fetch a wagon to carry him alive to the king. He roared until the forest rang, and the ropes did not give at all.\n\nThe mouse heard him, and came, and recognized the voice.\n\nIt began to gnaw. It worked at one rope until the strands parted, then the next, then the next, taking hours, until the net came apart and the lion stepped free.\n\n\u201cYou laughed when I said I might repay you,\u201d said the mouse. \u201cNow you know that even a mouse can help a lion.\u201d",
 m:"The person who can't do anything for you today may be the only one who can do something for you later. Also: be kind anyway."},
 
 {t:"The Bundle of Sticks",r:"30 sec read",
@@ -2019,11 +2052,11 @@ s:"A king had a boulder placed in the middle of the main road into his city, and
 m:"Every obstacle carries a purse under it. Most people go around and complain, which is why the purse is still there."},
 
 {t:"The Donkey in the Well",r:"45 sec read",
-s:"A farmer's donkey fell down a well. The animal cried piteously for hours while the farmer tried to figure out what to do.\n\nFinally he decided the donkey was old, and the well needed covering up anyway, and it wasn't worth the trouble to retrieve him. He invited his neighbours to come and help. They all grabbed shovels and began to shovel dirt into the well.\n\nAt first, the donkey realised what was happening and cried horribly. Then, to everyone's amazement, he quieted down.\n\nA few shovel loads later, the farmer looked down the well and was astonished at what he saw.\n\nWith every shovel of dirt that hit his back, the donkey was doing something remarkable. He would shake it off and take a step up.\n\nAs the farmer's neighbours continued to shovel dirt on top of the animal, he would shake it off and take a step up. Shake it off and step up. Shake it off and step up.\n\nPretty soon, everyone was astonished as the donkey stepped up over the edge of the well and trotted off.",
+s:"A farmer's donkey fell down a well. The animal cried piteously for hours while the farmer tried to figure out what to do.\n\nFinally he decided the donkey was old, and the well needed covering up anyway, and it wasn't worth the trouble to retrieve him. He invited his neighbors to come and help. They all grabbed shovels and began to shovel dirt into the well.\n\nAt first, the donkey realized what was happening and cried horribly. Then, to everyone's amazement, he quieted down.\n\nA few shovel loads later, the farmer looked down the well and was astonished at what he saw.\n\nWith every shovel of dirt that hit his back, the donkey was doing something remarkable. He would shake it off and take a step up.\n\nAs the farmer's neighbors continued to shovel dirt on top of the animal, he would shake it off and take a step up. Shake it off and step up. Shake it off and step up.\n\nPretty soon, everyone was astonished as the donkey stepped up over the edge of the well and trotted off.",
 m:"The dirt that's being thrown at you is also a floor, if you keep shaking it off and stepping up."},
 
 {t:"The Chinese Bamboo",r:"45 sec read",
-s:"You plant the seed of a Moso bamboo, and then you water it.\n\nThe first year, nothing happens. Not a shoot, not a green tip, nothing above the soil at all. You water it and weed around it and fertilise it, and at the end of twelve months the ground looks exactly as it did on the day you planted.\n\nThe second year, the same. Nothing.\n\nThe third year, nothing. The fourth year, nothing. Four years of watering bare earth, of a neighbour asking what exactly you're growing there, of a reasonable person concluding that the seed was dead and the effort has been wasted. Anyone would stop. Most people do.\n\nIn the fifth year, the bamboo breaks the surface \u2014 and grows something like eighty feet in six weeks.\n\nThe question people ask is whether it grew eighty feet in six weeks or in five years, and the answer is not really a riddle. All through those silent years it was building a root system, deep and wide enough to support the height that was coming. Without the roots, the stalk would have gone up a few feet and fallen over.\n\nThe growth was never absent. It was underground, which is not the same thing.",
+s:"You plant the seed of a Moso bamboo, and then you water it.\n\nThe first year, nothing happens. Not a shoot, not a green tip, nothing above the soil at all. You water it and weed around it and fertilise it, and at the end of twelve months the ground looks exactly as it did on the day you planted.\n\nThe second year, the same. Nothing.\n\nThe third year, nothing. The fourth year, nothing. Four years of watering bare earth, of a neighbor asking what exactly you're growing there, of a reasonable person concluding that the seed was dead and the effort has been wasted. Anyone would stop. Most people do.\n\nIn the fifth year, the bamboo breaks the surface \u2014 and grows something like eighty feet in six weeks.\n\nThe question people ask is whether it grew eighty feet in six weeks or in five years, and the answer is not really a riddle. All through those silent years it was building a root system, deep and wide enough to support the height that was coming. Without the roots, the stalk would have gone up a few feet and fallen over.\n\nThe growth was never absent. It was underground, which is not the same thing.",
 m:"Some work has no visible output for a long time and is still working. Water it today anyway."},
 
 {t:"The Elephant and the Rope",r:"30 sec read",
@@ -2031,7 +2064,7 @@ s:"A man walking past a group of working elephants stopped, puzzled by something
 m:"Check the rope. Some of what's holding you was only ever strong enough to hold a much smaller version of you."},
 
 {t:"The Glass of Water",r:"30 sec read",
-s:"A psychologist walked around a room while teaching stress management to an audience. As she raised a glass of water, everyone expected they'd be asked the half empty or half full question. Instead, with a smile on her face, she asked: \u201cHow heavy is this glass of water?\u201d\n\nAnswers called out ranged from eight ounces to twenty.\n\n\u201cThe absolute weight doesn't matter,\u201d she replied. \u201cIt depends on how long I hold it. If I hold it for a minute, it's not a problem. If I hold it for an hour, I'll have an ache in my arm. If I hold it for a day, my arm will feel numb and paralysed. In each case the weight of the glass doesn't change, but the longer I hold it, the heavier it becomes.\u201d\n\nShe set the glass down.\n\n\u201cThe stresses and worries in life are like that glass of water. Think about them for a while and nothing happens. Think about them a bit longer and they begin to hurt. And if you think about them all day long, you will feel paralysed \u2014 incapable of doing anything.\n\n\u201cIt's important to remember to let go of your stresses. As early in the evening as you can, put all your burdens down. Don't carry them through the night and into the next day. Whatever burdens you're carrying now \u2014 set them down for a moment if you can.\u201d",
+s:"A psychologist walked around a room while teaching stress management to an audience. As she raised a glass of water, everyone expected they'd be asked the half empty or half full question. Instead, with a smile on her face, she asked: \u201cHow heavy is this glass of water?\u201d\n\nAnswers called out ranged from eight ounces to twenty.\n\n\u201cThe absolute weight doesn't matter,\u201d she replied. \u201cIt depends on how long I hold it. If I hold it for a minute, it's not a problem. If I hold it for an hour, I'll have an ache in my arm. If I hold it for a day, my arm will feel numb and paralyzed. In each case the weight of the glass doesn't change, but the longer I hold it, the heavier it becomes.\u201d\n\nShe set the glass down.\n\n\u201cThe stresses and worries in life are like that glass of water. Think about them for a while and nothing happens. Think about them a bit longer and they begin to hurt. And if you think about them all day long, you will feel paralyzed \u2014 incapable of doing anything.\n\n\u201cIt's important to remember to let go of your stresses. As early in the evening as you can, put all your burdens down. Don't carry them through the night and into the next day. Whatever burdens you're carrying now \u2014 set them down for a moment if you can.\u201d",
 m:"The weight isn't the problem. The duration is. Put it down before tonight."},
 
 {t:"The Three Bricklayers",r:"30 sec read",
@@ -2039,7 +2072,7 @@ s:"In 1666, after the Great Fire, Sir Christopher Wren was surveying the site wh
 m:"You can't always change today's bricks. You can change what you understand yourself to be building."},
 
 {t:"The Long Spoons",r:"45 sec read",
-s:"A man was granted a vision of the afterlife, and was shown hell first.\n\nHe saw a great round table with an enormous pot of stew at the centre, and the smell of it was extraordinary. Around the table sat people who were starving \u2014 gaunt, desperate, hollow-eyed. Each of them held a spoon that reached the pot, but the handle was far longer than their own arm, so that having filled the spoon they could not get it back to their mouths.\n\nThey strained and twisted and dropped stew on the floor and screamed at each other, and they starved with the food in front of them.\n\nThen he was shown heaven.\n\nIt was the same round table. The same pot of stew, the same smell. The same spoons, precisely as long, precisely as awkward.\n\nBut here the people were well fed, and talking, and laughing.\n\n\u201cI don't understand,\u201d the man said. \u201cIt's identical. Why are they happy here and starving there?\u201d\n\n\u201cIt's simple,\u201d said his guide. \u201cHere they have learned to feed each other.\u201d",
+s:"A man was granted a vision of the afterlife, and was shown hell first.\n\nHe saw a great round table with an enormous pot of stew at the center, and the smell of it was extraordinary. Around the table sat people who were starving \u2014 gaunt, desperate, hollow-eyed. Each of them held a spoon that reached the pot, but the handle was far longer than their own arm, so that having filled the spoon they could not get it back to their mouths.\n\nThey strained and twisted and dropped stew on the floor and screamed at each other, and they starved with the food in front of them.\n\nThen he was shown heaven.\n\nIt was the same round table. The same pot of stew, the same smell. The same spoons, precisely as long, precisely as awkward.\n\nBut here the people were well fed, and talking, and laughing.\n\n\u201cI don't understand,\u201d the man said. \u201cIt's identical. Why are they happy here and starving there?\u201d\n\n\u201cIt's simple,\u201d said his guide. \u201cHere they have learned to feed each other.\u201d",
 m:"The constraint is the same in both rooms. What differs is whether anyone thought to turn toward the person beside them."},
 
 {t:"The Fence and the Nails",r:"45 sec read",
@@ -2051,7 +2084,7 @@ s:"An ageing emperor with no children needed a successor, and rather than choose
 m:"Bring the empty pot. The one thing that can't be faked is being the person who tells you the truth about the outcome."},
 
 {t:"The Violinist in the Metro",r:"45 sec read",
-s:"On a cold Friday morning in January 2007, a man in jeans and a baseball cap set up in the L'Enfant Plaza metro station in Washington, opened a violin case at his feet, threw in a few dollars as seed money, and began to play.\n\nHe played for forty-three minutes. Six pieces, mostly Bach, including the Chaconne from the Partita in D minor, which is among the most demanding works ever written for the instrument.\n\nDuring that time, 1,097 people passed him.\n\nSeven stopped to listen for at least a minute. Twenty-seven gave money. He collected $32.17. The overwhelming majority walked past without slowing, checking phones, making their trains. One woman recognised him and stood watching, astonished.\n\nThe violinist was Joshua Bell, one of the finest musicians alive. He was playing a Stradivarius made in 1713, worth about three and a half million dollars. Three days earlier he had filled Boston's Symphony Hall, where decent seats went for a hundred dollars.\n\nThe Washington Post had arranged it as an experiment, and won a Pulitzer for the piece. One detail stayed with almost everyone who read it: nearly every time a small child walked past, the child tried to stop and look, and every single time, the parent hurried them along.",
+s:"On a cold Friday morning in January 2007, a man in jeans and a baseball cap set up in the L'Enfant Plaza metro station in Washington, opened a violin case at his feet, threw in a few dollars as seed money, and began to play.\n\nHe played for forty-three minutes. Six pieces, mostly Bach, including the Chaconne from the Partita in D minor, which is among the most demanding works ever written for the instrument.\n\nDuring that time, 1,097 people passed him.\n\nSeven stopped to listen for at least a minute. Twenty-seven gave money. He collected $32.17. The overwhelming majority walked past without slowing, checking phones, making their trains. One woman recognized him and stood watching, astonished.\n\nThe violinist was Joshua Bell, one of the finest musicians alive. He was playing a Stradivarius made in 1713, worth about three and a half million dollars. Three days earlier he had filled Boston's Symphony Hall, where decent seats went for a hundred dollars.\n\nThe Washington Post had arranged it as an experiment, and won a Pulitzer for the piece. One detail stayed with almost everyone who read it: nearly every time a small child walked past, the child tried to stop and look, and every single time, the parent hurried them along.",
 m:"Extraordinary things are going past you in unmarked clothes. Some of what you'd pay a hundred dollars for is free at 8am and you're late."}
 ];
 
@@ -2102,7 +2135,7 @@ const PUZZLES7=[
 {r:["EVE#PEG","AIL#ORE","RADICAL","##ELK##","MARKETS","OIL#TOT","PRY#SPY"],c:{AIL:"Be under the weather",AIR:"Put it on the ___",EAR:"It hears you out",ELDERLY:"Getting on in years",ELK:"Antlered lodge member?",ERA:"A historical stretch",EVE:"The night before",GEL:"Hair goop, or what a plan finally does",ILK:"Of that ___",MARKETS:"Where bulls meet bears",MOP:"Floor cleaner, or a head of unruly hair",OIL:"Midnight ___",ORE:"It's mined for metal",PEG:"Take down a ___",POCKETS:"Deep ___ (wealth)",PRY:"Nose around",RADICAL:"Extreme \u2014 or a surfer's compliment",SPY:"I ___ with my little eye",STY:"Pig's place, or an eyelid bump",TOP:"Spinning toy, or the very best",TOT:"A little one, or a little drink",VIA:"By way of"}},
 {r:["PEP#SAD","OAR#TRY","PRODUCE","##CAM##","TREMBLE","WEE#LAY","ODD#EWE"],c:{ARC:"The sun's path",CAM:"Engine part that opens the valves",DAM:"A beaver's project",DYE:"Tint",EAR:"It gets lent",EWE:"Lamb's mother",EYE:"Needle's hole",LAW:"Murphy's ___",LAY:"Put down, or a ballad",OAR:"Blade in the water",ODD:"Not even",PEP:"___ talk",POP:"Soda, or dad",PROCEED:"Carry on",PRODUCE:"The grocery aisle, or to make",RED:"In the ___",SAD:"Blue",STUMBLE:"Trip up",TREMBLE:"Shake in your boots",TRY:"Give it a go",TWO:"It takes ___ to tango",WEE:"Small, or the hours after midnight"}},
 {r:["ACT#SEA","ROE#TAR","CONFIRM","##AIR##","CENTRAL","ART#EGO","WAS#DEW"],c:{ACT:"Part of a play, or to pretend",AGE:"It's just a number",AIR:"What you clear by talking it out",ARC:"A curve",ARM:"A limb, or to supply weapons",ART:"Sun Tzu's book, partly",CAW:"A crow's call",CENTRAL:"Grand ___ Station",CONFIRM:"Nail down",COO:"A dove's sound, or to talk sweetly",DEW:"Morning's first wet",EAR:"Ache spot",EGO:"It bruises easily",ERA:"An age",FIT:"In shape, or a tantrum",LOW:"Cattle sound, or not high",ROE:"Caviar, essentially",SEA:"The deep blue",STIRRED:"Shaken, not ___",TAR:"Road goo, or an old sailor",TENANTS:"They pay the landlord",WAS:"Used to be"}},
-{r:["BAD#EEL","ORE#AYE","ACCUSED","##ART##","SADNESS","OWE#RUE","YES#NET"],c:{ACCUSED:"Both the one pointing and the one pointed at, in court",ARC:"A curve",ART:"Sun Tzu's book, partly",AWE:"Shock and ___",AYE:"Vote in favour",BAD:"Michael Jackson album",BOA:"Squeezer, or a feathery scarf",DECADES:"They pass slowly, then all at once",EASTERN:"Where light shows up first",EEL:"Slippery swimmer",EYE:"Needle's hole",LED:"Guided",NET:"Hoop's fringe",ORE:"It's mined for metal",OWE:"Be down to someone",RUE:"Regret",SADNESS:"It passes, like the ring says",SET:"Ready, ___, go",SOY:"Sauce, milk or bean",SUE:"Take to court",URN:"It holds ashes or coffee",YES:"The answer you're hoping for"}},
+{r:["BAD#EEL","ORE#AYE","ACCUSED","##ART##","SADNESS","OWE#RUE","YES#NET"],c:{ACCUSED:"Both the one pointing and the one pointed at, in court",ARC:"A curve",ART:"Sun Tzu's book, partly",AWE:"Shock and ___",AYE:"Vote in favor",BAD:"Michael Jackson album",BOA:"Squeezer, or a feathery scarf",DECADES:"They pass slowly, then all at once",EASTERN:"Where light shows up first",EEL:"Slippery swimmer",EYE:"Needle's hole",LED:"Guided",NET:"Hoop's fringe",ORE:"It's mined for metal",OWE:"Be down to someone",RUE:"Regret",SADNESS:"It passes, like the ring says",SET:"Ready, ___, go",SOY:"Sauce, milk or bean",SUE:"Take to court",URN:"It holds ashes or coffee",YES:"The answer you're hoping for"}},
 {r:["BAD#WAN","ORE#EGO","ACCUSED","##ART##","SADNESS","OWE#RUE","YES#NET"],c:{ACCUSED:"Both the one pointing and the one pointed at, in court",AGE:"It's just a number",ARC:"A curve",ART:"Sun Tzu's book, partly",AWE:"Shock and ___",BAD:"Michael Jackson album",BOA:"Squeezer, or a feathery scarf",DECADES:"They pass slowly, then all at once",EGO:"It bruises easily",NET:"Hoop's fringe",NOD:"Yes, without a word",ORE:"It's mined for metal",OWE:"Be down to someone",RUE:"Regret",SADNESS:"It passes, like the ring says",SET:"Ready, ___, go",SOY:"Sauce, milk or bean",SUE:"Take to court",URN:"It holds ashes or coffee",WAN:"Pale",WESTERN:"A shootout, or half the hemisphere",YES:"The answer you're hoping for"}},
 {r:["BAD#WAS","ORE#EGO","ACCUSED","##ART##","SADNESS","OWE#RUE","YES#NET"],c:{ACCUSED:"Both the one pointing and the one pointed at, in court",AGE:"It's just a number",ARC:"A curve",ART:"Sun Tzu's book, partly",AWE:"Shock and ___",BAD:"Michael Jackson album",BOA:"Squeezer, or a feathery scarf",DECADES:"They pass slowly, then all at once",EGO:"It bruises easily",NET:"Hoop's fringe",ORE:"It's mined for metal",OWE:"Be down to someone",RUE:"Regret",SADNESS:"It passes, like the ring says",SET:"Ready, ___, go",SOD:"Turf",SOY:"Sauce, milk or bean",SUE:"Take to court",URN:"It holds ashes or coffee",WAS:"Used to be",WESTERN:"A shootout, or half the hemisphere",YES:"The answer you're hoping for"}},
 {r:["BAR#SHE","ORE#PEG","AMAZING","##SIN##","LEOPARD","URN#CUE","GAS#HEW"],c:{AMAZING:"Grace, in a hymn",ARM:"A limb, or to supply weapons",BAR:"You can raise it, lower it, or drink at it",BOA:"Squeezer, or a feathery scarf",CUE:"Your moment, or the stick that hits the ball",DEW:"Morning's first wet",EGG:"Breakfast staple, or to urge on",ERA:"An age",GAS:"Fill 'er up with it",HEN:"She lays the breakfast",HEW:"Chop, or stick to (a line)",LEOPARD:"Famously stuck with its look",LUG:"Haul with difficulty",ORE:"It's mined for metal",PEG:"Take down a ___",REASONS:"You have your ___",RUE:"Regret",SHE:"Pronoun",SIN:"What the sermon is against",SPINACH:"It made a sailor strong, allegedly",URN:"It holds ashes or coffee",ZIP:"Nothing at all, or how the jacket closes"}},
@@ -2338,6 +2371,10 @@ const STEPS={
       blurb:'A crossword to switch the brain on. Bigger at the weekend.'},
   14:{name:'Stretch', plain:'Stretch',   t:'The Stretch', s:'A few guided stretches',
       blurb:'A few gentle mobility moves, guided on a timer.'},
+  17:{name:'Home team',plain:'Family',  t:'Home team',  s:'One small thing for the people at home',
+      blurb:'One small, specific thing for your partner or kids. Rotates daily.'},
+  18:{name:'WIN',     plain:'WIN',       t:'One thing',   s:'The one thing that makes today a win',
+      blurb:'Name the one thing. Ten seconds.', core:true},
   15:{name:'Warm-up', plain:'Warm-up',   t:'The Warm-up', s:'A quote, a joke or a story \u2014 one a day',
       blurb:'One thing to switch the brain on. It rotates: a quote, a joke or a short story.'}
 };
@@ -2350,7 +2387,7 @@ const STEP_NAMES=Object.keys(STEPS).map(Number).sort((a,b)=>a-b).map(n=>STEPS[n]
 /* The running order, and which modules are in it at all. It belongs to the
    user now: DEFAULT_FLOW is only the starting point. */
 /* Two minutes, not twenty. Everything else waits under Extras. */
-const DEFAULT_FLOW=[15,5,6];   // Warm-up, Software, Today
+const DEFAULT_FLOW=[15,18,17];   // Warm-up, WIN, Home team  (v3: under a minute)
 let FLOW=DEFAULT_FLOW.slice();
 function validFlow(f){
   const seen=[];
@@ -2359,7 +2396,9 @@ function validFlow(f){
 }
 function setFlow(f){FLOW=validFlow(f);S.flow=FLOW.slice();saveS()}
 const flowPos=n=>FLOW.indexOf(n);  // 0-based position of a step
-function flowNext(n){const i=flowPos(n);return go(i<0||i>=FLOW.length-1?8:FLOW[i+1])}
+/* The last step finishes the day and lands home, where the WIN now leads.
+   The wrap-up page is still one tap away (Review), not a second finish line. */
+function flowNext(n){const i=flowPos(n);if(i>=0&&i>=FLOW.length-1)return finishDay();return go(i<0?8:FLOW[i+1])}
 function flowBack(n){const i=flowPos(n);return go(i<=0?0:FLOW[i-1])}
 /* The step's plain name, and where it sits in your morning. A module opened
    on its own (Stretch, when it isn't in your flow) has no "of 7" to claim. */
@@ -2454,6 +2493,8 @@ function go(n){
   if(n===7)cwOpen();
   if(n===14)strOpen();
   if(n===15)renderWarm();
+  if(n===18)winOpen();
+  if(n===17)famOpen();
   if(n===8)renderRecap();
 }
 
@@ -2488,10 +2529,16 @@ function syncDash(){
   $('winT').textContent=win||'Name the one thing.';
   $('winT').className='win-t disp'+(win?'':' empty');
   $('winFrame').className='win-frame'+(win?'':' empty');
-  $('winFrame').onclick=()=>go(6);
-  $('focusMark').textContent=statusOf(6)==='done'?'Set':'';
+  $('winFrame').onclick=e=>{e.stopPropagation();go(FLOW.indexOf(18)>=0?18:6)};
+  $('focusSect').onclick=()=>go(FLOW.indexOf(18)>=0?18:6);
+  { const fs=$('focusSect'),bb=$('beginBtn');   // once you have a WIN, it's the first thing you see
+    if(win&&fs.nextElementSibling!==bb)bb.parentNode.insertBefore(fs,bb);
+    if(!win&&fs.previousElementSibling&&fs.previousElementSibling.id!=='idx'){const seq=$('idx').parentNode;seq.parentNode.insertBefore(fs,seq.nextSibling)} }
+  $('focusMark').textContent=(statusOf(6)==='done'||statusOf(18)==='done')?'Set':'';
   $('focusMark').style.color='var(--done)';
-  $('winList').innerHTML=t3.map((x,i)=>'<div class="win-item"><i>'+(i+1)+'</i><span>'+esc(x)+'</span></div>').join('');
+  const rest3=t3.filter(x=>x!==win);       // the WIN is already the headline; don't list it twice
+  $('winList').innerHTML=rest3.map((x,i)=>'<div class="win-item"><i>'+(i+2)+'</i><span>'+esc(x)+'</span></div>').join('')+
+    (DAY.fam?'<div class="win-item"><i>&#9829;</i><span>'+esc(DAY.fam)+'</span></div>':'');
 
   /* The sunrise band ends just under the call to action. It used to be anchored
      to the hero quote, which now sits far down the page — following it there
@@ -2727,7 +2774,7 @@ function jrAge(from,onKey){
 }
 
 /* ============================= SPARK / LAUGH / STORY ============================= */
-/* Pick from the flavours you asked for — but never let a narrow filter starve
+/* Pick from the flavors you asked for — but never let a narrow filter starve
    the pool into weekly repeats. Below MIN_POOL we widen to everything and say
    so on screen, rather than silently ignoring the preference. */
 const MIN_POOL=8;
@@ -2746,16 +2793,28 @@ function poolNote(kind){
   const el=$(kind==='quote'?'sparkWide':'storyWide');if(!el)return;
   const w=poolFor(kind).widened&&activeTags().length;
   el.style.display=w?'':'none';
-  if(w)el.textContent='Not enough in your chosen flavours, so this is drawn from everything.';
+  if(w)el.textContent='Not enough in your chosen flavors, so this is drawn from everything.';
 }
+/* No-repeat bag: nothing comes back until everything in its list has been
+   shown once. Keyed by text, not position, so editing a list never resets it. */
+function seenGet(){return readJSON('flBag',{})||{}}
+function seenMark(kind,key){if(!key)return;const a=seenGet();a[kind]=a[kind]||[];if(a[kind].indexOf(key)<0){a[kind].push(key);seenPut(a)}}
+function seenPut(o){try{localStorage.setItem('flBag',JSON.stringify(o))}catch(e){}}
+function freshPick(kind,ix,keyOf,cur){
+  if(!ix.length)return 0;
+  const all=seenGet();const seen=all[kind]||[];
+  let pool=ix.filter(i=>i!==cur&&seen.indexOf(keyOf(i))<0);
+  if(!pool.length){all[kind]=[];pool=ix.filter(i=>i!==cur);if(!pool.length)pool=ix.slice()}  // full lap done: start over
+  const n=pool[Math.floor(Math.random()*pool.length)];
+  const k=keyOf(n);all[kind]=all[kind]||[];if(k&&all[kind].indexOf(k)<0)all[kind].push(k);seenPut(all);
+  return n;
+}
+const jokeKey=i=>JOKES[i]?jokeStr(JOKES[i]):'';
 function pick(kind,cur){
   const ix=poolFor(kind).ix;
   if(!ix.length)return 0;
   if(ix.length<2)return ix[0];
-  let n=ix[Math.floor(Math.random()*ix.length)];
-  let guard=0;
-  while(n===cur&&guard++<12)n=ix[Math.floor(Math.random()*ix.length)];
-  return n;
+  return freshPick(kind,ix,kind==='quote'?(i=>S.quotes[i]):(i=>(STORIES[i]||{}).t),cur);
 }
 function renderSpark(){sparkI=pick('quote',null);paintSpark()}
 
@@ -2820,16 +2879,17 @@ function jokeReveal(){
 function renderJoke(){
   if(jokeI===null){
     const k=JOKES.findIndex(j=>jokeStr(j)===DAY.joke);
-    jokeI=k>=0?k:Math.floor(Math.random()*JOKES.length);
+    jokeI=k>=0?k:freshPick('joke',JOKES.map((j,i)=>i),jokeKey,null);
   }
   paintJoke();
 }
 /* "Another" changes the kind as well as the joke, and doesn't repeat itself. */
 function newJoke(){
   const cur=JOKES[jokeI]?JOKES[jokeI].k:'';
-  let pool=JOKES.map((j,i)=>i).filter(i=>JOKES[i].k!==cur&&jokeRecent.indexOf(i)<0);
-  if(!pool.length)pool=JOKES.map((j,i)=>i).filter(i=>i!==jokeI);
-  jokeI=pool[Math.floor(Math.random()*pool.length)];paintJoke();
+  const seenJ=seenGet().joke||[];
+  let pool=JOKES.map((j,i)=>i).filter(i=>JOKES[i].k!==cur&&seenJ.indexOf(jokeKey(i))<0);
+  if(!pool.length)pool=JOKES.map((j,i)=>i);
+  jokeI=freshPick('joke',pool,jokeKey,jokeI);paintJoke();
 }
 function paintStory(){const st=STORIES[storyI];
   $('storyTitle').textContent=st.t;$('storyRead').textContent=st.r;
@@ -2901,7 +2961,7 @@ function medReset(){medStopTimers();medRun=false;medLeft=medDur;
 let softI=0;
 /* One card a day, on the same rotation the crossword banks use. This used to
    march you through every card before it would let you leave: the primary
-   button was relabelled "Next reminder" instead of completing the step, so the
+   button was relabeled "Next reminder" instead of completing the step, so the
    only exit was Skip — which recorded the step as avoided. */
 function softToday(){
   const n=S.affirms.length;
@@ -3128,7 +3188,7 @@ function carriedAge(from){
 }
 
 /* ============================= ONBOARDING =============================
-   Four steps: which modules, what order, what flavour, which cards. It runs
+   Four steps: which modules, what order, what flavor, which cards. It runs
    itself on day one and is re-openable from Settings, so nothing here is a
    one-shot you can never get back to. Nothing is written until "Done". */
 const OB_TICK='<svg viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>';
@@ -3476,7 +3536,7 @@ function cwSelect(r,c,dir,focus){
   if(e)e.cells.forEach(([rr,cc])=>{const el=$('cw-'+rr+'-'+cc);if(el)el.classList.add('hl')});
   const cur=$('cw-'+r+'-'+c);if(cur)cur.classList.add('sel');
   if(e){$('cwClueL').textContent=(dir==='a'?'Across':'Down')+' · '+e.n;$('cwClueT').textContent=e.clue}
-  /* The toggle is labelled with the direction it switches TO, and hides itself
+  /* The toggle is labeled with the direction it switches TO, and hides itself
      when this cell only belongs to one word — there'd be nothing to switch to. */
   const flip=$('cwFlipBtn');
   if(flip){
@@ -3728,7 +3788,8 @@ function renderRecap(){
   const add=(l,t)=>{if(t&&String(t).trim())rows.push('<div class="recap-item"><div class="recap-l">'+l+
     '</div><div class="recap-t">'+esc(t)+'</div></div>')};
   add("WIN — What's Important Now",DAY.win);
-  add('Top 3',[DAY.t1,DAY.t2,DAY.t3].filter(Boolean).map((x,i)=>(i+1)+'. '+x).join('\n'));
+  add('Home team',DAY.fam);
+  {const t3=[DAY.t1,DAY.t2,DAY.t3].filter(Boolean);if(!(t3.length===1&&t3[0]===DAY.win))add('Top 3',t3.map((x,i)=>(i+1)+'. '+x).join('\n'));}
   const rest=liveItems().filter(i=>ppPicks().indexOf(i.id)<0);
   add('Also on the list',rest.map(i=>'· '+i.text).join('\n'));
   const openIds=FLOW.filter(i=>statusOf(i)!=='done');
@@ -4100,7 +4161,7 @@ function why(n){return n?'<details class="warm-why"><summary>What does this mean
 function paintWarm(){
   const box=$('warmBody'),h=$('warmH'),lead=$('warmLead');
   if(warmKind==='quote'){
-    if(sparkI===null||!S.quotes[sparkI])sparkI=pick('quote',null);
+    if(sparkI===null||!S.quotes[sparkI]){const k=S.quotes.indexOf(DAY.quote);sparkI=k>=0?k:pick('quote',null)}
     const [q,a]=splitLine(S.quotes[sparkI]);
     h.textContent='The Spark';lead.textContent='One idea to carry into the day.';
     const n=QUOTE_NOTES[parsePair(S.quotes[sparkI])[0]];
@@ -4108,7 +4169,7 @@ function paintWarm(){
       (n?why(n):'<div class="tip"><div class="tip-l">Sit with it</div><div class="tip-t">What would today look like if this were true?</div></div>');
     if(DAY.quote!==S.quotes[sparkI]){DAY.quote=S.quotes[sparkI];saveDay()}
   }else if(warmKind==='joke'){
-    if(jokeI===null){const k=JOKES.findIndex(j=>jokeStr(j)===DAY.joke);jokeI=k>=0?k:Math.floor(Math.random()*JOKES.length)}
+    if(jokeI===null){const k=JOKES.findIndex(j=>jokeStr(j)===DAY.joke);if(k>=0)seenMark('joke',jokeKey(k));jokeI=k>=0?k:freshPick('joke',JOKES.map((j,i)=>i),jokeKey,null)}
     const j=JOKES[jokeI];
     h.textContent='The Laugh';lead.textContent='Life isn\u2019t that serious. Proof:';
     box.innerHTML='<div class="sheet joke-card" onclick="warmReveal()"><div class="joke-kind">'+esc(JOKE_KINDS[j.k]||'')+'</div>'+
@@ -4118,7 +4179,7 @@ function paintWarm(){
     jokeRecent.push(jokeI);if(jokeRecent.length>30)jokeRecent.shift();
     const s=jokeStr(j);if(DAY.joke!==s){DAY.joke=s;saveDay()}
   }else{
-    if(storyI===null||!STORIES[storyI])storyI=pick('story',null);
+    if(storyI===null||!STORIES[storyI]){const k=STORIES.findIndex(x=>x.t===DAY.story);storyI=k>=0?k:pick('story',null)}
     const st=STORIES[storyI];
     h.textContent=st.t;lead.textContent=st.r;
     box.innerHTML='<div class="disp warm-story">'+esc(st.s)+'</div><div class="rule"></div>'+
@@ -4136,9 +4197,10 @@ function warmAnother(){
   else if(warmKind==='story')storyI=pick('story',storyI);
   else{
     const cur=JOKES[jokeI]?JOKES[jokeI].k:'';
-    let pool=JOKES.map((j,i)=>i).filter(i=>JOKES[i].k!==cur&&jokeRecent.indexOf(i)<0);
-    if(!pool.length)pool=JOKES.map((j,i)=>i).filter(i=>i!==jokeI);
-    jokeI=pool[Math.floor(Math.random()*pool.length)];
+    const seenJ=seenGet().joke||[];
+    let pool=JOKES.map((j,i)=>i).filter(i=>JOKES[i].k!==cur&&seenJ.indexOf(jokeKey(i))<0);
+    if(!pool.length)pool=JOKES.map((j,i)=>i);
+    jokeI=freshPick('joke',pool,jokeKey,jokeI);
   }
   paintWarm();$('s15').scrollTop=0;haptic(8);
 }
@@ -4193,10 +4255,80 @@ function renderShelfSum(){
     s.length+' shipped so far.';
 }
 
+
+/* ============================= v3: WIN + HOME TEAM ============================= */
+function winPaint(){
+  const cur=DAY.winId?itemById(DAY.winId):null;
+  $('winNow').textContent=cur?'Today’s WIN: '+cur.text+'. It rides the dashboard all day.':'';
+  const box=$('winPick');box.innerHTML='';
+  const items=liveItems();
+  $('winPickL').style.display=items.length?'':'none';
+  items.slice(0,6).forEach(it=>{
+    const b=document.createElement('button');
+    b.className='win-choice'+(DAY.winId===it.id?' on':'');
+    b.innerHTML='<span class="star"><svg viewBox="0 0 24 24"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5-5.8-3-5.8 3 1.1-6.5L2.6 9.4l6.5-.9z"/></svg></span><span>'+esc(it.text)+'</span>';
+    b.onclick=()=>{DAY.winId=it.id;ppSetPicks([it.id].concat(ppPicks().filter(x=>x!==it.id)).slice(0,3));haptic([12,30,14]);tick(660);winPaint()};
+    box.appendChild(b);
+  });
+}
+function winOpen(){$('winInput').value='';winPaint()}
+function winSet(){
+  const el=$('winInput');const t=cleanItem(el.value);
+  if(!t){el.focus();return false}
+  const it={id:uid(),text:t,done:false,carried:false};
+  DAY.items=ppItems().concat([it]);DAY.winId=it.id;
+  ppSetPicks([it.id].concat(ppPicks().filter(x=>x!==it.id)).slice(0,3));
+  el.value='';haptic([12,30,14]);tick(660);winPaint();return true;
+}
+function winDone(){
+  if($('winInput').value.trim())winSet();
+  if(!DAY.winId){$('winNow').textContent='Type one thing first, or tap Skip this.';$('winInput').focus();haptic([10,40,10]);return}
+  mark(18,'done');flowNext(18);
+}
+$('winInput').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();winDone()}});
+
+/* Small, specific, doable before a 9pm departure. Generic on purpose:
+   this file is public, so no names live in it. */
+const FAM=[
+  ['Partner','Text her one specific thing she did this week that you noticed.'],
+  ['Partner','Ask how her day actually went, then just listen. No fixing.'],
+  ['Partner','Take one chore off her plate tonight without being asked.'],
+  ['Partner','Leave a short note where she’ll find it after you leave.'],
+  ['Partner','Tell her one thing you’re looking forward to doing together.'],
+  ['Partner','Put the phone down for the first ten minutes you’re both home.'],
+  ['Partner','Ask: “What’s one thing I could do this week that would help?”'],
+  ['Partner','Plan the next date, even a small one. Put it on paper.'],
+  ['Partner','Thank her for something she does that nobody thanks her for.'],
+  ['Partner','Six-second hug. Long enough that it isn’t a pat.'],
+  ['Kids','Ask each kid one real question about their day. Not “how was school.”'],
+  ['Kids','Ten minutes of whatever they want to do. Your phone stays away.'],
+  ['Kids','Tell one of them something specific you’re proud of.'],
+  ['Kids','Go to practice, or ask about it tonight: one thing that went well.'],
+  ['Kids','Ask them to teach you something they know that you don’t.'],
+  ['Kids','Eat together tonight before you head out, even if it’s quick.'],
+  ['Kids','Send one of them a goofy text they won’t expect.'],
+  ['Kids','Tell a story from when you were their age. Keep it honest.'],
+  ['Kids','Ask: “What’s the best thing that happened this week?”'],
+  ['Kids','Catch one of them doing something right, and say so out loud.'],
+  ['Everyone','Five minutes, everyone at the table, no screens.'],
+  ['Everyone','Pick this weekend’s one family thing now, so it actually happens.'],
+  ['Everyone','Say goodbye to each person on your way out. Every one.'],
+  ['Everyone','Ask the house: “Anything you need from me before I go?”']
+];
+let famI=null;
+const famKey=i=>FAM[i][1];
+function famPick(){return freshPick('fam',FAM.map((f,i)=>i),famKey,null)}
+function famPaint(){const f=FAM[famI];$('famWho').textContent=f[0];$('famTxt').textContent=f[1];
+  $('famNote').textContent=DAY.fam?'Today’s: '+DAY.fam:''}
+function famOpen(){if(famI===null){famI=FAM.findIndex(f=>f[1]===DAY.fam);if(famI<0)famI=famPick()}famPaint()}
+function famAnother(){famI=freshPick('fam',FAM.map((f,i)=>i),famKey,famI);haptic(8);tick();famPaint()}
+function famDone(){DAY.fam=FAM[famI][1];saveDay();mark(17,'done');flowNext(17)}
+
 /* ============================= BOOT ============================= */
 FIELDS.forEach(k=>{const el=$(k);if(el)el.addEventListener('input',()=>{DAY[k]=el.value;saveDay()})});
 loadDayFields();
 migrateSettings();  // protect an existing user's cards before defaults change
+if(!S.v3){S.v3=1;if(!Array.isArray(S.flow)||S.flow.join()==='15,5,6')S.flow=DEFAULT_FLOW.slice();saveS()}  // v3: move the old default run once; a run you built yourself stays yours
 FLOW=validFlow(S.flow);
 migrateItems();
 carryOver();        // yesterday's unfinished items are waiting this morning

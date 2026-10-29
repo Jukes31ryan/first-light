@@ -64,6 +64,7 @@ console.log('\n— the system back gesture —');
 await boot();
 await p.click('#beginBtn');await p.waitForTimeout(300);
 await p.click('#s'+FLOW[0]+' .foot .btn-go');await p.waitForTimeout(300);
+if(FLOW[1]===18)await p.fill('#winInput','Test win');  // the WIN step needs one thing typed
 await p.click('#s'+FLOW[1]+' .foot .btn-go');await p.waitForTimeout(300);
 await p.goBack({waitUntil:'commit'}).catch(()=>{});await p.waitForTimeout(400);
 chk('steps back one step, inside the app',await on()==='s'+FLOW[1],await on());
