@@ -25,7 +25,7 @@ const nudgeShown=p=>p.evaluate(()=>{const e=document.getElementById('nudge');
   return !!e&&e.style.display!=='none'&&!!e.textContent.trim()});
 /* N days of history ending today, so the counts are what the app will see */
 const histOf=n=>{const h={},d=new Date();
-  for(let i=0;i<n;i++){h[d.toISOString().slice(0,10)]=1;d.setDate(d.getDate()-1)}return h};
+  for(let i=0;i<n;i++){h[d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')]=1;d.setDate(d.getDate()-1)}return h};
 
 // ───────── 1. we ask the browser not to evict us ─────────
 console.log('— persistent storage —');

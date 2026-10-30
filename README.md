@@ -94,12 +94,12 @@ Everything else (the crossword, breathing, stretch, and the full quote, joke and
 * **The month grid** — every morning you showed up, filled in. The streak as a shape, not just a number.
 * **Streak insurance** — one grace day a week, so forty days don't die to one bad Tuesday. It says so when it saves you.
 * **Look back** — an index of every day you showed up. Tap one to open **the journal**: that day as a full page — what mattered and whether you hit it, your top three, everything that was on the list, your own writing, and what the morning gave you.
-* **The three P's** — Purge (type it once), Prioritise (tap three), Put into action (tap one). Nothing is written twice, and unfinished items carry forward from whenever you last opened the app — not just from yesterday — tagged with how old they are.
+* **The three P's** — Purge (type it once), Prioritize (tap three), Put into action (tap one). Nothing is written twice, and unfinished items carry forward from whenever you last opened the app — not just from yesterday — tagged with how old they are.
 * **Built to touch** — springs on press, haptics, a real breathing circle, and a sunrise burst when you finish. All of it toggleable, and it respects reduced-motion.
 * **Zero network requests** — fonts embedded, everything local. It works the same in a tunnel as at your kitchen table.
 * **Two looks** — **Sky**, dimmed blue with frosted-glass tiles, and **Night** for the dark. Set in Fraunces over Inter.
 * **Your software is yours** — reminders and quotes are edited in Settings, never in the code. Start from a ready-made set (**Operating rules**, eight rules that each name a situation and what to do in it, or a broader nine-card starter), pick from a library of 40 written cards, or write your own.
-* **Flavours** — tag what you want more of (Strategy, Stoic, Mindfulness, Poetry, Grit, Reflection) and the quotes and fables follow. A narrow pick widens itself rather than repeating on you.
+* **Flavors** — tag what you want more of (Strategy, Stoic, Mindfulness, Poetry, Grit, Reflection) and the quotes and fables follow. A narrow pick widens itself rather than repeating on you.
 * **Export / import** — one tap dumps everything to a JSON file, and restores from one. Insurance against a cleared browser.
 * **Day streak** that only counts consecutive days.
 * **Fully offline** — no API calls, no network needed after the first load.
@@ -138,7 +138,7 @@ tests/run.sh nav joke    # just those suites
 | `soft` | One reminder card a day, rotating through the set |
 | `crossword` | All 53 grids, every clue present and none that only make sense inside this app |
 | `v2` | The two-minute run, nights mode, anchors, the shelf, the wake-up note, and the one-offer-a-day rule |
-| `regress` | Content integrity, the modular order, carry-over across a gap, the journal, settings, flavours, the streak and grace day, the evening, and every screen in both themes |
+| `regress` | Content integrity, the modular order, carry-over across a gap, the journal, settings, flavors, the streak and grace day, the evening, and every screen in both themes |
 
 Screenshots land in `tests/out/`, which is ignored by git. Set `PORT`, or
 `PLAYWRIGHT=/path/to/playwright/index.mjs` if it isn't installed locally.

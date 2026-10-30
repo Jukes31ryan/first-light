@@ -72,7 +72,8 @@ chk('junk and duplicates are filtered out',
 
 // ───────── carry-over across a gap, not just from yesterday ─────────
 console.log('\n— unfinished work follows you —');
-const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10)};
+const localKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return localKey(d)};
 await boot({flSettings:{onboarded:true},
   ['flDay-'+daysAgo(5)]:{items:[{id:'a',text:'Call the bank',done:false},
                                {id:'b',text:'Already handled',done:true}]}});
@@ -166,7 +167,7 @@ chk('but only one a week',await p.evaluate(()=>localStorage.getItem('flStreak'))
 console.log('\n— the evening —');
 /* the WIN is derived from the picked item, never assigned — seed it the way
    the Today step would leave it */
-const today=new Date().toISOString().slice(0,10);
+const today=localKey(new Date());
 await boot({flSettings:{onboarded:true},
   ['flDay-'+today]:{items:[{id:'w',text:'The one thing',done:false}],picks:['w'],winId:'w'}});
 /* win and t1..t3 are display copies, recomputed on save rather than stored */
