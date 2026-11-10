@@ -92,45 +92,64 @@ const tap=(p,s)=>p.locator(s).first().click();
  await page.clock.runFor(62000);ok(await page.locator('[data-act=medreset]').count()===1&&await page.evaluate(()=>S.day.sat===1&&S.day.done.center===1),'finishing marks Center done');
  ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
 
-/* 4. Google Tasks, mocked end to end */
+/* 4. Google Tasks through the bridge. The mock runs the app's own bridge code against a fake Tasks service. */
 {const {ctx,page,errs}=await fresh();
- let remote=[{id:'g1',title:'From Google',position:'0001',status:'needsAction'},{id:'g2',title:'Dentist (Google)',position:'0002',status:'needsAction',due:'2026-11-12T00:00:00.000Z'}],calls=[],authFail=false,n=10;
- await page.route('https://accounts.google.com/gsi/client',r=>r.fulfill({contentType:'text/javascript',body:`window.google={accounts:{oauth2:{initTokenClient:c=>({requestAccessToken:()=>setTimeout(()=>c.callback({access_token:'tok-'+Date.now(),expires_in:3600}),10)})}}}`}));
- await page.route('https://tasks.googleapis.com/**',async r=>{const q=r.request(),u=new URL(q.url()),m=q.method();calls.push(m+' '+u.pathname);
-  if(authFail)return r.fulfill({status:401,body:'{}'});
-  if(!(q.headers().authorization||'').startsWith('Bearer tok-'))return r.fulfill({status:401,body:'{}'});
-  if(u.pathname.endsWith('/users/@me/lists'))return r.fulfill({json:{items:[{id:'L1',title:'My Tasks'},{id:'L2',title:'House'}]}});
-  const id=u.pathname.split('/').pop();
-  if(m==='GET')return r.fulfill({json:{items:remote.filter(t=>t.status==='needsAction')}});
-  if(m==='POST'){const b=q.postDataJSON();const t={id:'g'+(n++),title:b.title,position:'00'+n,status:'needsAction'};remote.push(t);return r.fulfill({json:t})}
-  if(m==='PATCH'){const b=q.postDataJSON(),t=remote.find(t=>t.id===id);Object.assign(t,b);return r.fulfill({json:t})}
-  if(m==='DELETE'){remote=remote.filter(t=>t.id!==id);return r.fulfill({status:204,body:''})}});
+ const G={lists:[{id:'L1',title:'My Tasks'},{id:'L2',title:'Flow'}],tasks:{L1:[{id:'m1',title:'On the other list',position:'0001',status:'needsAction'}],L2:[{id:'g1',title:'From Google',position:'0001',status:'needsAction'},{id:'g2',title:'Dentist (Google)',position:'0002',status:'needsAction',due:'2026-11-12T00:00:00.000Z'},{id:'g3',title:'Already done',position:'0003',status:'completed'}]},n:10};
+ const Tasks={Tasklists:{list:()=>({items:G.lists})},Tasks:{
+  list:(l,o)=>{const all=G.tasks[l].filter(t=>o.showCompleted!==false||t.status!=='completed');const start=o.pageToken?+o.pageToken:0;const items=all.slice(start,start+2);return{items,nextPageToken:start+2<all.length?String(start+2):undefined}}, // tiny pages to exercise paging
+  insert:(r,l)=>{const t={id:'g'+(G.n++),title:r.title,position:'00'+G.n,status:'needsAction'};G.tasks[l].push(t);return t},
+  patch:(r,l,id)=>{const t=G.tasks[l].find(t=>t.id===id);if(!t)throw new Error('Not Found');Object.assign(t,r);return t},
+  remove:(l,id)=>{G.tasks[l]=G.tasks[l].filter(t=>t.id!==id)}}};
+ const ContentService={MimeType:{JSON:'json'},createTextOutput:s=>({s,setMimeType(){return this}})};
+ let doPost=null,mode='ok',hits=0;const URL_OK='https://script.google.com/macros/s/AKfycbTESTtest-123_abc/exec';
+ await page.route('https://script.google.com/**',async r=>{hits++;if(mode==='html')return r.fulfill({contentType:'text/html',body:'<html>Sign in</html>'});if(mode==='down')return r.abort();
+  ok(r.request().headers()['content-type'].startsWith('text/plain')||hits>1,'bridge call is a simple request (no preflight)');
+  const out=doPost({postData:{contents:r.request().postData()}});return r.fulfill({contentType:'application/json',headers:{'access-control-allow-origin':'*'},body:out.s})});
+ const flow=()=>G.tasks.L2;
  await tap(page,'#tabs button >> nth=1');await page.fill('#newtask','Local first');await page.keyboard.press('Enter');
- await tap(page,'[data-go=gsetup]');await page.waitForSelector('#cid');ok((await page.locator('ol.how').innerText()).includes('http://127.0.0.1'),'setup shows the exact address to authorize');
- await page.screenshot({path:OUT+'v6-google-setup.png',fullPage:true});
- await page.fill('#cid','nope');await tap(page,'[data-form=gcid] button');ok(await page.evaluate(()=>!S.g.cid),'rejects something that is not a Client ID');
- await page.fill('#cid','123-abc.apps.googleusercontent.com');await tap(page,'[data-form=gcid] button');
- await page.waitForFunction(()=>S.g.at>0);await page.waitForSelector('.task');
- const titles=async()=>(await page.locator('.task .tt').allInnerTexts()).join('|');
- ok((await titles()).includes('From Google')&&(await titles()).includes('Dentist (Google)'),'Google tasks appear in the list');
- ok(remote.some(t=>t.title==='Local first'),'a task added here first is pushed up to Google');
- ok((await page.locator('#gline').innerText()).includes('My Tasks'),'status line names the Google list');
+ await tap(page,'[data-go=gsetup]');await page.waitForSelector('#burl');
+ await ctx.grantPermissions(['clipboard-read','clipboard-write']);await tap(page,'[data-act=copycode]');
+ const code=await page.evaluate(()=>navigator.clipboard.readText());const key=await page.evaluate(()=>bridge().key);
+ ok(code.includes('function doPost')&&key.length===48&&code.includes("'"+key+"'"),'Copy puts the bridge code on the clipboard with a fresh 48-character key');
+ doPost=new Function('Tasks','ContentService',code+';return doPost')(Tasks,ContentService);
+ ok(JSON.parse(doPost({postData:{contents:JSON.stringify({key:'wrong',ops:[{op:'del',id:'g1'}]})}}).s).error==='key'&&flow().some(t=>t.id==='g1'),'bridge refuses a wrong key and touches nothing');
+ ok(JSON.parse(doPost({postData:{contents:'garbage'}}).s).error,'bridge survives a malformed request');
+ await page.screenshot({path:OUT+'v6-google-setup.png',fullPage:true});ok(await noSide(page),'setup: no sideways scroll');
+ await page.fill('#burl','https://example.com/exec');await tap(page,'#bgo');ok(await page.evaluate(()=>!S.g.on&&!bridge().url),'rejects an address that is not a script URL');
+ await page.fill('#burl',URL_OK);await page.fill('#blist','Nope');await tap(page,'#bgo');await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('No list named'));ok(await page.evaluate(()=>!S.g.on),'unknown list name: says which lists exist, does not connect');
+ mode='html';await page.fill('#blist','flow');await tap(page,'#bgo');await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('Execute as Me'));ok(await page.evaluate(()=>!S.g.on&&!bridge().url),'wrong deploy settings: clear message, not connected');
+ mode='ok';await tap(page,'#bgo');await page.waitForFunction(()=>S.g.at>0);await page.waitForSelector('.task');
+ const titles=async()=>(await page.locator('.task:not(.done) .tt').allInnerTexts()).join('|');
+ ok((await titles()).includes('From Google')&&(await titles()).includes('Dentist (Google)'),'tasks from the chosen list appear (across pages)');
+ ok(!(await titles()).includes('On the other list')&&!(await titles()).includes('Already done'),'other lists and already-completed tasks stay out');
+ ok(flow().some(t=>t.title==='Local first')&&!G.tasks.L1.some(t=>t.title==='Local first'),'a task typed before connecting is pushed into the chosen list');
+ ok((await page.locator('#gline').innerText()).includes('Flow')&&(await page.locator('.brand').innerText()).toLowerCase()==='flow','screen is titled with the Google list name');
  ok(await page.locator('.due').count()===1,'due date shows');
- await page.fill('#newtask','Added after connect');await page.keyboard.press('Enter');await page.waitForFunction(()=>S.tasks.every(t=>t.gid));ok(remote.some(t=>t.title==='Added after connect'),'new task syncs up');
- await page.locator('.task',{hasText:'From Google'}).locator('.chk').click();await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(remote.find(t=>t.id==='g1').status==='completed','checking off here completes it in Google');
- remote.find(t=>t.id==='g2').status='completed';remote.push({id:'g99',title:'Added on Google side',position:'0099',status:'needsAction'});
+ await page.fill('#newtask','Added after connect');await page.keyboard.press('Enter');await page.waitForFunction(()=>S.tasks.every(t=>t.gid));ok(flow().filter(t=>t.title==='Added after connect').length===1,'new task reaches Google once');
+ await page.locator('.task',{hasText:'From Google'}).locator('.chk').click();await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(flow().find(t=>t.id==='g1').status==='completed','checking off here completes it in Google');
+ await page.locator('.task.done',{hasText:'From Google'}).locator('.chk').click();await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(flow().find(t=>t.id==='g1').status==='needsAction','unchecking here reopens it in Google');
+ await page.locator('.task .tt',{hasText:'From Google'}).click();await page.fill('#edt','Renamed here');await page.keyboard.press('Enter');await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(flow().find(t=>t.id==='g1').title==='Renamed here','renaming here renames it in Google');
+ flow().find(t=>t.id==='g2').status='completed';flow().push({id:'g99',title:'Added on Google side',position:'0099',status:'needsAction'});flow().find(t=>t.id==='g1').title='Renamed on Google side';
  await page.evaluate(()=>gSync());await page.waitForFunction(()=>S.tasks.some(t=>t.gid==='g99'));
- ok(await page.evaluate(()=>S.tasks.find(t=>t.gid==='g2').done===1),'completed on the Google side shows as done here');ok((await titles()).includes('Added on Google side'),'added on the Google side shows up here');
- await page.locator('.task .tt',{hasText:'Added after connect'}).click();await tap(page,'[data-act=del]');await page.waitForFunction(()=>!S.gdel.length);ok(!remote.some(t=>t.title==='Added after connect'),'delete here deletes in Google');
+ ok(await page.evaluate(()=>S.tasks.find(t=>t.gid==='g2').done===1),'completed on the Google side shows as done here');ok((await titles()).includes('Added on Google side')&&(await titles()).includes('Renamed on Google side'),'added and renamed on the Google side show up here');
+ await page.locator('.task .tt',{hasText:'Added after connect'}).click();await tap(page,'[data-act=del]');await page.waitForFunction(()=>!S.gdel.length);ok(!flow().some(t=>t.title==='Added after connect'),'delete here deletes in Google');
+ ok(await page.evaluate(()=>new Set(S.tasks.map(t=>t.gid)).size===S.tasks.length),'no duplicate tasks after all that');
+ /* star + focus on Today */
+ await page.locator('.task',{hasText:'Added on Google side'}).locator('.star').click();await tap(page,'#tabs button >> nth=0');ok((await page.locator('.tasks').innerText()).includes('Added on Google side'),"a starred Google task shows as Today's focus");await tap(page,'#tabs button >> nth=1');
  /* offline queue */
  await ctx.setOffline(true);await page.fill('#newtask','Made offline');await page.keyboard.press('Enter');await page.waitForTimeout(1500);ok((await page.locator('#gline').innerText()).includes('Offline'),'offline: says so, keeps the task');
- await ctx.setOffline(false);await page.evaluate(()=>gSync());await page.waitForFunction(()=>S.tasks.every(t=>t.gid||t.done));ok(remote.some(t=>t.title==='Made offline'),'back online: queued task reaches Google');
- /* expired sign-in */
- authFail=true;await page.evaluate(()=>gSync());await page.waitForSelector('[data-act=gsign]');ok(true,'expired sign-in shows a one-tap Reconnect');
- authFail=false;await tap(page,'[data-act=gsign]');await page.waitForFunction(()=>gState==='ok');ok(true,'Reconnect resumes syncing');
- const st=await page.evaluate(()=>JSON.stringify(S));ok(!st.includes('tok-'),'sign-in token is kept out of app data and backups');
+ await ctx.setOffline(false);await page.evaluate(()=>gSync());await page.waitForFunction(()=>S.tasks.every(t=>t.gid||t.done));ok(flow().filter(t=>t.title==='Made offline').length===1,'back online: queued task reaches Google once');
+ /* bridge unreachable, then recovers; must not hammer it */
+ mode='down';await page.evaluate(()=>gSync());await page.waitForSelector('[data-act=gretry]');await page.waitForTimeout(2500);const h0=hits;await page.waitForTimeout(4000);ok(hits===h0,'when Google is unreachable the app waits for you instead of retrying in a loop');
+ mode='ok';await tap(page,'[data-act=gretry]');await page.waitForFunction(()=>gState==='ok');ok(true,'Try again recovers');
+ const h1=hits;await page.waitForTimeout(3000);ok(hits===h1,'idle app makes no background calls');
+ const st=await page.evaluate(()=>JSON.stringify(S));ok(!st.includes(key)&&!st.includes('AKfycb'),'bridge address and key are kept out of app data and backups');
  await page.screenshot({path:OUT+'v6-list-google.png'});
- await tap(page,'[aria-label=Settings]');await tap(page,'[data-act=goff]');ok(await page.evaluate(()=>!S.g.cid&&S.tasks.length>0&&!localStorage.getItem('calibrate6-tok')),'disconnect keeps the list and removes the sign-in');
+ /* reload keeps the connection */
+ await page.reload();await page.waitForSelector('.task');await page.waitForFunction(()=>gState==='ok');ok(true,'still connected after a reload, no sign-in');
+ /* switch list in settings */
+ await tap(page,'[aria-label=Settings]');await page.selectOption('[data-set=glist]','My Tasks');await page.waitForFunction(()=>S.g.at>0&&S.tasks.some(t=>t.gid==='m1'));ok(await page.evaluate(()=>S.tasks.filter(t=>!t.done).length===1),'switching lists swaps the tasks cleanly');
+ const nFlow=flow().length;await tap(page,'[data-act=goff]');ok(await page.evaluate(()=>!S.g.on&&!localStorage.getItem('calibrate6-bridge')),'disconnect forgets the address and key');ok(flow().length===nFlow,'disconnect deletes nothing in Google');
  ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
 
 /* 5. install + offline */

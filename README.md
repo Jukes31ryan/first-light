@@ -20,8 +20,8 @@ Install it: on Android, open the link in Chrome, then menu > **Install app**. On
 
 - Nothing repeats until you have seen all of it (239 words, 230 facts, 66 stories, 175 jokes).
 - "My day starts at" in Settings decides when a new set of cards appears, so it works for night shifts.
-- The list can sync both ways with Google Tasks. That needs a free Google OAuth Client ID; the app walks you through it under Settings > Google Tasks.
-- Everything is stored in the browser on your device. Settings > Backup saves and restores a file. The Google sign-in token is never written to a backup.
+- The list can mirror one Google Tasks list, both ways, so there is only one list. It connects through a small Apps Script you deploy in your own Google account (Settings > Google Tasks has the steps and the code). There is no Google sign-in in the app.
+- Everything is stored in the browser on your device. Settings > Backup saves and restores a file. The bridge address and key are never written to a backup.
 
 ## Development
 
