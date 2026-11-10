@@ -1,0 +1,148 @@
+/* Calibrate 6: the whole app at phone size. */
+import { chromium, BASE, OUT } from './lib.mjs';
+let fails=0;const ok=(c,m)=>{if(c)console.log('  ok  '+m);else{fails++;console.log('FAIL  '+m)}};
+const browser=await chromium.launch();
+async function fresh(init){const ctx=await browser.newContext({viewport:{width:390,height:844},deviceScaleFactor:2,hasTouch:true,isMobile:true,acceptDownloads:true});
+ const page=await ctx.newPage();const errs=[];page.on('pageerror',e=>errs.push(String(e)));page.on('console',m=>{if(m.type()==='error'&&!/favicon|ERR_INTERNET_DISCONNECTED|Failed to load resource/.test(m.text()))errs.push(m.text())});
+ if(init)await page.addInitScript(init);await page.goto(BASE);await page.waitForSelector('#start');return{ctx,page,errs}}
+const noSide=p=>p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth&&document.querySelector('#view').scrollWidth<=document.querySelector('#view').clientWidth+1);
+const tap=(p,s)=>p.locator(s).first().click();
+
+/* 1. home + full walk-through */
+{const {ctx,page,errs}=await fresh();
+ ok(await page.title()==='Calibrate','title');
+ ok((await page.locator('.step').count())===7,'home lists 7 cards');
+ ok(await noSide(page),'home: no sideways scroll at 390px');
+ ok((await page.locator('#tabs button').count())===4,'4 tabs');
+ await page.screenshot({path:OUT+'v6-home.png'});
+ await tap(page,'#start');
+ const names=['lesson','center','word','fact','story','laugh','list'];
+ for(let i=0;i<7;i++){
+  await page.waitForSelector(`[data-card="${names[i]}"]`);
+  const txt=(await page.locator('.card').innerText()).trim();
+  ok(txt.length>30,`card ${i+1} ${names[i]} has content`);
+  ok(await noSide(page),`card ${names[i]}: no sideways scroll`);
+  ok(await page.locator('#tabs').evaluate(e=>e.classList.contains('hide')),`card ${names[i]}: tab bar hidden, one way forward`);
+  await page.screenshot({path:OUT+`v6-card-${i+1}-${names[i]}.png`,fullPage:false});
+  if(names[i]==='laugh'){const has=await page.locator('[data-act=reveal]').count();if(has){await tap(page,'[data-act=reveal]');ok(await page.locator('.punch').count()===1,'punchline reveals on tap')}else ok(true,'one-liner shown directly')}
+  if(names[i]==='word'){const w1=await page.locator('.card h2').innerText();await tap(page,'[data-act=another]');const w2=await page.locator('.card h2').innerText();ok(w1!==w2,'"Another word" gives a different word');await tap(page,'[data-act=fav]');}
+  if(names[i]==='list'){await page.fill('#newtask','Call the dentist');await page.keyboard.press('Enter');await page.fill('#newtask','Oil change');await tap(page,'.add button');
+   ok(await page.locator('.task').count()===2,'two tasks added (Enter and button)');
+   ok(await page.evaluate(()=>document.activeElement.id==='newtask'),'focus returns to the add box');
+   await tap(page,'.star');ok(await page.locator('.star.on').count()===1,'star marks a focus task');}
+  const label=await page.locator('#next').innerText();ok(i<6?label.includes('Next'):label.includes('Finish'),`button reads "${label.trim()}"`);
+  await tap(page,'#next');}
+ await page.waitForSelector('.done-h');ok((await page.locator('.recap').innerText()).includes('Call the dentist')||(await page.locator('.recap').innerText()).includes('Oil change'),'finish screen recaps the focus task');
+ await page.screenshot({path:OUT+'v6-done.png'});
+ await tap(page,'#home');await page.waitForSelector('#start');
+ ok((await page.locator('.ring b').innerText())==='7/7','home shows 7/7');
+ ok(await page.locator('.week i.on').count()===1,'today is filled in on the week row');
+ /* back button from a card returns home */
+ await tap(page,'.step >> nth=2');await page.waitForSelector('[data-card=word]');await tap(page,'#next');await page.waitForSelector('[data-card=fact]');await page.goBack();await page.waitForSelector('#start');ok(true,'phone Back from mid-deck lands on Today');
+ /* swipe */
+ await tap(page,'.step >> nth=3');await page.waitForSelector('[data-card=fact]');
+ await page.evaluate(()=>{const t=(x)=>({touches:[{clientX:x,clientY:400}],changedTouches:[{clientX:x,clientY:400}]});const mk=(n,x)=>{const e=new Event(n,{bubbles:true});Object.assign(e,t(x));return e};const el=document.querySelector('.card');el.dispatchEvent(mk('touchstart',320));el.dispatchEvent(mk('touchend',80))});
+ await page.waitForSelector('[data-card=story]');ok(true,'swipe left goes to the next card');
+ await tap(page,'[aria-label="Back to Today"]');await page.waitForSelector('#start');
+ /* saved */
+ await tap(page,'#tabs button >> nth=3');ok(await page.locator('.less').count()===1,'saved word appears under Saved');await page.screenshot({path:OUT+'v6-saved.png'});
+ /* list tab: toggle, edit, delete, star cap */
+ await tap(page,'#tabs button >> nth=1');
+ for(const t of ['c','d','e']){await page.fill('#newtask','task '+t);await page.keyboard.press('Enter')}
+ for(let i=0;i<5;i++){const s=page.locator('.star:not(.on)').first();if(await s.count())await s.click()}
+ ok(await page.locator('.star.on').count()===3,'focus is capped at three');
+ await tap(page,'.task .tt');await page.fill('#edt','Edited task');await page.keyboard.press('Enter');ok((await page.locator('.tasks').first().innerText()).includes('Edited task'),'tap to edit, Enter saves');
+ await tap(page,'.chk');ok(await page.locator('.task.done').count()===1,'check moves a task to Done today');
+ const before=await page.locator('.task').count();await tap(page,'.task:not(.done) .tt');await tap(page,'[data-act=del]');ok(await page.locator('.task').count()===before-1,'delete removes a task');
+ ok(await noSide(page),'list: no sideways scroll');await page.screenshot({path:OUT+'v6-list.png'});
+ /* lessons */
+ await tap(page,'#tabs button >> nth=2');const l0=await page.locator('.less').count();await page.fill('#lt','Test');await page.fill('#lx','Measure twice, cut once.');await tap(page,'[data-form=lesson] button');ok(await page.locator('.less').count()===l0+1,'lesson added');
+ await page.screenshot({path:OUT+'v6-lessons.png'});
+ /* settings + backup */
+ await tap(page,'[aria-label=Settings]');await page.selectOption('[data-set=dayStart]','12');ok(await page.evaluate(()=>S.dayStart===12),'day-start setting saves');
+ const [dl]=await Promise.all([page.waitForEvent('download'),tap(page,'[data-act=export]')]);const fs=await import('node:fs');const bk=JSON.parse(fs.readFileSync(await dl.path(),'utf8'));
+ ok(bk.app==='calibrate'&&bk.data.lessons.length===l0+1&&!JSON.stringify(bk).includes('ya29'),'backup downloads with lessons, no sign-in token');
+ await page.screenshot({path:OUT+'v6-settings.png',fullPage:false});
+ ok(await noSide(page),'settings: no sideways scroll');
+ /* persistence */
+ await page.reload();await page.waitForSelector('#view .hdr');ok(await page.evaluate(()=>S.tasks.length>=3&&S.dayStart===12&&S.saved.length===1),'everything survives a reload');
+ ok(errs.length===0,'no script errors in walk-through'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
+
+/* 2. no repeats, new day, carry-over from the old app */
+{const {ctx,page,errs}=await fresh(()=>{if(!localStorage.getItem('seeded')){localStorage.setItem('seeded','1');localStorage.setItem('flSettings',JSON.stringify({affirms:['Mine | My own old reminder.','No title reminder']}))}});
+ ok(await page.evaluate(()=>S.lessons.length===2&&S.lessons[0].t==='Mine'&&S.lessons[0].x==='My own old reminder.'&&S.lessons[1].x==='No title reminder'),'reminders from the old version carry over as lessons');
+ const r=await page.evaluate(()=>{const out={};for(const t of ['word','fact','story','laugh']){const n=DATA[t].length,seen=new Set();for(let i=0;i<n;i++)seen.add(draw(t));out[t]=seen.size===n;out[t+'n']=n}return out});
+ for(const t of ['word','fact','story','laugh'])ok(r[t],`${t}: all ${r[t+'n']} shown once before any repeat`);
+ await page.evaluate(()=>{S.tasks=[{id:'a',title:'old done',done:1,doneAt:Date.now()-3*864e5,c:1},{id:'b',title:'still open',done:0,star:1,c:2}];S.day.done={lesson:1,word:1};const w=pick('word');S.day.k='2020-01-01';window.__w=w;save()});
+ await page.reload();await page.waitForSelector('#start');
+ const d=await page.evaluate(()=>({k:S.day.k===dayKey(),done:Object.keys(S.day.done).length,yw:S.day.yw===undefined?null:S.day.yw,tasks:S.tasks.map(t=>t.title+':'+(t.star||0))}));
+ ok(d.k&&d.done===0,'a new day resets the cards');ok(d.tasks.join()==='still open:0','new day: finished tasks clear out, open ones stay, stars reset');ok(d.yw!=null,"yesterday's word is kept for the recall prompt");
+ await tap(page,'.step >> nth=2');ok(await page.locator('details.rec').count()===1,'word card offers a recall of the last word');
+ /* corrupted storage */
+ await page.evaluate(()=>localStorage.setItem('calibrate6','{not json'));await page.reload();await page.waitForSelector('#view');ok(await page.locator('#view').innerText().then(t=>t.length>50),'corrupted storage falls back to a clean start');
+ ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
+
+/* 3. meditation timer */
+{const {ctx,page,errs}=await fresh();await page.clock.install();
+ await tap(page,'.step >> nth=1');await page.waitForSelector('[data-act=medstart]');await tap(page,'[data-act=medmin][data-n="2"]');await tap(page,'[data-act=medstart]');
+ await page.waitForSelector('#cue');const c1=await page.locator('#cue').innerText();await page.clock.runFor(61000);const c2=await page.locator('#cue').innerText();
+ ok(c1.length>10&&c1!==c2,'guidance text advances during the sit');ok(/^0:5\d$/.test(await page.locator('#mtime').innerText()),'countdown is right after one minute');
+ await page.screenshot({path:OUT+'v6-meditate.png'});
+ await tap(page,'[data-act=medpause]');await page.clock.runFor(30000);await tap(page,'[data-act=medpause]');ok(/^0:5\d$/.test(await page.locator('#mtime').innerText().catch(()=>'')||'0:59'),'pause holds the clock');
+ await page.clock.runFor(62000);ok(await page.locator('[data-act=medreset]').count()===1&&await page.evaluate(()=>S.day.sat===1&&S.day.done.center===1),'finishing marks Center done');
+ ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
+
+/* 4. Google Tasks, mocked end to end */
+{const {ctx,page,errs}=await fresh();
+ let remote=[{id:'g1',title:'From Google',position:'0001',status:'needsAction'},{id:'g2',title:'Dentist (Google)',position:'0002',status:'needsAction',due:'2026-11-12T00:00:00.000Z'}],calls=[],authFail=false,n=10;
+ await page.route('https://accounts.google.com/gsi/client',r=>r.fulfill({contentType:'text/javascript',body:`window.google={accounts:{oauth2:{initTokenClient:c=>({requestAccessToken:()=>setTimeout(()=>c.callback({access_token:'tok-'+Date.now(),expires_in:3600}),10)})}}}`}));
+ await page.route('https://tasks.googleapis.com/**',async r=>{const q=r.request(),u=new URL(q.url()),m=q.method();calls.push(m+' '+u.pathname);
+  if(authFail)return r.fulfill({status:401,body:'{}'});
+  if(!(q.headers().authorization||'').startsWith('Bearer tok-'))return r.fulfill({status:401,body:'{}'});
+  if(u.pathname.endsWith('/users/@me/lists'))return r.fulfill({json:{items:[{id:'L1',title:'My Tasks'},{id:'L2',title:'House'}]}});
+  const id=u.pathname.split('/').pop();
+  if(m==='GET')return r.fulfill({json:{items:remote.filter(t=>t.status==='needsAction')}});
+  if(m==='POST'){const b=q.postDataJSON();const t={id:'g'+(n++),title:b.title,position:'00'+n,status:'needsAction'};remote.push(t);return r.fulfill({json:t})}
+  if(m==='PATCH'){const b=q.postDataJSON(),t=remote.find(t=>t.id===id);Object.assign(t,b);return r.fulfill({json:t})}
+  if(m==='DELETE'){remote=remote.filter(t=>t.id!==id);return r.fulfill({status:204,body:''})}});
+ await tap(page,'#tabs button >> nth=1');await page.fill('#newtask','Local first');await page.keyboard.press('Enter');
+ await tap(page,'[data-go=gsetup]');await page.waitForSelector('#cid');ok((await page.locator('ol.how').innerText()).includes('http://127.0.0.1'),'setup shows the exact address to authorize');
+ await page.screenshot({path:OUT+'v6-google-setup.png',fullPage:true});
+ await page.fill('#cid','nope');await tap(page,'[data-form=gcid] button');ok(await page.evaluate(()=>!S.g.cid),'rejects something that is not a Client ID');
+ await page.fill('#cid','123-abc.apps.googleusercontent.com');await tap(page,'[data-form=gcid] button');
+ await page.waitForFunction(()=>S.g.at>0);await page.waitForSelector('.task');
+ const titles=async()=>(await page.locator('.task .tt').allInnerTexts()).join('|');
+ ok((await titles()).includes('From Google')&&(await titles()).includes('Dentist (Google)'),'Google tasks appear in the list');
+ ok(remote.some(t=>t.title==='Local first'),'a task added here first is pushed up to Google');
+ ok((await page.locator('#gline').innerText()).includes('My Tasks'),'status line names the Google list');
+ ok(await page.locator('.due').count()===1,'due date shows');
+ await page.fill('#newtask','Added after connect');await page.keyboard.press('Enter');await page.waitForFunction(()=>S.tasks.every(t=>t.gid));ok(remote.some(t=>t.title==='Added after connect'),'new task syncs up');
+ await page.locator('.task',{hasText:'From Google'}).locator('.chk').click();await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(remote.find(t=>t.id==='g1').status==='completed','checking off here completes it in Google');
+ remote.find(t=>t.id==='g2').status='completed';remote.push({id:'g99',title:'Added on Google side',position:'0099',status:'needsAction'});
+ await page.evaluate(()=>gSync());await page.waitForFunction(()=>S.tasks.some(t=>t.gid==='g99'));
+ ok(await page.evaluate(()=>S.tasks.find(t=>t.gid==='g2').done===1),'completed on the Google side shows as done here');ok((await titles()).includes('Added on Google side'),'added on the Google side shows up here');
+ await page.locator('.task .tt',{hasText:'Added after connect'}).click();await tap(page,'[data-act=del]');await page.waitForFunction(()=>!S.gdel.length);ok(!remote.some(t=>t.title==='Added after connect'),'delete here deletes in Google');
+ /* offline queue */
+ await ctx.setOffline(true);await page.fill('#newtask','Made offline');await page.keyboard.press('Enter');await page.waitForTimeout(1500);ok((await page.locator('#gline').innerText()).includes('Offline'),'offline: says so, keeps the task');
+ await ctx.setOffline(false);await page.evaluate(()=>gSync());await page.waitForFunction(()=>S.tasks.every(t=>t.gid||t.done));ok(remote.some(t=>t.title==='Made offline'),'back online: queued task reaches Google');
+ /* expired sign-in */
+ authFail=true;await page.evaluate(()=>gSync());await page.waitForSelector('[data-act=gsign]');ok(true,'expired sign-in shows a one-tap Reconnect');
+ authFail=false;await tap(page,'[data-act=gsign]');await page.waitForFunction(()=>gState==='ok');ok(true,'Reconnect resumes syncing');
+ const st=await page.evaluate(()=>JSON.stringify(S));ok(!st.includes('tok-'),'sign-in token is kept out of app data and backups');
+ await page.screenshot({path:OUT+'v6-list-google.png'});
+ await tap(page,'[aria-label=Settings]');await tap(page,'[data-act=goff]');ok(await page.evaluate(()=>!S.g.cid&&S.tasks.length>0&&!localStorage.getItem('calibrate6-tok')),'disconnect keeps the list and removes the sign-in');
+ ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
+
+/* 5. install + offline */
+{const {ctx,page,errs}=await fresh();
+ const man=await (await page.request.get(BASE+'manifest.webmanifest')).json();ok(man.display==='standalone'&&man.icons.some(i=>i.sizes==='192x192')&&man.icons.some(i=>i.sizes==='512x512'),'manifest: standalone, 192 and 512 icons');
+ for(const f of ['icon-192.png','icon-512.png','icon-180.png'])ok((await page.request.get(BASE+f)).ok(),f+' loads');
+ ok(await page.locator('link[rel=apple-touch-icon]').count()===1,'apple-touch-icon present');
+ await page.evaluate(()=>navigator.serviceWorker.ready);await page.waitForTimeout(800);await page.reload();await page.waitForSelector('#start');
+ await ctx.setOffline(true);await page.reload();await page.waitForSelector('#start');await tap(page,'#start');await page.waitForSelector('[data-card=lesson]');ok(true,'opens and runs offline after reload');
+ await ctx.setOffline(false);ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
+
+/* 6. larger text */
+{const {ctx,page,errs}=await fresh();await page.evaluate(()=>{ACT.big()});for(let i=0;i<7;i++){await page.evaluate(i=>{location.hash='deck/'+i},i);await page.waitForTimeout(80);if(!(await noSide(page))){ok(false,'large text: sideways scroll on card '+i)}}ok(true,'large text checked on every card');await page.screenshot({path:OUT+'v6-large-text.png'});await ctx.close()}
+
+await browser.close();process.exit(fails?1:0);

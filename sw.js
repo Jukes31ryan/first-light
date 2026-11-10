@@ -1,63 +1,32 @@
-/* First Light service worker — offline app shell.
-   Bump CACHE on every release: the name is the version, and a new name is
-   what evicts the old files and tells open tabs an update is waiting. */
-const CACHE = 'calibrate-v22';
-const SHELL = [
-  './',
-  './index.html',
-  './manifest.webmanifest',
-  './icon-192.png',
-  './icon-512.png',
-  './icon-180.png'
-];
+/* Calibrate service worker: offline app shell.
+   Bump CACHE on every release. A new name evicts the old files and tells
+   open copies that an update is waiting. */
+const CACHE = 'calibrate-v23';
+const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-180.png'];
 
 self.addEventListener('install', e => {
-  e.waitUntil(
-    // No skipWaiting here on purpose: the new worker waits until the user
-    // taps "update", so a release never reloads the page mid-sentence.
-    caches.open(CACHE)
-      .then(c => Promise.all(SHELL.map(u => c.add(u).catch(() => {}))))
-  );
+  // No skipWaiting here on purpose: the page asks for it when the user taps
+  // "Update ready", so a release never reloads the app in the middle of a card.
+  e.waitUntil(caches.open(CACHE).then(c => Promise.all(SHELL.map(u => c.add(new Request(u, { cache: 'reload' })).catch(() => {})))));
 });
-
-self.addEventListener('message', e => {
-  if (e.data === 'skipWaiting') self.skipWaiting();
-});
-
 self.addEventListener('activate', e => {
-  e.waitUntil(
-    caches.keys()
-      .then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k))))
-      .then(() => self.clients.claim())
-  );
+  e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))));
 });
-
+self.addEventListener('message', e => { if (e.data === 'skip' || e.data === 'skipWaiting' || (e.data && e.data.type === 'SKIP_WAITING')) self.skipWaiting(); });
 self.addEventListener('fetch', e => {
-  const req = e.request;
-  if (req.method !== 'GET') return;
-
-  // Navigations: network first, fall back to the cached shell so it opens offline.
-  if (req.mode === 'navigate') {
-    e.respondWith(
-      fetch(req)
-        .then(res => {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put('./index.html', copy)).catch(() => {});
-          return res;
-        })
-        .catch(() => caches.match('./index.html').then(r => r || caches.match('./')))
-    );
+  const u = new URL(e.request.url);
+  if (e.request.method !== 'GET' || u.origin !== location.origin) return; // Google sign-in and Tasks go straight to the network
+  if (e.request.mode === 'navigate') { // network first so updates land fast; cached shell when offline
+    e.respondWith(fetch(e.request).then(r => {
+      if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put('./index.html', copy)); }
+      return r;
+    }).catch(() => caches.match('./index.html').then(r => r || caches.match('./'))));
     return;
   }
-
-  // Everything else (icons, fonts): cache first, then network, then cache the result.
   e.respondWith(
-    caches.match(req).then(hit => hit || fetch(req).then(res => {
-      if (res && (res.status === 200 || res.type === 'opaque')) {
-        const copy = res.clone();
-        caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
-      }
-      return res;
-    }).catch(() => hit))
+    caches.match(e.request, { ignoreSearch: true }).then(hit => hit || fetch(e.request).then(r => {
+      if (r.ok) { const copy = r.clone(); caches.open(CACHE).then(c => c.put(e.request, copy)); }
+      return r;
+    }))
   );
 });
