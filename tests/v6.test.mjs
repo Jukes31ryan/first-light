@@ -16,7 +16,7 @@ const tap=(p,s)=>p.locator(s).first().click();
  ok((await page.locator('#tabs button').count())===4,'4 tabs');
  await page.screenshot({path:OUT+'v6-home.png'});
  await tap(page,'#start');
- const names=['lesson','center','word','fact','story','laugh','list'];
+ const names=['lesson','word','fact','story','laugh','list','center'];
  for(let i=0;i<7;i++){
   await page.waitForSelector(`[data-card="${names[i]}"]`);
   const txt=(await page.locator('.card').innerText()).trim();
@@ -38,9 +38,9 @@ const tap=(p,s)=>p.locator(s).first().click();
  ok((await page.locator('.ring b').innerText())==='7/7','home shows 7/7');
  ok(await page.locator('.week i.on').count()===1,'today is filled in on the week row');
  /* back button from a card returns home */
- await tap(page,'.step >> nth=2');await page.waitForSelector('[data-card=word]');await tap(page,'#next');await page.waitForSelector('[data-card=fact]');await page.goBack();await page.waitForSelector('#start');ok(true,'phone Back from mid-deck lands on Today');
+ await tap(page,'.step >> nth=1');await page.waitForSelector('[data-card=word]');await tap(page,'#next');await page.waitForSelector('[data-card=fact]');await page.goBack();await page.waitForSelector('#start');ok(true,'phone Back from mid-deck lands on Today');
  /* swipe */
- await tap(page,'.step >> nth=3');await page.waitForSelector('[data-card=fact]');
+ await tap(page,'.step >> nth=2');await page.waitForSelector('[data-card=fact]');
  await page.evaluate(()=>{const t=(x)=>({touches:[{clientX:x,clientY:400}],changedTouches:[{clientX:x,clientY:400}]});const mk=(n,x)=>{const e=new Event(n,{bubbles:true});Object.assign(e,t(x));return e};const el=document.querySelector('.card');el.dispatchEvent(mk('touchstart',320));el.dispatchEvent(mk('touchend',80))});
  await page.waitForSelector('[data-card=story]');ok(true,'swipe left goes to the next card');
  await tap(page,'[aria-label="Back to Today"]');await page.waitForSelector('#start');
@@ -76,20 +76,34 @@ const tap=(p,s)=>p.locator(s).first().click();
  await page.evaluate(()=>{S.tasks=[{id:'a',title:'old done',done:1,doneAt:Date.now()-3*864e5,c:1},{id:'b',title:'still open',done:0,star:1,c:2}];S.day.done={lesson:1,word:1};const w=pick('word');S.day.k='2020-01-01';window.__w=w;save()});
  await page.reload();await page.waitForSelector('#start');
  const d=await page.evaluate(()=>({k:S.day.k===dayKey(),done:Object.keys(S.day.done).length,yw:S.day.yw===undefined?null:S.day.yw,tasks:S.tasks.map(t=>t.title+':'+(t.star||0))}));
- ok(d.k&&d.done===0,'a new day resets the cards');ok(d.tasks.join()==='still open:0','new day: finished tasks clear out, open ones stay, stars reset');ok(d.yw!=null,"yesterday's word is kept for the recall prompt");
- await tap(page,'.step >> nth=2');ok(await page.locator('details.rec').count()===1,'word card offers a recall of the last word');
+ ok(d.k&&d.done===0,'a new day resets the cards');ok(d.tasks.join()==='still open:0','new day: finished tasks clear out, open ones stay, stars reset');/* words: knew it, review until learned */
+ await tap(page,'.step >> nth=1');await page.waitForSelector('[data-card=word]');
+ const wA=await page.evaluate(()=>S.day.pick.word);await tap(page,'[data-act=knew]');
+ const k1=await page.evaluate(a=>({known:S.wk[a]===1,moved:S.day.pick.word!==a,inq:(S.q.word||[]).includes(a)}),wA);ok(k1.known&&k1.moved&&!k1.inq,'"I already knew this" retires the word and deals another');
+ const wB=await page.evaluate(()=>S.day.pick.word);await tap(page,'#next');ok(await page.evaluate(b=>S.wd[b]&&S.wd[b].st===0&&S.wd[b].due===dnum()+1,wB),'a new word is queued for a check tomorrow');
+ const step=async(days)=>{await page.evaluate(n=>{const d=new Date(Date.parse(S.day.k+'T00:00:00Z')-n*864e5);S.day.k=d.toISOString().slice(0,10);for(const i in S.wd)S.wd[i].due-=n;S.day.rv=0;save();location.hash=''},days);await page.reload();await page.waitForSelector('#start');await tap(page,'.step >> nth=1');await page.waitForSelector('[data-card=word]')};
+ await step(1);ok((await page.locator('details.rec summary').allInnerTexts()).includes(await page.evaluate(b=>WORDS[b].w,wB)),'next day the word comes back under "Do you remember?"');
+ const rvB=()=>page.locator('details.rec',{hasText:''}).filter({has:page.locator(`[data-act=rv][data-i="${wB}"]`)});
+ await rvB().locator('summary').click();await rvB().locator('[data-ok="0"]').click();ok(await page.evaluate(b=>S.wd[b].st===0&&S.wd[b].due===dnum()+1,wB),'"Not yet" brings it back tomorrow');
+ for(const gap of [1,2,5]){await step(gap);await rvB().locator('summary').click();await rvB().locator('[data-ok="1"]').click()}
+ ok(await page.evaluate(b=>S.wk[b]===2&&!S.wd[b],wB),'three "Got it" answers spread over days mark it learned');
+ ok(await page.evaluate(()=>{S.q.word=[];const seen=new Set();for(let i=0;i<WORDS.length;i++)seen.add(draw('word'));return [...seen].every(i=>!S.wk[i])}),'known and learned words are never dealt again');
+ await tap(page,'[aria-label="Back to Today"]');
  /* corrupted storage */
  await page.evaluate(()=>localStorage.setItem('calibrate6','{not json'));await page.reload();await page.waitForSelector('#view');ok(await page.locator('#view').innerText().then(t=>t.length>50),'corrupted storage falls back to a clean start');
  ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
 
 /* 3. meditation timer */
 {const {ctx,page,errs}=await fresh();await page.clock.install();
- await tap(page,'.step >> nth=1');await page.waitForSelector('[data-act=medstart]');await tap(page,'[data-act=medmin][data-n="2"]');await tap(page,'[data-act=medstart]');
+ await tap(page,'.step >> nth=6');await page.waitForSelector('[data-act=medstart]');await tap(page,'[data-act=medmin][data-n="2"]');await tap(page,'[data-act=medstart]');
  await page.waitForSelector('#cue');const c1=await page.locator('#cue').innerText();await page.clock.runFor(61000);const c2=await page.locator('#cue').innerText();
  ok(c1.length>10&&c1!==c2,'guidance text advances during the sit');ok(/^0:5\d$/.test(await page.locator('#mtime').innerText()),'countdown is right after one minute');
  await page.screenshot({path:OUT+'v6-meditate.png'});
  await tap(page,'[data-act=medpause]');await page.clock.runFor(30000);await tap(page,'[data-act=medpause]');ok(/^0:5\d$/.test(await page.locator('#mtime').innerText().catch(()=>'')||'0:59'),'pause holds the clock');
  await page.clock.runFor(62000);ok(await page.locator('[data-act=medreset]').count()===1&&await page.evaluate(()=>S.day.sat===1&&S.day.done.center===1),'finishing marks Center done');
+ const wu=await page.evaluate(()=>{const o=location;let href='';ACT.wu=ACT.wu;const src=ACT.wu.toString();return{intent:src.includes('package=org.wakingup.android')&&src.includes('browser_fallback_url')}});ok(wu.intent,'Waking Up button targets the installed app, with the website as fallback');
+ await page.evaluate(()=>{CARDS.forEach(c=>S.day.done[c.id]=1);S.day.away=1;save();document.dispatchEvent(new Event('visibilitychange'))});await page.waitForSelector('.done-h');ok(await page.evaluate(()=>S.hist[S.day.k]===1&&!S.day.away),'coming back from Waking Up lands on the finished screen');
+ await tap(page,'#home');const p0=await page.evaluate(()=>JSON.stringify(S.day.pick));ok((await page.locator('#start').innerText()).includes('Fresh set'),'after finishing, the button offers a fresh set');await tap(page,'#start');await page.waitForSelector('[data-card=lesson]');ok(await page.evaluate(p=>Object.keys(S.day.done).length===0&&JSON.stringify(S.day.pick)!==p,p0),'"Fresh set" deals new cards the same day');
  ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
 
 /* 4. Google Tasks through the bridge. The mock runs the app's own bridge code against a fake Tasks service. */

@@ -1,7 +1,7 @@
 /* Calibrate service worker: offline app shell.
    Bump CACHE on every release. A new name evicts the old files and tells
    open copies that an update is waiting. */
-const CACHE = 'calibrate-v24';
+const CACHE = 'calibrate-v25';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-180.png'];
 
 self.addEventListener('install', e => {

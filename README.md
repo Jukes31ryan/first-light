@@ -5,12 +5,12 @@ A few minutes to point the day. Seven cards, one per screen, one button forward:
 | Card | What it does |
 |------|--------------|
 | **Remember** | One of your own lessons, so you don't relearn it the hard way |
-| **Center** | A 2, 5 or 10 minute guided meditation with a chime (8 styles) |
-| **Word** | One word worth owning, with pronunciation and an example |
+| **Word** | One word worth owning. Mark it known, or it comes back for a check until learned |
 | **Fact** | Something interesting and true |
 | **Story** | A short story that ends on a point |
 | **Laugh** | A joke |
-| **List** | Empty your head, then star up to three things for today |
+| **List** | Your tasks (optionally your Google Tasks list). Star up to three for today |
+| **Center** | Finish with a 2, 5 or 10 minute guided meditation (8 styles), or hand off to Waking Up |
 
 **Live:** https://jukes31ryan.github.io/first-light/
 
