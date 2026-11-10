@@ -163,7 +163,63 @@ const tap=(p,s)=>p.locator(s).first().click();
  await page.reload();await page.waitForSelector('.task');await page.waitForFunction(()=>gState==='ok');ok(true,'still connected after a reload, no sign-in');
  /* switch list in settings */
  await tap(page,'[aria-label=Settings]');await page.selectOption('[data-set=glist]','My Tasks');await page.waitForFunction(()=>S.g.at>0&&S.tasks.some(t=>t.gid==='m1'));ok(await page.evaluate(()=>S.tasks.filter(t=>!t.done).length===1),'switching lists swaps the tasks cleanly');
- const nFlow=flow().length;await tap(page,'[data-act=goff]');ok(await page.evaluate(()=>!S.g.on&&!localStorage.getItem('calibrate6-bridge')),'disconnect forgets the address and key');ok(flow().length===nFlow,'disconnect deletes nothing in Google');
+ const nFlow=flow().length;await tap(page,'[data-act=goff]');ok(await page.evaluate(()=>!S.g.on&&!bridge().url),'disconnect forgets the script address');ok(flow().length===nFlow,'disconnect deletes nothing in Google');
+ ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
+
+/* 4b. One-tap Google sign-in, with Google mocked */
+{const {ctx,page,errs}=await fresh();
+ const T={lists:[{id:'L1',title:'My Tasks'},{id:'L2',title:'Flow'}],tasks:{L1:[{id:'m1',title:'On the other list',position:'0001',status:'needsAction'}],L2:[{id:'g1',title:'From Google',position:'0001',status:'needsAction'},{id:'g2',title:'Dentist (Google)',position:'0002',status:'needsAction',due:'2026-11-12T00:00:00.000Z'},{id:'g3',title:'Already done',position:'0003',status:'completed'}]},n:10};
+ let calls=0,authFail=false;
+ await page.route('https://accounts.google.com/gsi/client',r=>r.fulfill({contentType:'text/javascript',body:`window.google={accounts:{oauth2:{initTokenClient:c=>({requestAccessToken:()=>setTimeout(()=>window.__fail?c.error_callback({type:'popup_closed'}):c.callback({access_token:'tok-'+Date.now(),expires_in:3600}),10)}),revoke:()=>{window.__revoked=1}}}}`}));
+ await page.route('https://tasks.googleapis.com/**',async r=>{const q=r.request(),u=new URL(q.url()),m=q.method();calls++;
+  if(authFail||!(q.headers().authorization||'').startsWith('Bearer tok-'))return r.fulfill({status:401,body:'{}'});
+  if(u.pathname.endsWith('/users/@me/lists'))return r.fulfill({json:{items:T.lists}});
+  const mm=u.pathname.match(/\/lists\/([^/]+)\/tasks(?:\/(.+))?$/),L=mm[1],id=mm[2];
+  if(m==='GET'){const all=T.tasks[L].filter(t=>u.searchParams.get('showCompleted')!=='false'||t.status!=='completed');const st=+(u.searchParams.get('pageToken')||0);return r.fulfill({json:{items:all.slice(st,st+2),nextPageToken:st+2<all.length?String(st+2):undefined}})}
+  if(m==='POST'){const b=q.postDataJSON(),t={id:'g'+(T.n++),title:b.title,position:'00'+T.n,status:'needsAction'};T.tasks[L].push(t);return r.fulfill({json:t})}
+  if(m==='PATCH'){const b=q.postDataJSON(),t=T.tasks[L].find(t=>t.id===id);if(!t)return r.fulfill({status:404,body:'{}'});Object.assign(t,b);return r.fulfill({json:t})}
+  if(m==='DELETE'){T.tasks[L]=T.tasks[L].filter(t=>t.id!==id);return r.fulfill({status:204,body:''})}});
+ const flow=()=>T.tasks.L2,titles=async()=>(await page.locator('.task:not(.done) .tt').allInnerTexts()).join('|');
+ await tap(page,'#tabs button >> nth=1');await page.fill('#newtask','Local first');await page.keyboard.press('Enter');
+ await tap(page,'[data-go=gsetup]');await page.waitForSelector('#cidin');
+ ok(await page.locator('#gconnect').count()===0,'with no Google ID yet, the sign-in button is not offered');
+ await page.fill('#cidin','nonsense');await tap(page,'[data-form=cid] button');ok(await page.evaluate(()=>!bridge().cid),'rejects something that is not a Client ID');
+ await page.fill('#cidin','123-abc.apps.googleusercontent.com');await tap(page,'[data-form=cid] button');await page.waitForSelector('#gconnect');
+ ok(await page.locator('#burl').count()===0,'with an ID, the screen is one button and the helper-script steps are tucked away');
+ ok(await noSide(page),'sign-in screen: no sideways scroll');await page.screenshot({path:OUT+'v6-signin.png'});
+ await tap(page,'[data-act=gadv]');ok(await page.locator('#burl').count()===1,'Advanced options reveal the helper script path');
+ await page.goBack().catch(()=>{});await page.evaluate(()=>{GADV=false;go('gsetup')});await page.waitForSelector('#gconnect');
+ await page.evaluate(()=>{window.__fail=true});await tap(page,'#gconnect');await page.waitForFunction(()=>document.querySelector('#toast').textContent.includes('did not finish'));ok(await page.evaluate(()=>!S.g.on&&!tok()),'closing the Google window leaves nothing half-connected');
+ await page.evaluate(()=>{window.__fail=false});await tap(page,'#gconnect');await page.waitForSelector('[data-act=gchoose]');
+ ok((await page.locator('[data-act=gchoose]').first().innerText()).includes('Flow'),'two lists: asks which one, with Flow suggested first');await page.screenshot({path:OUT+'v6-picker.png'});
+ await tap(page,'[data-act=gchoose] >> nth=0');await page.waitForFunction(()=>S.g.at>0);await page.waitForSelector('.task');
+ ok((await titles()).includes('From Google')&&(await titles()).includes('Dentist (Google)'),'tasks from the chosen list appear (across pages)');
+ ok(!(await titles()).includes('On the other list')&&!(await titles()).includes('Already done'),'other lists and completed tasks stay out');
+ ok(flow().some(t=>t.title==='Local first'),'a task typed before connecting is pushed up');
+ ok((await page.locator('.brand').innerText()).toLowerCase()==='flow','screen is titled with the Google list name');
+ await page.fill('#newtask','Added after connect');await page.keyboard.press('Enter');await page.waitForFunction(()=>S.tasks.every(t=>t.gid));ok(flow().filter(t=>t.title==='Added after connect').length===1,'new task reaches Google once');
+ await page.locator('.task',{hasText:'From Google'}).locator('.chk').click();await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(flow().find(t=>t.id==='g1').status==='completed','check off here completes it in Google');
+ await page.locator('.task.done',{hasText:'From Google'}).locator('.chk').click();await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(flow().find(t=>t.id==='g1').status==='needsAction','uncheck here reopens it');
+ await page.locator('.task .tt',{hasText:'From Google'}).click();await page.fill('#edt','Renamed here');await page.keyboard.press('Enter');await page.waitForFunction(()=>!S.tasks.some(t=>t.dirty));ok(flow().find(t=>t.id==='g1').title==='Renamed here','rename here renames it in Google');
+ flow().find(t=>t.id==='g2').status='completed';flow().push({id:'g99',title:'Added on Google side',position:'0099',status:'needsAction'});
+ await page.evaluate(()=>gSync());await page.waitForFunction(()=>S.tasks.some(t=>t.gid==='g99'));
+ ok(await page.evaluate(()=>S.tasks.find(t=>t.gid==='g2').done===1)&&(await titles()).includes('Added on Google side'),'changes made on the Google side show up here');
+ await page.locator('.task .tt',{hasText:'Added after connect'}).click();await tap(page,'[data-act=del]');await page.waitForFunction(()=>!S.gdel.length);ok(!flow().some(t=>t.title==='Added after connect'),'delete here deletes in Google');
+ ok(await page.evaluate(()=>new Set(S.tasks.map(t=>t.gid)).size===S.tasks.length),'no duplicate tasks');
+ /* the hourly expiry */
+ await page.evaluate(()=>localStorage.setItem('calibrate6-tok',JSON.stringify({t:'tok-old',exp:Date.now()-1000})));
+ await page.fill('#newtask','Typed while signed out');await page.keyboard.press('Enter');await page.evaluate(()=>gSync());await page.waitForSelector('[data-act=gsign]');
+ ok(true,'expired token: shows a one-tap "Sync now"');const c0=calls;await page.waitForTimeout(2500);ok(calls===c0,'no calls and no retry loop while signed out');
+ ok((await titles()).includes('Typed while signed out')&&!flow().some(t=>t.title==='Typed while signed out'),'task typed while signed out is kept locally and waits');
+ await tap(page,'[data-act=gsign]');await page.waitForFunction(()=>S.tasks.every(t=>t.gid||t.done));ok(flow().some(t=>t.title==='Typed while signed out'),'one tap later it reaches Google');
+ authFail=true;await page.evaluate(()=>{localStorage.setItem('calibrate6-tok',JSON.stringify({t:'tok-x',exp:Date.now()+3600e3}));gSync()});await page.waitForSelector('[data-act=gsign]');ok(true,'Google rejecting a token also lands on "Sync now"');authFail=false;await tap(page,'[data-act=gsign]');await page.waitForFunction(()=>gState==='ok');
+ /* offline */
+ await ctx.setOffline(true);await page.fill('#newtask','Made offline');await page.keyboard.press('Enter');await page.waitForTimeout(1500);ok((await page.locator('#gline').innerText()).includes('Offline'),'offline: says so, keeps the task');
+ await ctx.setOffline(false);await page.evaluate(()=>gSync());await page.waitForFunction(()=>S.tasks.every(t=>t.gid||t.done));ok(flow().filter(t=>t.title==='Made offline').length===1,'back online: queued task reaches Google once');
+ const st=await page.evaluate(()=>JSON.stringify(S));ok(!st.includes('tok-'),'the sign-in token is kept out of app data and backups');
+ await page.screenshot({path:OUT+'v6-list-google.png'});
+ await tap(page,'[aria-label=Settings]');await page.selectOption('[data-set=glist]','My Tasks');await page.waitForFunction(()=>S.g.at>0&&S.tasks.some(t=>t.gid==='m1'));ok(await page.evaluate(()=>S.tasks.filter(t=>!t.done).length===1),'switching lists in Settings swaps the tasks cleanly');
+ const nFlow=flow().length;await tap(page,'[data-act=goff]');ok(await page.evaluate(()=>!S.g.on&&!tok()&&window.__revoked===1),'disconnect forgets the token and tells Google to revoke it');ok(flow().length===nFlow,'disconnect deletes nothing in Google');
  ok(errs.length===0,'no script errors'+(errs.length?': '+errs.join(' | '):''));await ctx.close()}
 
 /* 5. install + offline */
