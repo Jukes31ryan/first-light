@@ -59,9 +59,9 @@ await boot({flSettings:{onboarded:true,flow:[6,2]}});
 chk('a two-module morning is honoured',await p.evaluate(()=>JSON.stringify(FLOW))==='[6,2]');
 chk('the count reflects it',(await p.textContent('#seqCount')).indexOf('/2')>0);
 await p.evaluate(()=>{go(6);mark(6,'done')});await p.waitForTimeout(250);
-chk('the last module finishes the day and lands home',
+chk('the last module hands off to Launch',
   await p.evaluate(async()=>{flowNext(2);await new Promise(r=>setTimeout(r,250));
-    await new Promise(r=>setTimeout(r,800));return document.querySelector('.scr.on').id==='s0'}));
+    return document.querySelector('.scr.on').id==='s8'}));
 await boot({flSettings:{onboarded:true,flow:[]}});
 chk('an empty flow falls back rather than shipping a blank app',
   await p.evaluate(()=>FLOW.length>0));
@@ -72,8 +72,7 @@ chk('junk and duplicates are filtered out',
 
 // ───────── carry-over across a gap, not just from yesterday ─────────
 console.log('\n— unfinished work follows you —');
-const localKey=d=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return localKey(d)};
+const daysAgo=n=>{const d=new Date();d.setDate(d.getDate()-n);return d.toISOString().slice(0,10)};
 await boot({flSettings:{onboarded:true},
   ['flDay-'+daysAgo(5)]:{items:[{id:'a',text:'Call the bank',done:false},
                                {id:'b',text:'Already handled',done:true}]}});
@@ -167,7 +166,7 @@ chk('but only one a week',await p.evaluate(()=>localStorage.getItem('flStreak'))
 console.log('\n— the evening —');
 /* the WIN is derived from the picked item, never assigned — seed it the way
    the Today step would leave it */
-const today=localKey(new Date());
+const today=new Date().toISOString().slice(0,10);
 await boot({flSettings:{onboarded:true},
   ['flDay-'+today]:{items:[{id:'w',text:'The one thing',done:false}],picks:['w'],winId:'w'}});
 /* win and t1..t3 are display copies, recomputed on save rather than stored */

@@ -64,7 +64,6 @@ console.log('\n— the system back gesture —');
 await boot();
 await p.click('#beginBtn');await p.waitForTimeout(300);
 await p.click('#s'+FLOW[0]+' .foot .btn-go');await p.waitForTimeout(300);
-if(FLOW[1]===18)await p.fill('#winInput','Test win');  // the WIN step needs one thing typed
 await p.click('#s'+FLOW[1]+' .foot .btn-go');await p.waitForTimeout(300);
 await p.goBack({waitUntil:'commit'}).catch(()=>{});await p.waitForTimeout(400);
 chk('steps back one step, inside the app',await on()==='s'+FLOW[1],await on());
@@ -78,8 +77,8 @@ await p.goBack({waitUntil:'commit'}).catch(()=>{});await p.waitForTimeout(400);
 chk('from Settings it goes home',await on()==='s0',await on());
 /* Tapping Home must spend the history entry, or the next system back would
    do nothing visible and feel broken */
-await p.click('#idx .idx-row:nth-child(3)');await p.waitForTimeout(300);
-await p.click('#s'+FLOW[2]+' .nav-home');await p.waitForTimeout(500);
+await p.click('#idx .idx-row:nth-child(4)');await p.waitForTimeout(300);
+await p.click('#s'+FLOW[3]+' .nav-home');await p.waitForTimeout(500);
 chk('Home consumes the entry it pushed',await p.evaluate(()=>histArmed)===false);
 chk('no errors in any of it',errs.length===0,errs.join(';'));
 
